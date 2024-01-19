@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    {% comment %} <link rel="stylesheet" href="./css/app.css"> {% endcomment %}
+    <link rel="stylesheet" href="{% static '/css/society_common.css' %}">
+    {% comment %} <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> {% endcomment %}
+    <script src="{% static 'js/jquery-3.6.4.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+
+</head>
+<style>
+    @media screen and (max-width: 992px) {
+        .navbar-nav li{
+            padding: 0px 25px;
+        }
+        .dropdown .dropdown-menu{
+            background: transparent !important;
+            border: none;
+        }
+    }
+
+    /* @media screen and (min-width: 993) (max-width: 1200px) {
+  color: var(--tz-menu-item-hover-color);
+  color: var(--tz-menu-item-active-color);
+  color: var(--tz-menu-item-active-color);
+
+    } */
+
+    /* Your additional styles go here */
+    {% block extrastyle %}   {% endblock extrastyle %}
+</style>
+<body>
+    <div class="header">
+        <div class="container-fluid d-flex" style="background-color: #092635; height: 70px;">
+            <div class="d-flex align-items-center gap-2">
+                <div class="logo-topbar">
+                    <a href="#" style="text-decoration: none;" ><h4 style="color: #fff;">Society<br> Management</h4></a>
+                </div>
+                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon bg-white fs-2"></span>
+                </button>
+            </div>
+            <ul class="align-items-center ms-auto me-3 d-flex gap-3">
+                <li class="dropdown notification-list">
+                    <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false">
+                        <i class="ri-mail-line fs-22"></i>
+                        <span class="noti-icon-badge badge text-bg-purple">4</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg py-0">
+                        <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="m-0 fs-16 fw-semibold"> Messages</h6>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="javascript: void(0);" class="text-dark text-decoration-underline">
+                                        <small>Clear All</small>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="max-height: 300px;" data-simplebar>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);"
+                                class="dropdown-item p-0 notify-item read-noti card m-0 shadow-none">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="notify-icon">
+                                                <img src="assets/images/users/avatar-1.jpg"
+                                                    class="img-fluid rounded-circle" alt="" />
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 text-truncate ms-2">
+                                            <h5 class="noti-item-title fw-semibold fs-14">Cristina Pride <small
+                                                    class="fw-normal text-muted float-end ms-1">1 day ago</small>
+                                            </h5>
+                                            <small class="noti-item-subtitle text-muted">Hi, How are you? What about
+                                                our
+                                                next meeting</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="top-navbar">
+        <nav class="navbar shadow-sm navbar-expand-lg bg-body-tertiary">
+            <div class="container">
+            <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav gap-2 ms-auto me-auto mb-2 mb-lg-0" style="font-family: 'Calibri', sans-serif;">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link hoverMe" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Master Creation &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'society_creation' %}">Society Master Creation</a></li>
+                            <li><a class="dropdown-item" href="{% url 'member_master' %}">Members Master</a></li>
+                            <li><a class="dropdown-item" href="{% url 'tenant' %}">Tenent Master</a></li>
+                            <li><a class="dropdown-item" href="{% url 'house_help_master' %}">HouseHelp Master</a></li>
+                            <li><a class="dropdown-item" href="{% url 'income_expense_ledger' %}">Income/Expense Ledger <br> Creation</a></li>
+                            <li><a class="dropdown-item" href="{% url 'asset_liability_ledger' %}">Asset/Liability Creation</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Accounts &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Investment Register</a></li>
+                        <li><a class="dropdown-item" href="#">Booking Master</a></li>
+                        <li><a class="dropdown-item" href="#">Sending Invoices & Ledger</a></li>
+                        <li><a class="dropdown-item" href="#">SMS/Mail/Whatsapp</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Meeting & Election &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">AGM</a></li>
+                        <li><a class="dropdown-item" href="#">SGM</a></li>
+                        <li><a class="dropdown-item" href="#">Extra Ordinary General Meeting</a></li>
+                        <li><a class="dropdown-item" href="#">Managing Committee Meeting</a></li>
+                        <li><a class="dropdown-item" href="#">Election</a></li>
+                        <li><a class="dropdown-item" href="#">Managig Committee</a></li>
+                        <li><a class="dropdown-item" href="#">Office Bearer</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Raise Request &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">NOC</a></li>
+                        <li><a class="dropdown-item" href="#">Complain</a></li>
+                        <li><a class="dropdown-item" href="#">Change in Member Info</a></li>
+                        <li><a class="dropdown-item" href="#">Suggestion</a></li>
+                        <li><a class="dropdown-item" href="#">Flat Repair Request</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gate Management &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Visitors Record</a></li>
+                        <li><a class="dropdown-item" href="#">Payment Gateway</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Empanelment of Contractor &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Register Vendor with Skills</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Reports &nbsp;<i class="fa-solid fa-angle-down float-end" style="padding-top: 6px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Register Vehicle</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <!-- <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+                </form> -->
+            </div>
+            </div>
+        </nav>
+    </div>
+
+
+{% block body %}
+{% endblock body %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"
+            integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+<script src="{% static '/js/society_common.js' %}"></script>
+{% comment %} <script src="{% static '/js/Sweet-Alert.js' %}"></script> {% endcomment %}
+
+
+</body>
+</html>

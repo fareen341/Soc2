@@ -1,0 +1,645 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} <title>Society Management | Society-Creation</title> {% endblock title %}
+
+{% block body %}
+
+
+<div class="container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-11 col-sm-10 col-md-11 col-lg-11 col-xl-10 text-center p-0 mb-2">
+        <div class="card px-0 pt-4 pb-0 mt-1 mb-3">
+          <h2 id="heading">Member Creation</h2>
+          <p style="color: #616161">
+            Fill all form field to go to next step
+          </p>
+          <form name="main-member-form" id="msform">
+            {% csrf_token %}
+            <!-- progressbar -->
+            <ul id="progressbar" class="col-10 ms-auto me-auto" style="padding: 0 !important">
+              <li class="active" id="member"><strong>Members Details</strong></li>
+              <li id="shares"><strong>Shares Details</strong></li>
+              <li id="homeLoan"><strong>Home Loan Details</strong></li>
+              <li id="gst"><strong>GST Details</strong></li>
+              <li id="vehicle"><strong>Vehicle Details</strong></li>
+            </ul>
+            <!-- <div class="progress">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div> <br> fieldsets -->
+
+
+            <fieldset>
+              <!-- <div class=""> -->
+
+              <div id="forms-container">
+                <div class="form-container">
+                  <div class="row mt-3" style="text-align: left">
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <!-- <input type="text" class="w-100 sty-inp "> -->
+                        <select name="wing_flat_select" id="id_wing_flat" class="w-100 sty-inp">
+                          {% for key, value in wing_flat_no.items %}
+                          <option value="{{ key }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>
+
+                        <label for="wing_flat_select" class="sty-label">Wing & Flat No.</label>
+                        <small id="id_wing_flat_Error" class="error-message"></small>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="text" class="w-100 sty-inp" id="id_member_name" />
+                        <label for="" class="sty-label">Member's Name</label>
+                      </div>
+                      <small id="id_member_name_Error" class="error-message"></small>
+                    </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="number" id="id_member_ownership" min="0" max="100"
+                          class="w-100 sty-inp percentage-input">
+
+                        <label for="" class="sty-label">Ownership %</label>
+                        <small id="id_member_ownership_Error" class="error-message"></small>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <select name="member_position" id="id_member_position" class="w-100 sty-inp">
+                          {% for key, value in member_position.items %}
+                          <option value="{{ key }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>
+                        <label for="" class="sty-label">Position</label>
+                        <small id="id_member_position_Error" class="error-message"></small>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="date" id="id_member_dob" class="w-100 sty-inp form-control" />
+                        <label for="" class="sty-label">Member DOB</label>
+                      </div>
+                      <small id="id_member_dob_Error" class="error-message"></small>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="text" id="id_member_pan_number" class="w-100 sty-inp" />
+                        <label for="" class="sty-label">Member PAN No</label>
+                      </div>
+                      <small id="id_member_pan_number_Error" class="error-message"></small>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="number" id="id_member_aadhar_no" class="w-100 sty-inp" />
+                        <label for="" class="sty-label">Member Aadhaar No</label>
+                      </div>
+                      <small id="id_member_aadhar_no_Error" class="error-message"></small>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <textarea class="w-100 sty-inp form-control" name="" id="id_member_address" cols="30"
+                          rows="1"></textarea>
+                        <label for="" class="sty-label">Member Permanent Address</label>
+                        <small id="id_member_address_Error" class="error-message"></small>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+
+                      <div class="w-100 sty-input-wrapper">
+                        <select name="state" id="id_member_state" class="w-100 sty-inp">
+                          {% for key, value in state_names.items %}
+                          <option value="{{ key }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>
+
+                        <label for="" class="sty-label">State</label>
+                      </div>
+                      <small id="id_member_state_Error" class="error-message"></small>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="number" class="w-100 sty-inp" id="id_member_pin_code" />
+                        <label for="" class="sty-label">Pin Code</label>
+                        <small id="id_member_pin_code_Error" class="error-message"></small>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="email" class="w-100 sty-inp" id="id_member_email" />
+                        <label for="" class="sty-label">Member Email</label>
+                        <small id="id_member_email_Error" class="error-message"></small>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="number" id="id_member_contact" class="w-100 sty-inp form-control" />
+                        <label for="" class="sty-label">Member Contact No.</label>
+                        <small id="id_member_contact_Error" class="error-message"></small>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="number" class="w-100 sty-inp" id="id_member_emergency_contact" />
+                        <label for="" class="sty-label">Emergency Contact No.</label>
+                        <small id="id_member_emergency_contact_Error" class="error-message"></small>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="text" class="w-100 sty-inp" id="id_member_occupation" />
+                        <label for="" class="sty-label">Occupation</label>
+                        <small id="id_member_occupation_Error" class="error-message"></small>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 d-flex align-items-center">
+                      <small id="id_is_primary">
+                        <span>
+                          <input type="checkbox" class="sty-inp" />
+                        </span>&nbsp;Make this Member as a Primary Member
+                      </small>
+                      <small id="id_is_primary_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <!-- ---Nominee Details--- -->
+                  <hr />
+                  <h2 id="heading" class="mb-3">Nominee Details</h2>
+                  <div id="newNominee">
+                    <div class="row abcd" id="cloneNominee">
+                      <!-- <center>h3</center> -->
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp" id="id_nominee_name" />
+                          <label for="" class="sty-label">Nominee Name</label>
+                          <small id="id_nominee_name_Error" class="error-message"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date" />
+                          <label for="" class="sty-label">Date of Nomination</label>
+                          <small id="id_nomination_date_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input class="w-100 sty-inp form-control" type="text" name="" id="id_nominee_relation" />
+                          <label for="" class="sty-label">Relation with Nominator</label>
+                          <small id="id_nominee_relation_Error" class="error-message"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp form-control percentage-input"
+                            id="id_naminee_sharein" />
+                          <label for="" class="sty-label">Nominee Sharein %</label>
+                          <small id="id_naminee_sharein_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
+                          <label for="" class="sty-label">Nominee DOB</label>
+                          <small id="id_nominee_dob_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
+                          <label for="" class="sty-label">Nominee Aadhaar No</label>
+                          <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
+                          <label for="" class="sty-label">Nominee PAN No</label>
+                          <small id="id_nominee_pan_no_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="email" class="w-100 sty-inp" id="id_nominee_email" />
+                          <label for="" class="sty-label">Nominee Email</label>
+                          <small id="id_nominee_email_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address" cols="30"
+                            rows="1"></textarea>
+                          <label for="" class="sty-label">Nominee Permanent Address</label>
+                          <small id="id_nominee_address_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <select name="state" id="id_nominee_state" class="w-100 sty-inp">
+                            {% for key, value in state_names.items %}
+                            <option value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                          </select>
+
+                          <label for="" class="sty-label">State</label>
+                          <small id="id_nominee_state_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
+                          <label for="" class="sty-label">Pin Code</label>
+                          <small id="id_nominee_pin_code_Error" class="error-message"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number" />
+                          <label for="" class="sty-label">Nominee Contact No.</label>
+                          <small id="id_nominee_contact_number_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact" />
+                          <label for="" class="sty-label">Emergency Contact No.</label>
+                          <small id="id_nominee_emergency_contact_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <hr />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <input type="button" name="" class="add-mem-btn float-start" id="" value="Add Nominee"
+                onclick="addNominee()" />
+              <input type="button" name="next" class="next action-button" id="save_and_next_member"
+                value="Save & Next" />
+              <input class="add-mem-btn" type="submit" name="addMember" id="save_and_add_member"
+                value="Save & Add Member" />
+            </fieldset>
+            <fieldset>
+              <div class="">
+
+
+                <div class="row">
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <!-- <input type="number" class="w-100 sty-inp" /> -->
+                      <select name="" id="id_shared_wing_flat_select" class="w-100 sty-inp">
+                        {% for key, value in wing_flat_no.items %}
+                        <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                      </select>
+                      <label for="id_shared_wing_flat_select" class="sty-label">Wing & Flat No.</label>
+                      <small id="id_shared_wing_flat_select_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_folio_number" />
+                      <label for="id_folio_number" class="sty-label">Folio Number</label>
+                      <small id="id_folio_number_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="date" class="w-100 sty-inp" id="id_shares_date" />
+                      <label for="id_shares_date" class="sty-label">Share Issue Date</label>
+                      <small id="id_shares_date_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_application_number" />
+                      <label for="id_application_number" class="sty-label">Application Number</label>
+                      <small id="id_application_number_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_shares_certificate" />
+                      <label for="id_shares_certificate" class="sty-label">Serial No. of Certificate</label>
+                      <small id="id_shares_certificate_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_allotment_number" />
+                      <label for="id_allotment_number" class="sty-label">Allotment Number</label>
+                      <small id="id_allotment_number_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_shares_from" />
+                      <label for="id_shares_from" class="sty-label">Share No. from</label>
+                      <small id="id_shares_from_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_shares_to" />
+                      <label for="id_shares_to" class="sty-label">Share No. To</label>
+                      <small id="id_shares_to_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="date" class="w-100 sty-inp" id="id_shares_transfer_date" />
+                      <label for="id_shares_transfer_date" class="sty-label">Share Transfer Date</label>
+                      <small id="id_shares_transfer_date_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_total_amount_received" />
+                      <label for="id_total_amount_received" class="sty-label">Total Amount Received</label>
+                      <small id="id_total_amount_received_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="date" class="w-100 sty-inp" id="id_total_amount_date" />
+                      <label for="id_total_amount_date" class="sty-label">Total Amount Received On</label>
+                      <small id="id_total_amount_date_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_transfer_from_folio_no" />
+                      <label for="id_transfer_folio_number" class="sty-label">Transfer from Folio Number</label>
+                      <small id="id_transfer_folio_number_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp" id="id_transfer_to_folio_no" />
+                      <label for="id_transfer_to_folio_no" class="sty-label">Transfer to Folio Number</label>
+                      <small id="id_transfer_to_folio_no_Error" class="error-message"></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <input type="button" name="next" class="next action-button" id="addSharesDetail" value="Save & Next" />
+              <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+            </fieldset>
+            <fieldset>
+              <!-- <div class="form-card">
+                                  <div class="row">
+                                      <div class="col-7">
+                                          <h2 class="fs-title">Image Upload:</h2>
+                                      </div>
+                                      <div class="col-5">
+                                          <h2 class="steps">Step 3 - 4</h2>
+                                      </div>
+                                  </div> <label class="fieldlabels">Upload Your Photo:</label> <input type="file" name="pic" accept="image/*"> <label class="fieldlabels">Upload Signature Photo:</label> <input type="file" name="pic" accept="image/*">
+                              </div>  -->
+
+              <div class="row">
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" id="id_bank_loan_name" />
+                    <label for="id_bank_loan_name" class="sty-label">Hypothication Bank Name</label>
+                    <small id="id_bank_loan_name_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" id="id_bank_loan_object" />
+                    <label for="id_bank_loan_object" class="sty-label">Object of Loan</label>
+                    <small id="id_bank_loan_object_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="date" class="w-100 sty-inp" id="id_bank_loan_date" />
+                    <label for="id_bank_loan_date" class="sty-label">Loan Issue Date</label>
+                    <small id="id_bank_loan_date_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="number" class="w-100 sty-inp" id="id_bank_loan_value" />
+                    <label for="id_bank_loan_value" class="sty-label">Loan Value</label>
+                    <small id="id_bank_loan_value_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="number" class="w-100 sty-inp" id="id_bank_loan_acc_no" />
+                    <label for="id_bank_loan_acc_no" class="sty-label">Account Number</label>
+                    <small id="id_bank_loan_acc_no_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="number" class="w-100 sty-inp" id="id_bank_loan_installment" />
+                    <label for="id_bank_loan_installment" class="sty-label">Installment</label>
+                    <small id="id_bank_loan_installment_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <!-- <input type="text" class="w-100 sty-inp" /> -->
+                    <select name="" class="w-100 form-control sty-inp" id="id_bank_loan_status">
+                      <option value="#">Select Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                    <label for="id_bank_loan_status" class="sty-label">Status</label>
+                    <small id="id_bank_loan_status_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3" id="toggleChangeNoc" style="display: none;">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="file" class="w-100 sty-inp form-control" id="id_bank_loan_noc_file"  />
+                    <label for="id_bank_loan_noc_file" class="sty-label">Attach NOC</label>
+                    <small id="id_bank_loan_noc_file_Error" class="error-message"></small>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" id="id_bank_loan_remark" />
+                    <label for="id_bank_loan_remark" class="sty-label">Remarks</label>
+                    <small id="id_bank_loan_remark_Error" class="error-message"></small>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <input type="button" name="next" class="next action-button" id="homeLoanSubmit" value="Save & Next" />
+              <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+            </fieldset>
+            <fieldset>
+              <!-- <div class="form-card">
+                                  <div class="row">
+                                      <div class="col-7">
+                                          <h2 class="fs-title">Finish:</h2>
+                                      </div>
+                                      <div class="col-5">
+                                          <h2 class="steps">Step 4 - 4</h2>
+                                      </div>
+                                  </div> <br><br>
+                                  <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
+                                  <div class="row justify-content-center">
+                                      <div class="col-3"> <img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> </div>
+                                  </div> <br><br>
+                                  <div class="row justify-content-center">
+                                      <div class="col-7 text-center">
+                                          <h5 class="purple-text text-center">You Have Successfully Signed Up</h5>
+                                      </div>
+                                  </div>
+                              </div> -->
+
+              <div class="row">
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" />
+                    <label for="" class="sty-label">GST Number</label>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" />
+                    <label for="" class="sty-label">Billing State</label>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" />
+                    <label for="" class="sty-label">Billing Name</label>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <textarea class="w-100 sty-inp form-control" name="" id="" cols="30" rows="1"></textarea>
+                    <label for="" class="sty-label">Billing Address</label>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="number" class="w-100 sty-inp" />
+                    <label for="" class="sty-label">Contact Number</label>
+                  </div>
+                </div>
+              </div>
+              <hr />
+
+              <input type="button" name="" class="next action-button" value="Save & Next" />
+              <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+            </fieldset>
+            <fieldset>
+              <!-- <div class="form-card">
+                                  <div class="row">
+                                      <div class="col-7">
+                                          <h2 class="fs-title">Finish:</h2>
+                                      </div>
+                                      <div class="col-5">
+                                          <h2 class="steps">Step 4 - 4</h2>
+                                      </div>
+                                  </div> <br><br>
+                                  <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
+                                  <div class="row justify-content-center">
+                                      <div class="col-3"> <img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> </div>
+                                  </div> <br><br>
+                                  <div class="row justify-content-center">
+                                      <div class="col-7 text-center">
+                                          <h5 class="purple-text text-center">You Have Successfully Signed Up</h5>
+                                      </div>
+                                  </div>
+                              </div> -->
+              <div id="newVehicle">
+                <div class="row mt-3" id="cloneVehicle">
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="text" class="w-100 sty-inp" id="parkingLot0" />
+                      <label for="" class="sty-label">Parking Lot</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="text" class="w-100 sty-inp" id="vehicleType0" />
+                      <label for="" class="sty-label">Vehicle Type</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="text" class="w-100 sty-inp" id="vehicleNumber0" />
+                      <label for="" class="sty-label">Vehicle Number</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="text" class="w-100 sty-inp" id="brandVehicle0" />
+                      <label for="" class="sty-label">Brand & Model</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="file" class="w-100 sty-inp form-control" id="rcCopy0" />
+                      <label for="" class="sty-label">RC Copy</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <select class="w-100 sty-inp form-control" name="" id="stickerOpt0">
+                        <option value="#">YES / NO</option>
+                        <option value="yes">YES</option>
+                        <option value="no">NO</option>
+                      </select>
+                      <!-- <input type="text" class="w-100 sty-inp"> -->
+                      <label for="" class="sty-label">Sticker Issued</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="text" class="w-100 sty-inp form-control" id="stickNumber0" />
+                      <label for="" class="sty-label">Sticker Number</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3">
+                    <div class="w-100 sty-input-wrapper">
+                      <select class="w-100 sty-inp form-control" name="" id="selectCharge0"
+                        onchange="selectChange(this.id, 'related_' + this.id)">
+                        <option value="#" selected>YES / NO</option>
+                        <option id="optN0" value="option1">NO</option>
+                        <option id="optY0" value="option2">YES</option>
+                      </select>
+                      <!-- <input type="text" class="w-100 sty-inp"> -->
+                      <label for="" class="sty-label">Vehicle Chargeable</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3" id="addCharge0">
+                    <div class="w-100 sty-input-wrapper">
+                      <input type="number" class="w-100 sty-inp form-control" id="related_selectCharge0" disabled />
+                      <label for="" class="sty-label">Charge Amount</label>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <div class="row" id="newVehicleContainer"></div>
+              </div>
+              <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle"
+                onclick="addVehicle()" />
+              <input type="submit" name="" class="action-button" id="memberCreated" value="Submit" />
+              <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+            </fieldset>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock body %}
