@@ -503,38 +503,46 @@
               <div class="row">
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <input type="text" class="w-100 sty-inp" />
-                    <label for="" class="sty-label">GST Number</label>
+                    <input type="text" class="w-100 sty-inp" id="id_member_gst_number"/>
+                    <label for="id_member_gst_number" class="sty-label">GST Number</label>
+                    <small id="id_member_gst_number_Error" class="error-message"></small>
                   </div>
                 </div>
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <input type="text" class="w-100 sty-inp" />
-                    <label for="" class="sty-label">Billing State</label>
+                    <select name="state" id="id_gst_state" class="w-100 sty-inp">
+                      {% for key, value in state_names.items %}
+                          <option value="{{ key }}">{{ value }}</option>
+                      {% endfor %}
+                  </select>
+                    <small id="id_gst_state_Error" class="error-message"></small>
                   </div>
                 </div>
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <input type="text" class="w-100 sty-inp" />
-                    <label for="" class="sty-label">Billing Name</label>
+                    <input type="text" class="w-100 sty-inp" id="id_gst_billing_name" />
+                    <label for="id_gst_billing_name" class="sty-label">Billing Name</label>
+                    <small id="id_gst_billing_name_Error" class="error-message"></small>
                   </div>
                 </div>
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <textarea class="w-100 sty-inp form-control" name="" id="" cols="30" rows="1"></textarea>
-                    <label for="" class="sty-label">Billing Address</label>
+                    <textarea class="w-100 sty-inp form-control" name="" id="id_gst_billing_address" cols="30" rows="1"></textarea>
+                    <label for="id_gst_billing_address" class="sty-label">Billing Address</label>
+                    <small id="id_gst_billing_address_Error" class="error-message"></small>
                   </div>
                 </div>
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <input type="number" class="w-100 sty-inp" />
-                    <label for="" class="sty-label">Contact Number</label>
+                    <input type="number" class="w-100 sty-inp" id="id_gst_contact_no" />
+                    <label for="id_gst_contact_no" class="sty-label">Contact Number</label>
+                    <small id="id_gst_contact_no_Error" class="error-message"></small>
                   </div>
                 </div>
               </div>
               <hr />
 
-              <input type="button" name="" class="next action-button" value="Save & Next" />
+              <input type="button" name="" class="next action-button" value="Save & Next" id="gstFormSubmit" />
               <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
             </fieldset>
             <fieldset>
@@ -561,67 +569,61 @@
                 <div class="row mt-3" id="cloneVehicle">
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <input type="text" class="w-100 sty-inp" id="parkingLot0" />
-                      <label for="" class="sty-label">Parking Lot</label>
+                      <input type="text" class="w-100 sty-inp" id="id_parking_lot0" />
+                      <label for="id_parking_lot0" class="sty-label">Parking Lot</label>
+                      <small id="Error_id_parking_lot0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <input type="text" class="w-100 sty-inp" id="vehicleType0" />
-                      <label for="" class="sty-label">Vehicle Type</label>
+                      <input type="text" class="w-100 sty-inp" id="id_vehicle_type0" />
+                      <label for="id_vehicle_type0" class="sty-label">Vehicle Type</label>
+                      <small id="Error_id_vehicle_type0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <input type="text" class="w-100 sty-inp" id="vehicleNumber0" />
-                      <label for="" class="sty-label">Vehicle Number</label>
+                      <input type="text" class="w-100 sty-inp" id="id_vehicle_number0" />
+                      <label for="id_vehicle_number0" class="sty-label">Vehicle Number</label>
+                      <small id="Error_id_vehicle_number0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <input type="text" class="w-100 sty-inp" id="brandVehicle0" />
-                      <label for="" class="sty-label">Brand & Model</label>
+                      <input type="text" class="w-100 sty-inp" id="id_vehicle_brand0" />
+                      <label for="id_vehicle_brand0" class="sty-label">Brand & Model</label>
+                      <small id="Error_id_vehicle_brand0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <input type="file" class="w-100 sty-inp form-control" id="rcCopy0" />
-                      <label for="" class="sty-label">RC Copy</label>
+                      <input type="file" class="w-100 sty-inp form-control" id="id_rc_copy0" />
+                      <label for="id_rc_copy0" class="sty-label">RC Copy</label>
+                      <small id="Error_id_rc_copy0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <select class="w-100 sty-inp form-control" name="" id="stickerOpt0">
-                        <option value="#">YES / NO</option>
-                        <option value="yes">YES</option>
-                        <option value="no">NO</option>
-                      </select>
-                      <!-- <input type="text" class="w-100 sty-inp"> -->
-                      <label for="" class="sty-label">Sticker Issued</label>
+                      <input type="text" class="w-100 sty-inp form-control" id="id_sticker_number0" />
+                      <label for="id_sticker_number0" class="sty-label">Sticker Number</label>
+                      <small id="Error_id_sticker_number0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <input type="text" class="w-100 sty-inp form-control" id="stickNumber0" />
-                      <label for="" class="sty-label">Sticker Number</label>
-                    </div>
-                  </div>
-                  <div class="col-lg-4 mb-3">
-                    <div class="w-100 sty-input-wrapper">
-                      <select class="w-100 sty-inp form-control" name="" id="selectCharge0"
-                        onchange="selectChange(this.id, 'related_' + this.id)">
+                      <select class="w-100 sty-inp form-control" name="" id="id_select_charge0"
+                        onchange="selectChange(this.id, ('related_' + this.id), ('vehicle_' + this.id))">
                         <option value="#" selected>YES / NO</option>
                         <option id="optN0" value="option1">NO</option>
                         <option id="optY0" value="option2">YES</option>
                       </select>
                       <!-- <input type="text" class="w-100 sty-inp"> -->
-                      <label for="" class="sty-label">Vehicle Chargeable</label>
+                      <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
+                      <small id="Error_id_select_charge0" class="error-message"></small>
                     </div>
                   </div>
                   <div class="col-lg-4 mb-3" id="addCharge0">
-                    <div class="w-100 sty-input-wrapper">
-                      <input type="number" class="w-100 sty-inp form-control" id="related_selectCharge0" disabled />
-                      <label for="" class="sty-label">Charge Amount</label>
+                    <div class="w-100 sty-input-wrapper" id="vehicle_id_select_charge0">
                     </div>
                   </div>
                   <hr />
@@ -630,7 +632,7 @@
               </div>
               <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle"
                 onclick="addVehicle()" />
-              <input type="submit" name="" class="action-button" id="memberCreated" value="Submit" />
+              <input type="button" name="" class="action-button" id="vehicleFormSubmit" value="Submit" />
               <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
             </fieldset>
 

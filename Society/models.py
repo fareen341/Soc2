@@ -50,6 +50,7 @@ class SocietyBankCreation(models.Model):
     beneficiary_code = models.CharField(max_length=100, null=True, blank=True)
     beneficiary_acc_number = models.CharField(max_length=100, null=True, blank=True)
     beneficiary_bank = models.CharField(max_length=100, null=True, blank=True)
+    is_primary = models.BooleanField(default=False, null=True, blank=True)
 
 
 class SocietyDocumentCreation(models.Model):

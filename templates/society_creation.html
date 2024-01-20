@@ -20,7 +20,7 @@
                                 <li id="payment"><strong>Documents</strong></li>
                                 <li id="confirm"><strong>Create Wing / Unit</strong></li>
                             </ul>
-                            <input type="text" id="unique_reg_number" value="" hidden />
+                            <input type="text" id="unique_reg_number" value="" />
                             <!-- <div class="progress">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                             </div> <br> fieldsets -->
@@ -339,10 +339,16 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="col-lg-4 mb-3">
-                                                <input type="checkbox" id="id_isPrimary1" name="id_isPrimary1" value="yes">
-                                                <label for="id_isPrimary1">Make primary?</label>
+                                            <!-- <div class="col-lg-4 mb-4">
+                                                <div class="mb-2 w-100 sty-input-wrapper">
+                                                <input type="checkbox" id="id_isPrimary1" name="" value="yes" class="sty-inp">
+                                                <label for="">Make primary?</label>
                                                 <small id="id_isPrimary1_Error"  class="error-message"></small>
+                                            </div> -->
+                                            <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                                <input type="checkbox" class="sty-inp" id="id_isPrimary1">
+                                                <label>Make this Primary</label>
+                                                <small class="mb-3 error-message" id="id_isPrimary1_Error"></small>
                                             </div>
                                     </div>
                                     </div>

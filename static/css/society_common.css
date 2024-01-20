@@ -361,3 +361,8 @@ p {
     font-family:"Calibri", sans-serif;
     font-weight: normal;
 }
+
+
+.hidden-charge-amount {
+    display: none;
+}

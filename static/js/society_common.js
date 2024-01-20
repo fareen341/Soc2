@@ -301,10 +301,10 @@ $(document).ready(function () {
                 contentType: false,
                 success: function (response) {
                     console.log("Success")
-                    // if (response.reg_number) {
-                    //     $("#unique_reg_number").val(response.reg_number)
-                    //     // alert(response.reg_number)
-                    // }
+                    if (response.reg_number) {
+                        $("#unique_reg_number").val(response.reg_number)
+                        // alert(response.reg_number)
+                    }
                     toastr.success(response.message, "Shares Details Added!");
                     // $("#Societyform")[0].reset();
                 },
@@ -317,41 +317,47 @@ $(document).ready(function () {
 
     $("#homeLoanSubmit").click(function (e) {
         let required_fields = {
-            "id_bank_loan_name": "Bank name is required!",
+            // "id_bank_loan_name": "Bank name is required!",
             // "id_bank_loan_object": "Object of loan is required!",
             // "id_bank_loan_date": "Loan issue date is required!",
             // "id_bank_loan_value": "Loan value is required!",
             // "id_bank_loan_acc_no": "Loan account no. is required!",
             // "id_bank_loan_installment": "Loan installment is required!",
-            "id_bank_loan_status": "Loan status is required",
-            // "id_bank_loan_noc_file": "Loan file is required",
+            // "id_bank_loan_status": "Loan status is required",
             // "id_bank_loan_remark": "Loan remark is reqired!"
         }
         let isValid = true
+        let fileStatusCheck = true
         function validateForm(step) {
             for (let key in required_fields) {
                 let value = $("#" + key).val().trim();
                 if (value === "" || ((key == "id_bank_loan_status") && (value == "#"))) {
+                    // if ($("#id_bank_loan_status").length > 0 && $("#id_bank_loan_status").val() === "Closed" && isValid == true) {
+                    //     // fileStatusCheck = true
+                    //     continue
+                    // }
                     isValid = false;
                     $("#" + key).css("border-color", "red");
                     $("#" + key + "_Error").text(required_fields[key]);
-                    
-                }else {
+
+                } else {
                     $("#" + key).css("border-color", "");
                     $("#" + key + "_Error").text("");
-                //     if ((key == "id_bank_loan_noc_file")) { //&& $("#toggleChangeNoc").hasClass("activeStatus"))    
-                //     var computedStyle = window.getComputedStyle(document.getElementById("toggleChangeNoc"));
-                //     if (computedStyle.getPropertyValue('display') === 'none') {
-                //         isValid = true;
-                //         // alert("Display is set to 'block'");
-                //         $("#" + key).css("border-color", "");
-                //         $("#" + key + "_Error").text("");
-                //     }
-                // }
-                }  
+                }
             }
-            if ($("#id_bank_loan_status") && ($("#id_bank_loan_status") == "Closed")){
-                alert("calling")
+            if ($("#id_bank_loan_status").length > 0 && $("#id_bank_loan_status").val() === "Active") {
+                if ($("#id_bank_loan_noc_file").val() === "") {
+                    isValid = false
+                    $("#id_bank_loan_noc_file").css("border-color", "red");
+                    $("#id_bank_loan_noc_file_Error").text("File needed");
+                } else {
+                    $("#id_bank_loan_noc_file").css("border-color", "");
+                    $("#id_bank_loan_noc_file_Error").text("");
+                }
+            } else if ($("#id_bank_loan_status").length > 0 && ($("#id_bank_loan_status").val() === "Closed")) {
+                isValid = true
+                $("#id_bank_loan_noc_file").css("border-color", "");
+                $("#id_bank_loan_noc_file_Error").text("");
             }
             return isValid;
         }
@@ -359,6 +365,7 @@ $(document).ready(function () {
         if (!validateForm()) {
             stopNext = false
         } else {
+            console.log("ELSE=================")
             let sharedData = []
             Object.keys(required_fields).forEach(function (field) {
                 sharedData.push({ [field]: $('#' + field).val() });
@@ -366,6 +373,9 @@ $(document).ready(function () {
             var formData = new FormData();
             formData.append('form_name', "shared_form");
             formData.append('shares_json', JSON.stringify(sharedData));
+            if ($('#id_bank_loan_noc_file')[0].files.length > 0) {
+                formData.append('id_bank_loan_noc_file', $('#id_bank_loan_noc_file')[0].files[0]);
+            }
 
             let headers = {
                 "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
@@ -391,7 +401,95 @@ $(document).ready(function () {
                     alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
                 }
             });
+            stopNext = true
         }
+    });
+
+    $("#gstFormSubmit").click(function (e) {
+        // alert("call");
+        let isValid = true;
+        let required_fields = {
+            // "id_member_gst_number": "Gst number required!",
+            // "id_gst_state": "GST state required!",
+            // "id_gst_billing_name": "Billing name is required!",
+            // "id_gst_billing_address": "Billing address is required!",
+            // "id_gst_contact_no": "Contact number is required!"
+        }
+
+        function validateForm(step) {
+            for (let key in required_fields) {
+                let value = $("#" + key).val().trim();
+                if (value === "" || ((key == "id_gst_state") && (value == "#"))) {
+                    isValid = false;
+                    $("#" + key).css("border-color", "red");
+                    $("#" + key + "_Error").text(required_fields[key]);
+                } else {
+                    $("#" + key).css("border-color", ""); // Reset to default
+                    $("#" + key + "_Error").text(""); // Clear the error message
+                }
+            }
+            return isValid;
+        }
+
+        if (!validateForm()) {
+            stopNext = false
+        } else {
+            stopNext = true
+            console.log("")
+        }
+
+    });
+
+    $("#vehicleFormSubmit").click(function (e) {
+        // get all the values here
+        let isValid = true;
+        let required_fields = {}
+        getAllVehicleDetails = {
+            "id_parking_lot": "Parking log is reqired!",
+            "id_vehicle_type": "Vehicle type is required!",
+            "id_vehicle_number": "Vehicle number is required!",
+            "id_vehicle_brand": "Vehicle brand is required!",
+            "id_rc_copy": "Vehicle cpy is required!",
+            "id_sticker_number": "Sticker number is required!",
+            "id_select_charge": "Vehiche chargable or not, pls select one!",
+            "new_vehicle_id_select_charge": "Charge amount is reqired!",
+        }
+
+        for (let key in getAllVehicleDetails) {
+            Array.from(document.querySelectorAll('[id^="' + key + '"]'))
+                .filter(element => !element.id.includes('_Error'))
+                .map(element => {
+                    required_fields[element.id] = getAllVehicleDetails[key]; // Use the corresponding message from get_nominee_detail
+                    return element;
+                });
+        }
+
+        function validateForm(step) {
+            for (let key in required_fields) {
+                let value = $("#" + key).val().trim();
+                if (value === "" || (key.startsWith("id_select_charge") && (value == "#"))) {
+                    isValid = false;
+                    $("#" + key).css("border-color", "red");
+                    $("#Error_" + key).text(required_fields[key]);
+                } else {
+                    $("#" + key).css("border-color", ""); // Reset to default
+                    $("#Error_" + key).text(""); // Clear the error message
+                }
+            }
+            return isValid;
+        }
+
+        // console.log("REQ fields===", required_fields)
+
+        if (!validateForm()) {
+            stopNext = false
+            console.log("failed")
+        } else {
+            console.log("success")
+            // let reg_name = $("#unique_reg_number").val()
+            stopNext = true
+        }
+
     });
 
     // Society form validation
@@ -408,9 +506,9 @@ $(document).ready(function () {
 
         let isValid = true;
         let required_fields = {
-            // "id_society_name": "Name cannot be empty",
+            "id_society_name": "Name cannot be empty",
             // "id_admin_email": "Email cannnot be empty",
-            // "id_alternate_email": "Alternate email cannot be empty",
+            // // "id_alternate_email": "Alternate email cannot be empty",
             // "id_registration_number": "Reg. No. cannot be empty!",
             // "id_registration_doc": "Doc cannot be empty",
             // "id_admin_mobile_number": "Mobile Number cannot be empty!",
@@ -422,7 +520,7 @@ $(document).ready(function () {
             // "id_society_reg_address": "Society reg. address required!",
             // "id_society_city": "City is required!",
             // "id_socity_state": "State cannot be empty!",
-            // "id_alternate_mobile_number": "Alternate mobile number required!",
+            // // "id_alternate_mobile_number": "Alternate mobile number required!",
             // "id_pin_code": "Pin code is required!",
             // "id_society_corr_reg_address": "Corr. Add. is required!",
             // "id_society_corr_city": "society_corr_city required",
@@ -433,7 +531,7 @@ $(document).ready(function () {
         // only give non required email field, and if required give it in required_fields fields
         let email_fields = {
             // "id_admin_email": "Invalid Email",
-            // "id_alternate_email": "Invalid Email"
+            "id_alternate_email": "Invalid Email"
         }
         let exact_ten_number = /^\d{10}$/;
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -575,155 +673,6 @@ $(document).ready(function () {
             formData.append('form_name', 'Societyform');
 
 
-            // $.ajax({
-            //     url: ajaxUrl,
-            //     method: 'POST',
-            //     data: formData,
-            //     headers: headers,
-            //     processData: false,
-            //     contentType: false,
-            //     success: function (response) {
-            //         console.log("Success")
-            //         if (response.reg_number) {
-            //             $("#unique_reg_number").val(response.reg_number)
-            //             // alert(response.reg_number)
-            //         }
-            //         toastr.success(response.message, "Society Details Added!");
-            //         $("#Societyform")[0].reset();
-            //     },
-            //     error: function (xhr) {
-            //         alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-            //     }
-            // });
-        }
-    });
-
-    // Bank form valdation
-    $('#bankSubmitAddAnother, #bankSubmit').click(function (e) {
-        var required_fields = {
-            // 'id_beneficiary_name': "Beneficiary name cannot be empty!",
-            // 'id_beneficiary_code': "Beneficiary code cannot be empty!",
-            // 'id_beneficiary_acc_number': "Beneficiary account no. cannot be empty!",
-            // 'id_beneficiary_bank': "Beneficiary bank cannot be empty!",
-        };
-
-        let id_beneficiary_name = Array.from(document.querySelectorAll('[id^="id_beneficiary_name"]'))
-            .filter(element => !element.id.includes('_Error'))
-            .map(element => {
-                required_fields[element.id] = "Beneficiary name is required!"; // Add the id and message to the required_fields object
-                return element;
-            });
-
-        let id_beneficiary_code = Array.from(document.querySelectorAll('[id^="id_beneficiary_code"]'))
-            .filter(element => !element.id.includes('_Error'))
-            .map(element => {
-                required_fields[element.id] = "Beneficiary code is required!"; // Add the id and message to the required_fields object
-                return element;
-            });
-
-        let id_beneficiary_acc_number = Array.from(document.querySelectorAll('[id^="id_beneficiary_acc_number"]'))
-            .filter(element => !element.id.includes('_Error'))
-            .map(element => {
-                required_fields[element.id] = "Beneficiary account no. is required!"; // Add the id and message to the required_fields object
-                return element;
-            });
-
-        let id_beneficiary_bank = Array.from(document.querySelectorAll('[id^="id_beneficiary_bank"]'))
-            .filter(element => !element.id.includes('_Error'))
-            .map(element => {
-                required_fields[element.id] = "Beneficiary bank name is required!"; // Add the id and message to the required_fields object
-                return element;
-            });
-
-        let id_isPrimary = Array.from(document.querySelectorAll('[id^="id_isPrimary"]'))
-            .filter(element => !element.id.includes('_Error'))
-            .map(element => {
-                required_fields[element.id] = "pls select this box, to make it primary!"; // Add the id and message to the required_fields object
-                return element;
-            });
-
-        // console.log("required_fields======", required_fields)
-
-        let checkboxes = document.querySelectorAll('[id^="id_isPrimary"]')
-        let anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-
-        // Check if any of the checkboxes is checked
-
-        // Display an alert if at least one checkbox is checked
-        // if (anyChecked) {
-        //     alert("At least one checkbox is checked!");
-        // } else {
-        //     alert("None of the checkboxes are checked.");
-        // }
-
-        function validateForm(step) {
-            let isValid = true;
-            let anyOneIsChecked = false;
-            for (var key in required_fields) {
-                let value = $("#" + key).val().trim();
-                // if (!($("#" + key).prop('checked'))){
-                //     anyOneIsChecked = true;
-                // }
-                if (value === "" || $("#" + key).prop('checked')) {
-                    isValid = false;
-                    // if (!anyChecked) {                       
-
-                    if (!($("#" + key).prop('checked')) && !anyChecked) {
-                        // alert("None of the checkboxes are checked.");
-                        console.log("1==========================")
-                        $("#" + key).css("border-color", "red");
-                        $("#" + key + "_Error").text(required_fields[key]);
-                    } else {
-                        console.log("2==========================")
-                        $("#" + key).css("border-color", "red");
-                        $("#" + key + "_Error").text(required_fields[key]);
-                    }
-                } else {
-                    $("#" + key).css("border-color", ""); // Reset to default
-                    $("#" + key + "_Error").text(""); // Clear the error message
-                }
-            }
-            return isValid;
-        }
-
-
-        if (!validateForm(1)) {
-            stopNext = false
-        } else {
-            let reg_name = $("#unique_reg_number").val()
-            stopNext = true
-            let form_fields = [
-                'beneficiary_name', 'beneficiary_code', 'beneficiary_acc_number', 'beneficiary_bank'
-            ]
-            let ajaxUrl = $("#ajax-url").data("url");
-            let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-            var headers = {
-                "X-CSRFToken": csrfToken
-            };
-            var formData = new FormData();
-            formData.append('form_name', 'bankForm');
-            formData.append('unique_reg_number', reg_name);
-
-            let bankDetails = [];
-
-            for (var i = 1; i < id_beneficiary_name.length + 1; i++) {
-                // form_fields.forEach(function (field) {
-                // formData.append(field, $('#id_' + field + i).val());
-                console.log("number is===========", i)
-                bankDetails.push({
-                    ["beneficiary_name"]: $('#id_beneficiary_name' + i).val(),
-                    ["beneficiary_code"]: $('#id_beneficiary_code' + i).val(),
-                    ["beneficiary_acc_number"]: $('#id_beneficiary_acc_number' + i).val(),
-                    ["beneficiary_bank"]: $('#id_beneficiary_bank' + i).val(),
-                    ["isPrimary"]: $('#id_isPrimary' + i).val(),
-                });
-                // });
-            }
-
-            let bankDataJson = JSON.stringify(bankDetails);
-            formData.append('bankDataJson', bankDataJson);
-            console.log("bank details========================", bankDataJson)
-
             $.ajax({
                 url: ajaxUrl,
                 method: 'POST',
@@ -733,11 +682,272 @@ $(document).ready(function () {
                 contentType: false,
                 success: function (response) {
                     console.log("Success")
-                    if (response.status) {
-                        alert(response.status)
+                    if (response.reg_number) {
+                        $("#unique_reg_number").val(response.reg_number)
+                        // alert(response.reg_number)
                     }
-                    toastr.success(response.message, "Bank Details Added!");
-                    $("#bankForm")[0].reset();
+                    toastr.success(response.message, "Society Details Added!");
+                    $("#Societyform")[0].reset();
+                },
+                error: function (xhr) {
+                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        }
+    });
+
+    // Bank form valdation
+    $('#bankSubmitAddAnother, #bankSubmit').click(function (e) {
+        // var required_fields = {
+        //     // 'id_beneficiary_name': "Beneficiary name cannot be empty!",
+        //     // 'id_beneficiary_code': "Beneficiary code cannot be empty!",
+        //     // 'id_beneficiary_acc_number': "Beneficiary account no. cannot be empty!",
+        //     // 'id_beneficiary_bank': "Beneficiary bank cannot be empty!",
+        // };
+
+        // let id_beneficiary_name = Array.from(document.querySelectorAll('[id^="id_beneficiary_name"]'))
+        //     .filter(element => !element.id.includes('_Error'))
+        //     .map(element => {
+        //         required_fields[element.id] = "Beneficiary name is required!"; // Add the id and message to the required_fields object
+        //         return element;
+        //     });
+
+        // let id_beneficiary_code = Array.from(document.querySelectorAll('[id^="id_beneficiary_code"]'))
+        //     .filter(element => !element.id.includes('_Error'))
+        //     .map(element => {
+        //         required_fields[element.id] = "Beneficiary code is required!"; // Add the id and message to the required_fields object
+        //         return element;
+        //     });
+
+        // let id_beneficiary_acc_number = Array.from(document.querySelectorAll('[id^="id_beneficiary_acc_number"]'))
+        //     .filter(element => !element.id.includes('_Error'))
+        //     .map(element => {
+        //         required_fields[element.id] = "Beneficiary account no. is required!"; // Add the id and message to the required_fields object
+        //         return element;
+        //     });
+
+        // let id_beneficiary_bank = Array.from(document.querySelectorAll('[id^="id_beneficiary_bank"]'))
+        //     .filter(element => !element.id.includes('_Error'))
+        //     .map(element => {
+        //         required_fields[element.id] = "Beneficiary bank name is required!"; // Add the id and message to the required_fields object
+        //         return element;
+        //     });
+
+        // let id_isPrimary = Array.from(document.querySelectorAll('[id^="id_isPrimary"]'))
+        //     .filter(element => !element.id.includes('_Error'))
+        //     .map(element => {
+        //         required_fields[element.id] = "pls select this box, to make it primary!"; // Add the id and message to the required_fields object
+        //         return element;
+        //     });
+
+        // // console.log("required_fields======", required_fields)
+
+        // let checkboxes = document.querySelectorAll('[id^="id_isPrimary"]')
+        // let anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+
+        // // Check if any of the checkboxes is checked
+
+        // // Display an alert if at least one checkbox is checked
+        // // if (anyChecked) {
+        // //     alert("At least one checkbox is checked!");
+        // // } else {
+        // //     alert("None of the checkboxes are checked.");
+        // // }
+
+        // function validateForm(step) {
+        //     let isValid = true;
+        //     let anyOneIsChecked = false;
+        //     for (var key in required_fields) {
+        //         let value = $("#" + key).val().trim();
+        //         // if (!($("#" + key).prop('checked'))){
+        //         //     anyOneIsChecked = true;
+        //         // }
+        //         if (value === "" || $("#" + key).prop('checked')) {
+        //             isValid = false;
+        //             // if (!anyChecked) {                       
+
+        //             if (!($("#" + key).prop('checked')) && !anyChecked) {
+        //                 // alert("None of the checkboxes are checked.");
+        //                 console.log("1==========================")
+        //                 $("#" + key).css("border-color", "red");
+        //                 $("#" + key + "_Error").text(required_fields[key]);
+        //             } else {
+        //                 console.log("2==========================")
+        //                 $("#" + key).css("border-color", "red");
+        //                 $("#" + key + "_Error").text(required_fields[key]);
+        //             }
+        //         } else {
+        //             $("#" + key).css("border-color", ""); // Reset to default
+        //             $("#" + key + "_Error").text(""); // Clear the error message
+        //         }
+        //     }
+        //     return isValid;
+        // }
+
+
+        // if (!validateForm(1)) {
+        //     stopNext = false
+        // } else {
+        //     let reg_name = $("#unique_reg_number").val()
+        //     stopNext = true
+        //     let form_fields = [
+        //         'beneficiary_name', 'beneficiary_code', 'beneficiary_acc_number', 'beneficiary_bank'
+        //     ]
+        //     let ajaxUrl = $("#ajax-url").data("url");
+        //     let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        //     var headers = {
+        //         "X-CSRFToken": csrfToken
+        //     };
+        //     var formData = new FormData();
+        //     formData.append('form_name', 'bankForm');
+        //     formData.append('unique_reg_number', reg_name);
+
+        //     let bankDetails = [];
+
+        //     for (var i = 1; i < id_beneficiary_name.length + 1; i++) {
+        //         // form_fields.forEach(function (field) {
+        //         // formData.append(field, $('#id_' + field + i).val());
+        //         console.log("number is===========", i)
+        //         bankDetails.push({
+        //             ["beneficiary_name"]: $('#id_beneficiary_name' + i).val(),
+        //             ["beneficiary_code"]: $('#id_beneficiary_code' + i).val(),
+        //             ["beneficiary_acc_number"]: $('#id_beneficiary_acc_number' + i).val(),
+        //             ["beneficiary_bank"]: $('#id_beneficiary_bank' + i).val(),
+        //             ["isPrimary"]: $('#id_isPrimary' + i).val(),
+        //         });
+        //         // });
+        //     }
+
+        //     let bankDataJson = JSON.stringify(bankDetails);
+        //     formData.append('bankDataJson', bankDataJson);
+        //     console.log("bank details========================", bankDataJson)
+
+        //     $.ajax({
+        //         url: ajaxUrl,
+        //         method: 'POST',
+        //         data: formData,
+        //         headers: headers,
+        //         processData: false,
+        //         contentType: false,
+        //         success: function (response) {
+        //             console.log("Success")
+        //             if (response.status) {
+        //                 alert(response.status)
+        //             }
+        //             toastr.success(response.message, "Bank Details Added!");
+        //             $("#bankForm")[0].reset();
+        //         },
+        //         error: function (xhr) {
+        //             alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+        //         }
+        //     });
+        // }
+
+
+        let isValid = true;
+        let required_fields = {}
+        let checkedPassed = false;
+        let bankData = [];
+        getAllBankDetails = {
+            'id_beneficiary_name': "Beneficiary name cannot be empty!",
+            'id_beneficiary_code': "Beneficiary code cannot be empty!",
+            'id_beneficiary_acc_number': "Beneficiary account no. cannot be empty!",
+            'id_beneficiary_bank': "Beneficiary bank cannot be empty!",
+            'id_isPrimary': "Pls select to make this primary!"
+        }
+
+        for (let key in getAllBankDetails) {
+            Array.from(document.querySelectorAll('[id^="' + key + '"]'))
+                .filter(element => !element.id.includes('_Error'))
+                .map(element => {
+                    required_fields[element.id] = getAllBankDetails[key]; // Use the corresponding message from get_nominee_detail
+                    return element;
+                });
+        }
+
+        let getCheckBoxValue = Array.from(document.querySelectorAll('[id^="id_isPrimary"]'))
+            .filter(element => !element.id.includes('_Error'))
+            .map(element => {
+                return element.checked;
+            });
+
+        if (getCheckBoxValue.some(value => value === true)) {
+            // console.log('At least one checkbox is checked.');
+            checkedPassed = true;
+        }
+
+        let trueCount = getCheckBoxValue.filter(item => item === true).length > 1;
+        console.log("TRUE====================", trueCount)
+        
+
+        function validateForm(step) {
+            for (let key in required_fields) {
+                let value = $("#" + key).val().trim();
+                if (value === "") {
+                    isValid = false;
+                    $("#" + key).css("border-color", "red");
+                    $("#" + key + "_Error").text(required_fields[key]);                    
+                }else if($("#" + key).is(":checkbox") && !checkedPassed){
+                    isValid = false;
+                    $("#" + key).css("border-color", "red");
+                    $("#" + key + "_Error").text(required_fields[key]); 
+                } else if (trueCount && $("#" + key).prop('checked')){
+                    isValid = false;
+                    console.log("CONDN FAILED")
+                    $("#" + key + "_Error").text("Select any one of them to make primary!");
+                } else {
+                    $("#" + key).css("border-color", ""); // Reset to default
+                    $("#" + key + "_Error").text(""); // Clear the error message
+                }
+            }
+            return isValid;
+        }
+
+        // console.log("REQ fields===", required_fields)
+
+        if (!validateForm()) {
+            stopNext = false
+            console.log("failed")
+        } else {
+            console.log("success")
+            // let reg_name = $("#unique_reg_number").val()
+            stopNext = true
+            const bank_form_count = Array.from(document.querySelectorAll('[id^="id_beneficiary_name"]'))
+                .filter(element => !element.id.endsWith('_Error')).length;
+
+            for (var i = 1; i < bank_form_count + 1; i++) {
+                console.log("number is===========", i)
+                bankData.push({
+                    ["beneficiary_name"]: $('#id_beneficiary_name' + i).val(),
+                    ["beneficiary_code"]: $('#id_beneficiary_code' + i).val(),
+                    ["beneficiary_acc_number"]: $('#id_beneficiary_acc_number' + i).val(),
+                    ["beneficiary_bank"]: $('#id_beneficiary_bank' + i).val(),
+                    ["is_primary"]: $("#id_isPrimary" + i).prop("checked")                    
+                });
+            }
+            let reg_name = $("#unique_reg_number").val()
+            console.log("REG NO====================================", reg_name)
+            let headers = {
+                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+            };
+            let formData = new FormData();
+            let bankDataJson = JSON.stringify(bankData);
+            formData.append('form_name', "bankForm");
+            formData.append('unique_reg_number', reg_name);
+            formData.append('bankDataJson', bankDataJson);
+
+            console.log("DATA+============", bankData)
+            $.ajax({
+                url: '/society-creation/',
+                method: 'POST',
+                data: formData,
+                headers: headers,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("Success");
+                    toastr.success(response.message, "Member Details Added!");
+                    // $("#bankForm")[0].reset();
                 },
                 error: function (xhr) {
                     alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
@@ -1436,17 +1646,148 @@ function addNominee() {
 
 let selectElement = document.getElementById("id_bank_loan_status");
 let toggleContent = document.getElementById("toggleChangeNoc");
+let fileField = document.getElementById("id_bank_loan_noc_file");
+let fileFieldError = document.getElementById("id_bank_loan_noc_file_Error");
 
-selectElement.addEventListener("change", function () {
-    let selectedValue = selectElement.value;
+if (selectElement) {
+    selectElement.addEventListener("change", function () {
+        let selectedValue = selectElement.value;
 
-    toggleContent.style.display = "none";
-    toggleContent.classList.remove("activeStatus");
-    if (selectedValue === "Active") {
-        // alert("call");
-        toggleContent.style.display = "block";
-        toggleContent.classList.add("activeStatus");
-    }
-});
+        toggleContent.style.display = "none";
+        fileField.style.borderColor = "";
+        fileFieldError.innerHTML = "";
+        toggleContent.classList.remove("activeStatus");
+        if (selectedValue === "Active") {
+            // alert("call");
+            toggleContent.style.display = "block";
+            toggleContent.classList.add("activeStatus");
+            fileField.style.borderColor = "";
+            fileFieldError.innerHTML = "";
+        }
+    });
+}
 
 // -------Toggle NOC in Home Loan Details Ends -------
+
+
+
+
+
+// -------Toggle Vehicle Parking Charges in Vehicle Details Starts -------
+var incVehChange = 1;
+function selectChange(idVal, idValInput, chargableAmount) {
+    // alert(idVal);
+    // alert(idValInput);
+    // alert(chargableAmount);
+    var selectElement = document.getElementById(idVal);
+    // var enableField = document.getElementById(idValInput);
+    // var addChargeDiv = document.getElementById("addCharge0");
+    // var enableField = document.getElementById('chargeAmnt0');
+    // console.log("enableField", enableField)
+
+    // alert("change")
+    if (selectElement.value === "option2") { // "option2" corresponds to "YES"
+        // addChargeDiv.style.display = "block";
+        // alert("true")
+        // enableField.disabled = false;
+        // $("#hidden_charge_amount").show();
+        // alert(idValInput);
+        // alert(chargableAmount);
+        if (!document.getElementById('new_' + chargableAmount)) {
+            var inputElement = $(`
+        <input type="text" class="w-100 sty-inp" id="new_${chargableAmount}" />
+        <label for="" class="sty-label">Charge Amount</label>       
+        <small id="Error_new_${chargableAmount}" class="error-message"></small>             
+        `);
+
+            // Append the input element to the container
+            $("#" + chargableAmount).append(inputElement);
+        }
+    } else {
+        // alert("false")
+        // addChargeDiv.style.display = "none";
+        // enableField.disabled = true;
+        $("#" + chargableAmount).empty();
+        // $("#hidden_charge_amount").hide();
+    }
+}
+
+
+// $("#id_select_vehicle_charge").change(function () {
+//     // Get the selected value
+//     var selectedValue = $(this).val();
+//     // alert(selectedValue);
+
+//     // Check if the selected value is "yes"
+//     if (selectedValue === "yes") {
+//         // alert("call")
+//         // Create an input element
+//         $("#hidden_charge_amount").show();
+//         var inputElement = $(`
+//         <input type="text" class="w-100 sty-inp" id="parkingLot0" />
+//         <label for="" class="sty-label">Parking Lot</label>                    
+//         `);
+
+//         // Append the input element to the container
+//         $("#chargeAmountInputContainer").append(inputElement);
+//     } else {
+//         // Remove the contents of the container if it exists
+//         $("#chargeAmountInputContainer").empty();
+//         $("#hidden_charge_amount").hide();
+//     }
+// });
+
+
+
+
+// -------Vehicle Addition Starts -------
+var incVehicle = 1;
+
+function addVehicle() {
+    const cloneVehicle = document.getElementById("cloneVehicle");
+    const clonedVehicle = cloneVehicle.cloneNode(true);
+
+    // Remove red border color from the cloned form
+    const formInputs = clonedVehicle.querySelectorAll("input, textarea, select");
+    formInputs.forEach(function (input) {
+        input.style.borderColor = ""; // Reset border color to default
+    });
+
+    // Remove error messages from the cloned form and update IDs
+    const errorMessages = clonedVehicle.querySelectorAll(".error-message");
+    errorMessages.forEach(function (errorMsg) {
+        let currentId = errorMsg.getAttribute("id");
+        if (currentId) {
+            let newId = currentId.replace(/(\d+)?_Error$/, incNominee + "_Error");
+            errorMsg.setAttribute("id", newId);
+            errorMsg.textContent = ""; // Clear error message text
+        }
+    });
+
+    const elementsToUpdate = clonedVehicle.querySelectorAll("input, textarea, select, small");
+    elementsToUpdate.forEach(function (element) {
+        let currentId = element.getAttribute("id");
+        if (currentId) {
+            let newId = currentId.replace(/\d+$/, incVehicle);
+            element.setAttribute("id", newId);
+
+            // Clear the value for input and textarea elements
+            if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                element.value = "";
+            }
+        }
+    });
+
+    // Update ID for the related div
+    const relatedDiv = clonedVehicle.querySelector("#vehicle_id_select_charge0");
+    if (relatedDiv) {
+        let newRelatedId = relatedDiv.getAttribute("id").replace(/\d+$/, incVehicle);
+        relatedDiv.setAttribute("id", newRelatedId);
+    }
+
+    incVehicle++;
+    clonedVehicle.id = "";
+
+    document.getElementById("newVehicle").appendChild(clonedVehicle);
+}
+

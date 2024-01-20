@@ -47,33 +47,20 @@ def society_creation(request):
             last_instance = SocietyCreation.objects.last()
             if last_instance:
                 reg_number = last_instance.registration_number
+                print("REG SOC===============", reg_number)
             return JsonResponse(({'reg_number': reg_number}))
 
         elif form_name == "bankForm":
             get_registration_number = request.POST.get("unique_reg_number")
-            # form_fields = [
-            #     'beneficiary_name', 'beneficiary_code', 'beneficiary_acc_number', 'beneficiary_bank'
-            # ]
-            # for field in form_fields:
-            #     society_creation_fields[field] = request.POST.get(field)
-
+            print("REG NO.", get_registration_number)
             soc_object = SocietyCreation.objects.get(registration_number=get_registration_number)
-            # SocietyBankCreation.objects.create(
-            #     society_creation = soc_object,
-            #     beneficiary_name = request.POST.get("beneficiary_name"),
-            #     beneficiary_code = request.POST.get("beneficiary_code"),
-            #     beneficiary_acc_number = request.POST.get("beneficiary_acc_number"),
-            #     beneficiary_bank = request.POST.get("beneficiary_bank")
-            # )
             bankDataJson = json.loads(request.POST.get("bankDataJson"))
             for data_dict in bankDataJson:
-                # print("DATA ==============", data_dict)
-                # if 'wing' in data_dict and 'flat' in data_dict:
-                    # Create an instance of the model and save it to the database
                 SocietyBankCreation.objects.create(
                     society_creation = soc_object,
                     **data_dict
                 )
+                
         elif form_name == "documentForm":
             get_registration_number = request.POST.get("unique_reg_number")
             jsonData = json.loads(request.POST.get('jsonData'))
@@ -156,9 +143,17 @@ def member_master(request):
             memberData = json.loads(request.POST.get("memberData"))
             nomineeData = json.loads(request.POST.get("nomineeData"))
             print(f"MEMBER DATA: {memberData} \n, NOMINEE: {nomineeData}")
+
         if form_name == "shared_form" and shares_json:
             shares_json_deserialized = json.loads(shares_json)
+            noc_file = request.FILES.get("id_bank_loan_noc_file")
             print("SHARES========", shares_json_deserialized)
+            print("SHARES========", noc_file)
+        
+        if form_name == "gst_details":
+            print()
+    
+
 
 
         # validate_ownership = json.loads(request.POST.get("validate_ownership"))
