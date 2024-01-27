@@ -173,6 +173,44 @@ p {
     content: "\f009"
 }
 
+
+/* MEMBER DETAILS LIST STYLE */
+#progressbar #member:before {
+    font-family: FontAwesome;
+    content: "\f500"
+}
+
+#progressbar #shares:before {
+    font-family: FontAwesome;
+    content: "\e529"
+}
+
+#progressbar #homeLoan:before {
+    font-family: FontAwesome;
+    content: "\f752"
+}
+
+#progressbar #gst:before {
+    font-family: FontAwesome;
+    content: "\f81d"
+}
+
+#progressbar #vehicle:before {
+    font-family: FontAwesome;
+    content: "\f1b9"
+}
+
+/ ------Income / Expense Creation------ /
+#progressbar #income:before {
+    font-family: FontAwesome;
+    content: "\f53d"
+}
+
+#progressbar #expense:before {
+    font-family: FontAwesome;
+    content: "\e528"
+}
+
 #progressbar li:before {
     width: 50px;
     height: 50px;
@@ -365,4 +403,291 @@ p {
 
 .hidden-charge-amount {
     display: none;
+}
+
+
+
+/* MEMBER TABLE STYLE */
+
+.modal-body .abs {
+    position: sticky !important;
+    /* width: 100%; */
+    top: 0;
+    background: #fff;
+
+}
+    th, td { white-space: nowrap; }
+/* div.dataTables_wrapper {
+    width: 800px;
+    margin: 0 auto;
+} */
+/* Custom styles to fix double appearance issue */
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_paginate {
+margin-top: 0; /* Adjust as needed */
+}
+
+/* Custom style to adjust spacing between controls and the table */
+.custom-controls {
+margin-bottom: 10px; /* Adjust as needed */
+}
+
+.dt-buttons {
+float: right;
+/* padding: 0px 10px; */
+}
+.dt-table th,
+.dt-table td {
+white-space: nowrap;
+}
+
+
+
+.dataTables_filter {
+float: right;
+margin: 5px 2px 10px;
+}
+
+/* Custom styles for DataTables row height */
+table.dataTable tbody th,
+table.dataTable tbody td {
+height: 20px; /* Adjust the value as needed */
+}
+
+/* Custom styles for the DataTable thead */
+
+/* Custom styles for the DataTable */
+
+/* Style the background color of the entire table */
+table {
+/* background-color: #f9f9f9; */
+border-collapse: collapse;
+width: 100%;
+font-family: 'Calibri', sans-serif;
+}
+
+/* Style the header background */
+/* thead {
+/* background-color: #000080; */
+/* color: #fff; */
+/* } */
+
+/* Style the header cells */
+thead th {
+padding: 10px;
+text-align: left;
+font-weight: bold;
+}
+
+/* Style the odd and even rows differently for better readability */
+/* tbody tr:nth-child(odd) {
+background-color: #fff !important;
+}
+tbody tr:nth-child(even) {
+background-color: #fff !important;
+} */
+
+/* Hover effect on table rows */
+tbody tr:hover {
+background-color: #fff;
+}
+
+/* Style the cell borders */
+td, th {
+/* border: 1px solid #ddd; */
+/* padding: 10px; */
+}
+
+/* Style the sorting icons */
+thead .sorting,
+thead .sorting_asc,
+thead .sorting_desc {
+/* background-color: #6ebbff; */
+/* color: #fff; */
+}
+
+/* Style the sorting icons on hover */
+thead .sorting:hover,
+thead .sorting_asc:hover,
+thead .sorting_desc:hover {
+/* background-color: #2b96f1; */
+}
+
+/* Custom styles for the first and second columns */
+thead th:nth-child(1),
+thead th:nth-child(2) {
+/* background-color: #2b96f1 !important; */
+/* color: #fff; */
+position: sticky;
+left: 0;
+z-index: 2;
+}
+
+/* Custom styles for DataTable buttons */
+.dt-button {
+background-color: #6ebbff !important;
+color: #fff !important;
+border: none !important;
+/* padding: 10px 15px !important; */
+border-radius: 5px !important;
+cursor: pointer ;
+margin-right: 5px;
+}
+.dt-button:hover{
+background-color: #2b96f1 !important;
+}
+
+.dt-button-collection {
+background: #6ebbff !important;
+}
+
+.dataTables_info {
+font-family: 'Calibri', sans-serif;
+margin-top: 10px;
+}
+.dataTables_length {
+font-family: 'Calibri', sans-serif;
+padding-right: 5px;
+}
+
+
+.dataTables_filter input {
+border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+padding: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Pleasant box shadow */
+transition: box-shadow 0.3s ease;
+}
+.dataTables_filter input:hover {
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Adjusted box shadow on hover */
+}
+
+.dataTables_length select {
+border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+padding: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Pleasant box shadow */
+transition: box-shadow 0.3s ease;
+}
+.dataTables_length select:hover {
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Adjusted box shadow on hover */
+}
+
+
+
+/* Hover effect on buttons */
+.dt-button:hover {
+background-color:#2b96f1;
+}
+
+/* Adjust styles for the search input */
+.dataTables_filter input {
+border: 1px solid #ddd;
+padding: 8px;
+}
+.dataTables_filter label {
+/* border: 1px solid #ddd; */
+/* padding: 8px; */
+text-transform: uppercase;
+font-weight: bold;
+color: #555;
+font-family: 'Calibri', sans-serif !important;
+}
+
+/* Add a subtle shadow to the table */
+table {
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* background-color: #fff !important; */
+}
+
+
+/* ---------------------------------------------------------------------- */
+
+/* Custom styles for DataTable pagination */
+
+/* Style the pagination container */
+.dataTables_paginate {
+margin-top: 10px !important;
+color: #fff !important;
+}
+
+/* Style the individual pagination buttons */
+.dataTables_paginate .paginate_button {
+background-color: #6ebbff !important;
+color: #fff !important;
+font-weight: bold;
+font-family: 'Calibri', sans-serif;
+border: none !important;
+/* padding: 10px 15px !important; */
+border-radius: 5px !important;
+cursor: pointer;
+margin: 0 5px;
+}
+
+/* .paginate_button.next.disabled{
+color: #fff !important;
+} */
+
+/* Hover effect on pagination buttons */
+
+
+/* Style the active page button */
+.dataTables_paginate .paginate_button.current {
+background-color: #2b96f1 !important;
+transform: scale(1.1);
+}
+
+
+/* Disable the "Previous" and "Next" buttons on hover */
+.dataTables_paginate .paginate_button.disabled:hover {
+background-color: #007BFF !important;
+color: #fff !important;
+cursor: not-allowed !important;
+}
+
+/* Add a subtle shadow to the pagination container */
+.dataTables_paginate {
+/* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; */
+}
+
+
+
+/* Custom styles for the DataTable */
+
+/* ... (existing styles) ... */
+
+/* Remove default sorting icons */
+thead .sorting,
+thead .sorting_asc,
+thead .sorting_desc {
+background: none;
+}
+
+/* Style the Font Awesome sorting icons */
+thead .sorting::before,
+thead .sorting_asc::before,
+thead .sorting_desc::before {
+font-family: 'Font Awesome 6 Free'; /* Check the correct font family name for Font Awesome 6 */
+font-weight: 900;
+content: '\f0dc'; /* Unicode for the FontAwesome sort icon */
+margin-right: 5px;
+}
+
+/* Change the icon for ascending order */
+thead .sorting_asc::before {
+content: '\f0de'; /* Unicode for the FontAwesome sort-up icon */
+}
+
+/* Change the icon for descending order */
+thead .sorting_desc::before {
+content: '\f0dd'; /* Unicode for the FontAwesome sort-down icon */
+}
+
+table.dt-table tbody th,
+table.dt-table tbody td {
+background-color: #fff !important; /* Set the background color to white */
+}
+
+
+/* Table related stuff */
+.abs{
+    z-index: 100;
 }

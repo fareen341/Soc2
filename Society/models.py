@@ -63,3 +63,92 @@ class SocietyUnitFlatCreation(models.Model):
     society_creation = models.ForeignKey(SocietyCreation, on_delete=models.CASCADE)
     unit = models.CharField(max_length=100, null=True, blank=True)
     flat = models.CharField(max_length=300, null=True, blank=True)
+    unit_flat_unique = models.CharField(max_length=100, null=True, blank=True)
+
+
+class MemberMasterCreation(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE, verbose_name="Flat No.")
+    member_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Name")
+    ownership_percent = models.IntegerField(null=True, blank=True, verbose_name="Ownership %")
+    member_position = models.CharField(max_length=200, null=True, blank=True, verbose_name="Position") 
+    member_dob = models.DateField(null=True, blank=True, verbose_name="DOB")
+    member_pan_no = models.CharField(max_length=200, null=True, blank=True, verbose_name="PAN No.")
+    member_aadhar_no = models.CharField(max_length=200, null=True, blank=True, verbose_name="Aadhar No.")
+    member_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Address") 
+    member_state = models.CharField(max_length=200, null=True, blank=True, verbose_name="State")
+    member_pin_code = models.CharField(max_length=200, null=True, blank=True, verbose_name="Pin Code")
+    member_email = models.EmailField(null=True, blank=True, verbose_name="Email")
+    member_contact = models.CharField(max_length=200, null=True, blank=True, verbose_name="Contact No.")
+    member_emergency_contact = models.CharField(max_length=200, null=True, blank=True, verbose_name="Emerg. Contact No.")
+    member_occupation = models.CharField(max_length=200, null=True, blank=True, verbose_name="Occupation")
+    member_is_primary = models.BooleanField(default = False, null=True, blank=True, verbose_name="Primary")
+
+    def __str__(self):
+        return self.member_name
+
+
+class MemberNomineeCreation(models.Model):
+    member_name = models.ForeignKey(MemberMasterCreation, on_delete=models.CASCADE)
+    nominee_name = models.CharField(max_length=300, null=True, blank=True)
+    date_of_nomination = models.DateField(null=True, blank=True)
+    relation_with_nominee = models.CharField(max_length=300, null=True, blank=True) 
+    nominee_sharein_percent = models.IntegerField(null=True, blank=True)
+    nominee_dob = models.DateField(null=True, blank=True)
+    nominee_aadhar_no = models.CharField(max_length=300, null=True, blank=True)
+    nominee_pan_no = models.CharField(max_length=300, null=True, blank=True)
+    nominee_email = models.EmailField(null=True, blank=True)
+    nominee_address = models.CharField(max_length=300, null=True, blank=True)
+    nominee_state = models.CharField(max_length=300, null=True, blank=True)
+    nominee_pin_code = models.CharField(max_length=300, null=True, blank=True)
+    nominee_contact = models.CharField(max_length=300, null=True, blank=True)
+    nominee_emergency_contact = models.CharField(max_length=300, null=True, blank=True) 
+
+class FlatSharesDetails(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    folio_number = models.CharField(max_length=300, null=True, blank=True)
+    shares_date = models.DateField(null=True, blank=True)
+    application_number = models.CharField(max_length=300, null=True, blank=True)
+    shares_certificate = models.CharField(max_length=300, null=True, blank=True)
+    allotment_number = models.CharField(max_length=300, null=True, blank=True)
+    shares_from = models.CharField(max_length=300, null=True, blank=True)
+    shares_to = models.CharField(max_length=300, null=True, blank=True)
+    shares_transfer_date = models.DateField(null=True, blank=True)
+    total_amount_received = models.IntegerField(null=True, blank=True)
+    total_amount_date = models.DateField(null=True, blank=True)
+    transfer_from_folio_no = models.CharField(max_length=300, null=True, blank=True)
+    transfer_to_folio_no = models.CharField(max_length=300, null=True, blank=True)
+
+
+
+class FlatHomeLoanDetails(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    bank_loan_name = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_object = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_date = models.DateField(null=True, blank=True)
+    bank_loan_value = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_acc_no = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_installment = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_status = models.BooleanField(null=True, blank=True, default=False)
+    bank_loan_remark = models.CharField(max_length=300, null=True, blank=True)
+    bank_noc_file = models.FileField(upload_to='files/', null=True, blank=True)
+
+
+class FlatGSTDetails(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    gst_number = models.CharField(max_length=300, null=True, blank=True)
+    gst_state = models.CharField(max_length=300, null=True, blank=True) 
+    gst_billing_name = models.CharField(max_length=300, null=True, blank=True) 
+    gst_billing_address = models.CharField(max_length=300, null=True, blank=True)
+    gst_contact_no = models.CharField(max_length=300, null=True, blank=True) 
+
+
+class FlatVehicleDetails(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    parking_lot = models.CharField(max_length=300, null=True, blank=True) 
+    vehicle_type = models.CharField(max_length=300, null=True, blank=True) 
+    vehicle_number = models.CharField(max_length=300, null=True, blank=True) 
+    vehicle_brand = models.CharField(max_length=300, null=True, blank=True) 
+    rc_copy = models.FileField(upload_to='files/', null=True, blank=True)
+    sticker_number = models.CharField(max_length=300, null=True, blank=True) 
+    select_charge = models.CharField(max_length=300, null=True, blank=True) 
+    new_vehicle_id_select_charge = models.CharField(max_length=300, null=True, blank=True) 

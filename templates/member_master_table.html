@@ -1,0 +1,1421 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} <title>Society Management | Member-Master-Creation</title> {% endblock title %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="member-title mt-4 d-flex" style="justify-content: space-between;">
+        <h3 class="lead" style="font-size: 27px;">Member Details</h3>
+        <div class="gap-4">
+            <a href="{% url 'member_master' %}" class="btn me-3" style="background-color: #6ebbff; color:white;">
+                <!-- Create member -->
+                <i class="fa-solid fa-square-plus fa-xl"></i>
+            </a>
+            <a href="" class="btn" style="background-color: #6ebbff; color:white;">
+                <!-- create member -->
+                <i class="fa-solid fa-file-import fa-xl"></i>
+            </a>
+        </div>
+    </div>
+    <p>{{flat_id}}====================</p>
+    <div class="mt-4">
+        <table id="example" class="display dt-table order-column" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="exclude-print">Actions</th>
+                    {% for item in member_data_label %}
+                    {% if item == "ID" %}
+                    <th hidden>{{ item }}============</th>
+                    {% else %}
+                    <th>{{ item }}</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in member_details %}
+                <tr>
+                    <td class="d-flex" style="justify-content: space-evenly;">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            onclick="updateMemberDetails(`{{item.wing_flat__id}}`)"><i
+                                class="fa-solid fa-eye"></i></button>
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModalEdit"
+                            onclick="editMemberDetails(`{{item.wing_flat__id}}`)"><i
+                                class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                    <td hidden></td>
+                    <td>{{ item.wing_flat__unit_flat_unique }}</td>
+                    <td>{{ item.member_name }}</td>
+
+                    {% if item.ownership_percent < 100 %} <td><span
+                            style="background-color: #c32525; color: white; font-size: 10px; padding: 4px 6px; border-radius: 6px;">{{
+                            item.ownership_percent }}</span></td>
+                        {% else %}
+                        <td><span
+                                style="background-color: green; color: white; font-size: 10px; padding: 3px; border-radius: 6px;">{{
+                                item.ownership_percent }}</span></td>
+                        {% endif %}
+                        <td>{{ item.member_position }}</td>
+                        <td>{{ item.member_dob }}</td>
+                        <td>{{ item.member_pan_no }}</td>
+                        <td>{{ item.member_aadhar_no }}</td>
+                        <td>{{ item.member_address|slice:"20" }}...</td>
+                        <td>{{ item.member_state }}</td>
+                        <td>{{ item.member_pin_code }}</td>
+                        <td>{{ item.member_email }}</td>
+                        <td>{{ item.member_contact }}</td>
+                        <td>{{ item.member_emergency_contact }}</td>
+                        <td>{{ item.member_occupation }}</td>
+                        {% if item.member_is_primary %}
+                        <td>
+                            <p class="view-inps"><i class="fa-solid fa-check" style="color: green;"></i></p>
+                        </td>
+                        {% else %}
+                        <td>
+                            <p class="view-inps"><i class="fa-solid fa-xmark" style="color: red;"></i></p>
+                        </td>
+                        {% endif %}
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <!-- -------------------Modal------------------ -->
+    <!-- Button trigger modal -->
+    <!-- <button type="button" class="btn btn-primary" >
+        Launch demo modal
+    </button> -->
+
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="exampleModalLabel">
+                        Details of Flat No. A-1103</h1>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
+                    <div class="abs">
+                        <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item " role="presentation">
+                                <button class="nav-link abc active" id="member-tab" data-bs-toggle="tab"
+                                    data-bs-target="#member-tab-pane" type="button" role="tab"
+                                    aria-controls="member-tab-pane" aria-selected="true">Members Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="shares-tab" data-bs-toggle="tab"
+                                    data-bs-target="#shares-tab-pane" type="button" role="tab"
+                                    aria-controls="shares-tab-pane" aria-selected="false">Shares Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="loan-tab" data-bs-toggle="tab"
+                                    data-bs-target="#loan-tab-pane" type="button" role="tab"
+                                    aria-controls="loan-tab-pane" aria-selected="false">Home Loan Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="gst-tab" data-bs-toggle="tab"
+                                    data-bs-target="#gst-tab-pane" type="button" role="tab" aria-controls="gst-tab-pane"
+                                    aria-selected="false">GST Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="vehicle-tab" data-bs-toggle="tab"
+                                    data-bs-target="#vehicle-tab-pane" type="button" role="tab"
+                                    aria-controls="vehicle-tab-pane" aria-selected="false">Vehicle Details</button>
+                            </li>
+                            <!-- <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+                        </li> -->
+                        </ul>
+                    </div>
+                    <!-- </div> -->
+                    <!-- <div class="container-fluid"> -->
+                    <div class="tab-content w-100" id="myTabContent">
+                        <div class="tab-pane fade show active" id="member-tab-pane" role="tabpanel"
+                            aria-labelledby="member-tab" tabindex="0">
+                            <div class="accordion" id="accordionExample">
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="shares-tab-pane" role="tabpanel" aria-labelledby="shares-tab"
+                            tabindex="0">
+                            <div class="container-fluid">
+                                <div class="row mt-3" id="sharedContent">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane fade" id="loan-tab-pane" role="tabpanel" aria-labelledby="loan-tab"
+                            tabindex="0">
+                            <div class="container-fluid">
+                                <div class="row mt-3" id="homeLoanContent">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="gst-tab-pane" role="tabpanel" aria-labelledby="gst-tab"
+                            tabindex="0">
+                            <div class="container-fluid">
+                                <div class="row mt-3" id="gstContent">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="vehicle-tab-pane" role="tabpanel" aria-labelledby="vehicle-tab"
+                            tabindex="0">
+                            <div class="container-fluid">
+                                <div class="row mt-3" id="vehicleContent">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+       <!-- ------Edit Modal--------- -->
+       <div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="exampleModalLabel">Edit
+                        Flat No. A-1103</h1>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
+                    <div class="abs" style="z-index: 100;">
+                        <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item " role="presentation">
+                                <button class="nav-link abc active" id="member-edit-tab" data-bs-toggle="tab"
+                                    data-bs-target="#member-edit-tab-pane" type="button" role="tab"
+                                    aria-controls="member-edit-tab-pane" aria-selected="true">Members Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="shares-edit-tab" data-bs-toggle="tab"
+                                    data-bs-target="#shares-edit-tab-pane" type="button" role="tab"
+                                    aria-controls="shares-edit-tab-pane" aria-selected="false">Shares Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="loan-edit-tab" data-bs-toggle="tab"
+                                    data-bs-target="#loan-edit-tab-pane" type="button" role="tab"
+                                    aria-controls="loan-edit-tab-pane" aria-selected="false">Home Loan Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="gst-edit-tab" data-bs-toggle="tab"
+                                    data-bs-target="#gst-edit-tab-pane" type="button" role="tab"
+                                    aria-controls="gst-edit-tab-pane" aria-selected="false">GST Details</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link abc" id="vehicle-edit-tab" data-bs-toggle="tab"
+                                    data-bs-target="#vehicle-edit-tab-pane" type="button" role="tab"
+                                    aria-controls="vehicle-edit-tab-pane" aria-selected="false">Vehicle Details</button>
+                            </li>
+                            <!-- <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+                    </li> -->
+                        </ul>
+                    </div>
+                    <!-- </div> -->
+                    <!-- <div class="container-fluid"> -->
+                    <div class="tab-content w-100" id="myTabContent">
+                        <div class="tab-pane fade show active" id="member-edit-tab-pane" role="tabpanel"
+                            aria-labelledby="member-edit-tab" tabindex="0">
+                            <div class="accordion" id="memberEditForm">
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="tab-pane fade" id="shares-edit-tab-pane" role="tabpanel"
+                            aria-labelledby="shares-edit-tab" tabindex="0">
+                            <div class="container-fluid" id="sharedmemberEditForm">
+                                
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="loan-edit-tab-pane" role="tabpanel"
+                            aria-labelledby="loan-edit-tab" tabindex="0">
+                            <div class="container-fluid" id="homeloanEditForm">
+                                
+                            </div>
+
+
+
+                        </div>
+                        <div class="tab-pane fade" id="gst-edit-tab-pane" role="tabpanel" aria-labelledby="gst-edit-tab"
+                            tabindex="0">
+                            <div class="container-fluid" id="gstEditform">
+                                
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="vehicle-edit-tab-pane" role="tabpanel"
+                            aria-labelledby="vehicle-edit-tab" tabindex="0">
+                            <div class="container-fluid" id="vehicleEditForm">
+                            </div>
+
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                    <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+     
+
+   
+    {% endblock body %}
+
+
+
+
+
+
+
+
+
+
+       <!-- ------Edit Modal--------- -->
+   <div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="exampleModalLabel">Edit
+                    Flat No. A-1103</h1>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
+                <div class="abs" style="z-index: 100;">
+                    <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item " role="presentation">
+                            <button class="nav-link abc active" id="member-edit-tab" data-bs-toggle="tab"
+                                data-bs-target="#member-edit-tab-pane" type="button" role="tab"
+                                aria-controls="member-edit-tab-pane" aria-selected="true">Members Details</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link abc" id="shares-edit-tab" data-bs-toggle="tab"
+                                data-bs-target="#shares-edit-tab-pane" type="button" role="tab"
+                                aria-controls="shares-edit-tab-pane" aria-selected="false">Shares Details</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link abc" id="loan-edit-tab" data-bs-toggle="tab"
+                                data-bs-target="#loan-edit-tab-pane" type="button" role="tab"
+                                aria-controls="loan-edit-tab-pane" aria-selected="false">Home Loan Details</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link abc" id="gst-edit-tab" data-bs-toggle="tab"
+                                data-bs-target="#gst-edit-tab-pane" type="button" role="tab"
+                                aria-controls="gst-edit-tab-pane" aria-selected="false">GST Details</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link abc" id="vehicle-edit-tab" data-bs-toggle="tab"
+                                data-bs-target="#vehicle-edit-tab-pane" type="button" role="tab"
+                                aria-controls="vehicle-edit-tab-pane" aria-selected="false">Vehicle Details</button>
+                        </li>
+                        <!-- <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+                </li> -->
+                    </ul>
+                </div>
+                <!-- </div> -->
+                <!-- <div class="container-fluid"> -->
+                <div class="tab-content w-100" id="myTabContent">
+                    <div class="tab-pane fade show active" id="member-edit-tab-pane" role="tabpanel"
+                        aria-labelledby="member-edit-tab" tabindex="0">
+                        <div class="accordion mb-3" id="member-edit-accordian">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button id="heading" class="accordion-button" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                                        aria-controls="collapseOne">
+                                        Sameer Nasir Shaikh
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show"
+                                    data-bs-parent="#member-edit-accordian">
+                                    <div class="accordion-body">
+                                        <form action="">
+                                            <div class="row mt-3 ps-4 pe-4" style="text-align: left">
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <!-- <input type="text" class="w-100 sty-inp "> -->
+                                                        <select name="" id="" class="w-100 form-control sty-inp">
+                                                            <option value="#">
+                                                                Select your Wing & Flat No.
+                                                            </option>
+                                                            <option value="#">A-Wing(101)</option>
+                                                            <option value="#">B-Wing(201)</option>
+                                                            <option value="#">C-Wing(301)</option>
+                                                        </select>
+                                                        <label for="" class="sty-label">Wing & Flat No.</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member's Name</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp percentage-input" />
+                                                        <label for="" class="sty-label">Ownership %</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <select name="" class="w-100 sty-inp form-control" id="">
+                                                            <option value="#">Select Position</option>
+                                                            <option value="associate-member">
+                                                                Associate Member
+                                                            </option>
+                                                            <option value="chairman">Chairman</option>
+                                                            <option value="secretary">Secretary</option>
+                                                            <option value="treasurer">Treasurer</option>
+                                                        </select>
+                                                        <label for="" class="sty-label">Position</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="date" class="w-100 sty-inp form-control" />
+                                                        <label for="" class="sty-label">Member DOB</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member PAN No</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member Aadhaar No</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <textarea class="w-100 sty-inp form-control" name="" id=""
+                                                            cols="30" rows="1"></textarea>
+                                                        <label for="" class="sty-label">Member Permanent
+                                                            Address</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <select class="w-100 sty-inp form-control" name="" id="">
+                                                            <option value="#">Select your State</option>
+                                                            <option value="Andhra Pradesh">
+                                                                Andhra Pradesh
+                                                            </option>
+                                                            <option value="Arunachal Pradesh">
+                                                                Arunachal Pradesh
+                                                            </option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">
+                                                                Himachal Pradesh
+                                                            </option>
+                                                            <option value="Jammu and Kashmir">
+                                                                Jammu and Kashmir
+                                                            </option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">
+                                                                Madhya Pradesh
+                                                            </option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">
+                                                                Uttar Pradesh
+                                                            </option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                            <option value="Andaman and Nicobar ">
+                                                                Andaman and Nicobar
+                                                            </option>
+                                                            <option value="Islands">Islands</option>
+                                                            <option value="Dadra and Nagar Haveli">
+                                                                Dadra and Nagar Haveli
+                                                            </option>
+                                                            <option value="Daman and Diu">
+                                                                Daman and Diu
+                                                            </option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Ladakh">Ladakh</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
+                                                        </select>
+                                                        <label for="" class="sty-label">State</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Pin Code</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="email" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member Email</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp form-control" />
+                                                        <label for="" class="sty-label">Member Contact No.</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Emergency Contact
+                                                            No.</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Occupation</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- ------------Nominee Details------------ -->
+                                            <h2 id="heading" class="mb-3 text-center">Nominee Details</h2>
+                                            <div id="newNominee">
+                                                <div class="row ps-4 pe-4 abcd" id="cloneNominee">
+                                                    <!-- <center>h3</center> -->
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp"
+                                                                id="nomName0" />
+                                                            <label for="" class="sty-label">Nominee Name</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp form-control"
+                                                                id="nomDate0" />
+                                                            <label for="" class="sty-label">Date of
+                                                                Nomination</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp form-control" type="text"
+                                                                name="" id="nomRelation0" />
+                                                            <label for="" class="sty-label">Relation with
+                                                                Nominator</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text"
+                                                                class="w-100 sty-inp form-control percentage-input"
+                                                                id="nomShares0" />
+                                                            <label for="" class="sty-label">Nominee Sharein
+                                                                %</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" id="nomDOB0" />
+                                                            <label for="" class="sty-label">Nominee DOB</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp"
+                                                                id="nomAadhaar0" />
+                                                            <label for="" class="sty-label">Nominee Aadhaar
+                                                                No</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" id="nomPan0" />
+                                                            <label for="" class="sty-label">Nominee PAN No</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="email" class="w-100 sty-inp"
+                                                                id="nomeEmail0" />
+                                                            <label for="" class="sty-label">Nominee Email</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <textarea class="w-100 sty-inp form-control" name=""
+                                                                id="nomAddress0" cols="30" rows="1"></textarea>
+                                                            <label for="" class="sty-label">Nominee Permanent
+                                                                Address</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select class="w-100 sty-inp form-control" name=""
+                                                                id="nomState0">
+                                                                <option value="#">Select your State</option>
+                                                                <option value="Andhra Pradesh">
+                                                                    Andhra Pradesh
+                                                                </option>
+                                                                <option value="Arunachal Pradesh">
+                                                                    Arunachal Pradesh
+                                                                </option>
+                                                                <option value="Assam">Assam</option>
+                                                                <option value="Bihar">Bihar</option>
+                                                                <option value="Chhattisgarh">
+                                                                    Chhattisgarh
+                                                                </option>
+                                                                <option value="Goa">Goa</option>
+                                                                <option value="Gujarat">Gujarat</option>
+                                                                <option value="Haryana">Haryana</option>
+                                                                <option value="Himachal Pradesh">
+                                                                    Himachal Pradesh
+                                                                </option>
+                                                                <option value="Jammu and Kashmir">
+                                                                    Jammu and Kashmir
+                                                                </option>
+                                                                <option value="Jharkhand">Jharkhand</option>
+                                                                <option value="Karnataka">Karnataka</option>
+                                                                <option value="Kerala">Kerala</option>
+                                                                <option value="Madhya Pradesh">
+                                                                    Madhya Pradesh
+                                                                </option>
+                                                                <option value="Maharashtra">Maharashtra</option>
+                                                                <option value="Manipur">Manipur</option>
+                                                                <option value="Meghalaya">Meghalaya</option>
+                                                                <option value="Mizoram">Mizoram</option>
+                                                                <option value="Nagaland">Nagaland</option>
+                                                                <option value="Odisha">Odisha</option>
+                                                                <option value="Punjab">Punjab</option>
+                                                                <option value="Rajasthan">Rajasthan</option>
+                                                                <option value="Sikkim">Sikkim</option>
+                                                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                                                <option value="Telangana">Telangana</option>
+                                                                <option value="Tripura">Tripura</option>
+                                                                <option value="Uttar Pradesh">
+                                                                    Uttar Pradesh
+                                                                </option>
+                                                                <option value="Uttarakhand">Uttarakhand</option>
+                                                                <option value="West Bengal">West Bengal</option>
+                                                                <option value="Andaman and Nicobar ">
+                                                                    Andaman and Nicobar
+                                                                </option>
+                                                                <option value="Islands">Islands</option>
+                                                                <option value="Dadra and Nagar Haveli">
+                                                                    Dadra and Nagar Haveli
+                                                                </option>
+                                                                <option value="Daman and Diu">
+                                                                    Daman and Diu
+                                                                </option>
+                                                                <option value="Delhi">Delhi</option>
+                                                                <option value="Ladakh">Ladakh</option>
+                                                                <option value="Lakshadweep">Lakshadweep</option>
+                                                                <option value="Puducherry">Puducherry</option>
+                                                            </select>
+                                                            <label for="" class="sty-label">State</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp"
+                                                                id="nomPin0" />
+                                                            <label for="" class="sty-label">Pin Code</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp form-control"
+                                                                id="nomContact0" />
+                                                            <label for="" class="sty-label">Nominee Contact
+                                                                No.</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp"
+                                                                id="nomEmerContact0" />
+                                                            <label for="" class="sty-label">Emergency Contact
+                                                                No.</label>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4"
+                                                style="justify-content: space-between;">
+                                                <button type="button" name="" class="btn btn-primary" id=""
+                                                    onclick="addNominee()"> Add Nominee
+                                                </button>
+                                                <div class="two-btn">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button id="heading" class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                        aria-expanded="false" aria-controls="collapseTwo">
+                                        Fareen Ansari
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse"
+                                    data-bs-parent="#member-edit-accordian">
+                                    <div class="accordion-body">
+                                        <form action="">
+                                            <div class="row mt-3 ps-4 pe-4" style="text-align: left">
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <!-- <input type="text" class="w-100 sty-inp "> -->
+                                                        <select name="" id="" class="w-100 form-control sty-inp">
+                                                            <option value="#">
+                                                                Select your Wing & Flat No.
+                                                            </option>
+                                                            <option value="#">A-Wing(101)</option>
+                                                            <option value="#">B-Wing(201)</option>
+                                                            <option value="#">C-Wing(301)</option>
+                                                        </select>
+                                                        <label for="" class="sty-label">Wing & Flat No.</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member's Name</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp percentage-input" />
+                                                        <label for="" class="sty-label">Ownership %</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <select name="" class="w-100 sty-inp form-control" id="">
+                                                            <option value="#">Select Position</option>
+                                                            <option value="associate-member">
+                                                                Associate Member
+                                                            </option>
+                                                            <option value="chairman">Chairman</option>
+                                                            <option value="secretary">Secretary</option>
+                                                            <option value="treasurer">Treasurer</option>
+                                                        </select>
+                                                        <label for="" class="sty-label">Position</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="date" class="w-100 sty-inp form-control" />
+                                                        <label for="" class="sty-label">Member DOB</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member PAN No</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member Aadhaar No</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <textarea class="w-100 sty-inp form-control" name="" id=""
+                                                            cols="30" rows="1"></textarea>
+                                                        <label for="" class="sty-label">Member Permanent
+                                                            Address</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <select class="w-100 sty-inp form-control" name="" id="">
+                                                            <option value="#">Select your State</option>
+                                                            <option value="Andhra Pradesh">
+                                                                Andhra Pradesh
+                                                            </option>
+                                                            <option value="Arunachal Pradesh">
+                                                                Arunachal Pradesh
+                                                            </option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">
+                                                                Himachal Pradesh
+                                                            </option>
+                                                            <option value="Jammu and Kashmir">
+                                                                Jammu and Kashmir
+                                                            </option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">
+                                                                Madhya Pradesh
+                                                            </option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">
+                                                                Uttar Pradesh
+                                                            </option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                            <option value="Andaman and Nicobar ">
+                                                                Andaman and Nicobar
+                                                            </option>
+                                                            <option value="Islands">Islands</option>
+                                                            <option value="Dadra and Nagar Haveli">
+                                                                Dadra and Nagar Haveli
+                                                            </option>
+                                                            <option value="Daman and Diu">
+                                                                Daman and Diu
+                                                            </option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Ladakh">Ladakh</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
+                                                        </select>
+                                                        <label for="" class="sty-label">State</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Pin Code</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="email" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Member Email</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp form-control" />
+                                                        <label for="" class="sty-label">Member Contact No.</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Emergency Contact
+                                                            No.</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" />
+                                                        <label for="" class="sty-label">Occupation</label>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-lg-4 d-flex align-items-center">
+                <small style="color: #2b96f1"
+                    ><span
+                    ><input type="checkbox" class="sty-inp" /></span
+                    >&nbsp;Make this Member as a Primary Member</small
+                >
+                </div> -->
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- ------------Nominee Details------------ -->
+                                            <h2 id="heading" class="mb-3 text-center">Nominee Details</h2>
+                                            <div id="newNominee2">
+                                                <div class="row ps-4 pe-4 abcd" id="cloneNominee2">
+                                                    <!-- <center>h3</center> -->
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp"
+                                                                id="nomName0" />
+                                                            <label for="" class="sty-label">Nominee Name</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp form-control"
+                                                                id="nomDate0" />
+                                                            <label for="" class="sty-label">Date of
+                                                                Nomination</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp form-control" type="text"
+                                                                name="" id="nomRelation0" />
+                                                            <label for="" class="sty-label">Relation with
+                                                                Nominator</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text"
+                                                                class="w-100 sty-inp form-control percentage-input"
+                                                                id="nomShares0" />
+                                                            <label for="" class="sty-label">Nominee Sharein
+                                                                %</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" id="nomDOB0" />
+                                                            <label for="" class="sty-label">Nominee DOB</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp"
+                                                                id="nomAadhaar0" />
+                                                            <label for="" class="sty-label">Nominee Aadhaar
+                                                                No</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" id="nomPan0" />
+                                                            <label for="" class="sty-label">Nominee PAN No</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="email" class="w-100 sty-inp"
+                                                                id="nomeEmail0" />
+                                                            <label for="" class="sty-label">Nominee Email</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <textarea class="w-100 sty-inp form-control" name=""
+                                                                id="nomAddress0" cols="30" rows="1"></textarea>
+                                                            <label for="" class="sty-label">Nominee Permanent
+                                                                Address</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select class="w-100 sty-inp form-control" name=""
+                                                                id="nomState0">
+                                                                <option value="#">Select your State</option>
+                                                                <option value="Andhra Pradesh">
+                                                                    Andhra Pradesh
+                                                                </option>
+                                                                <option value="Arunachal Pradesh">
+                                                                    Arunachal Pradesh
+                                                                </option>
+                                                                <option value="Assam">Assam</option>
+                                                                <option value="Bihar">Bihar</option>
+                                                                <option value="Chhattisgarh">
+                                                                    Chhattisgarh
+                                                                </option>
+                                                                <option value="Goa">Goa</option>
+                                                                <option value="Gujarat">Gujarat</option>
+                                                                <option value="Haryana">Haryana</option>
+                                                                <option value="Himachal Pradesh">
+                                                                    Himachal Pradesh
+                                                                </option>
+                                                                <option value="Jammu and Kashmir">
+                                                                    Jammu and Kashmir
+                                                                </option>
+                                                                <option value="Jharkhand">Jharkhand</option>
+                                                                <option value="Karnataka">Karnataka</option>
+                                                                <option value="Kerala">Kerala</option>
+                                                                <option value="Madhya Pradesh">
+                                                                    Madhya Pradesh
+                                                                </option>
+                                                                <option value="Maharashtra">Maharashtra</option>
+                                                                <option value="Manipur">Manipur</option>
+                                                                <option value="Meghalaya">Meghalaya</option>
+                                                                <option value="Mizoram">Mizoram</option>
+                                                                <option value="Nagaland">Nagaland</option>
+                                                                <option value="Odisha">Odisha</option>
+                                                                <option value="Punjab">Punjab</option>
+                                                                <option value="Rajasthan">Rajasthan</option>
+                                                                <option value="Sikkim">Sikkim</option>
+                                                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                                                <option value="Telangana">Telangana</option>
+                                                                <option value="Tripura">Tripura</option>
+                                                                <option value="Uttar Pradesh">
+                                                                    Uttar Pradesh
+                                                                </option>
+                                                                <option value="Uttarakhand">Uttarakhand</option>
+                                                                <option value="West Bengal">West Bengal</option>
+                                                                <option value="Andaman and Nicobar ">
+                                                                    Andaman and Nicobar
+                                                                </option>
+                                                                <option value="Islands">Islands</option>
+                                                                <option value="Dadra and Nagar Haveli">
+                                                                    Dadra and Nagar Haveli
+                                                                </option>
+                                                                <option value="Daman and Diu">
+                                                                    Daman and Diu
+                                                                </option>
+                                                                <option value="Delhi">Delhi</option>
+                                                                <option value="Ladakh">Ladakh</option>
+                                                                <option value="Lakshadweep">Lakshadweep</option>
+                                                                <option value="Puducherry">Puducherry</option>
+                                                            </select>
+                                                            <label for="" class="sty-label">State</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp"
+                                                                id="nomPin0" />
+                                                            <label for="" class="sty-label">Pin Code</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp form-control"
+                                                                id="nomContact0" />
+                                                            <label for="" class="sty-label">Nominee Contact
+                                                                No.</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp"
+                                                                id="nomEmerContact0" />
+                                                            <label for="" class="sty-label">Emergency Contact
+                                                                No.</label>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4"
+                                                style="justify-content: space-between;">
+                                                <button type="button" name="" class="btn btn-primary" id=""
+                                                    onclick="addNominee2()"> Add Nominee
+                                                </button>
+                                                <div class="two-btn">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="shares-edit-tab-pane" role="tabpanel"
+                        aria-labelledby="shares-edit-tab" tabindex="0">
+                        <div class="container-fluid">
+                            <form action="">
+
+                                <div class="row pt-3 ps-4 pe-4">
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <!-- <input type="number" class="w-100 sty-inp" /> -->
+                                            <select name="" id="" class="w-100 sty-inp form-control">
+                                                <option value="#">Select your Wing & Flat No.</option>
+                                                <option value="#">A-Wing(101)</option>
+                                                <option value="#">B-Wing(301)</option>
+                                                <option value="#">C-Wing(301)</option>
+                                            </select>
+                                            <label for="" class="sty-label">Wing & Flat No.</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Folio Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Share Issue Date</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Application Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Serial No. of Certificate</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Allotment Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Share No. from</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Share No. To</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Share Transfer Date</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Total Amount Received</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Total Amount Received On</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Transfer from Folio Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Transfer to Folio Number</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+
+                                <div class="two-btn float-end pb-3 pe-4">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="loan-edit-tab-pane" role="tabpanel"
+                        aria-labelledby="loan-edit-tab" tabindex="0">
+                        <div class="container-fluid">
+                            <form action="">
+                                <div class="row pt-3 ps-4 pe-4">
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Hypothication Bank Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Object of Loan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Loan Issue Date</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Loan Value</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Account Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Installment</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <!-- <input type="text" class="w-100 sty-inp" /> -->
+                                            <select name="" class="w-100 form-control sty-inp" id="selectStatus">
+                                                <option value="#">Select Status</option>
+                                                <option value="option1">Active</option>
+                                                <option value="option2">Closed</option>
+                                            </select>
+                                            <label for="" class="sty-label">Loan Status</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3" id="attachNOC" style="display: none;">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="file" class="w-100 sty-inp form-control" />
+                                            <label for="" class="sty-label">Attach NOC</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Remarks</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+
+                                <div class="two-btn float-end pb-3 pe-4">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+
+
+
+                    </div>
+                    <div class="tab-pane fade" id="gst-edit-tab-pane" role="tabpanel" aria-labelledby="gst-edit-tab"
+                        tabindex="0">
+                        <div class="container-fluid">
+                            <form action="">
+                                <div class="row pt-3 ps-4 pe-4">
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">GST Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Billing State</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Billing Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <textarea class="w-100 sty-inp form-control" name="" id="" cols="30"
+                                                rows="1"></textarea>
+                                            <label for="" class="sty-label">Billing Address</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Contact Number</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+
+                                <div class="two-btn float-end pb-3 pe-4">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="vehicle-edit-tab-pane" role="tabpanel"
+                        aria-labelledby="vehicle-edit-tab" tabindex="0">
+                        <div class="container-fluid">
+                            <form action="">
+                                <div id="newVehicle">
+                                    <div class="row pt-3 ps-4 pe-4" id="cloneVehicle">
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="parkingLot0" />
+                                                <label for="" class="sty-label">Parking Lot</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="vehicleType0" />
+                                                <label for="" class="sty-label">Vehicle Type</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="vehicleNumber0" />
+                                                <label for="" class="sty-label">Vehicle Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="brandVehicle0" />
+                                                <label for="" class="sty-label">Brand & Model</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="file" class="w-100 sty-inp form-control"
+                                                    id="rcCopy0" />
+                                                <label for="" class="sty-label">RC Copy</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <select class="w-100 sty-inp form-control" name="" id="stickerOpt0">
+                                                    <option value="#">YES / NO</option>
+                                                    <option value="yes">YES</option>
+                                                    <option value="no">NO</option>
+                                                </select>
+                                                <!-- <input type="text" class="w-100 sty-inp"> -->
+                                                <label for="" class="sty-label">Sticker Issued</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp form-control"
+                                                    id="stickNumber0" />
+                                                <label for="" class="sty-label">Sticker Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <select class="w-100 sty-inp form-control" name=""
+                                                    id="selectCharge0"
+                                                    onchange="selectChange(this.id, 'related_' + this.id)">
+                                                    <option value="#" selected>YES / NO</option>
+                                                    <option id="optN0" value="option1">NO</option>
+                                                    <option id="optY0" value="option2">YES</option>
+                                                </select>
+                                                <!-- <input type="text" class="w-100 sty-inp"> -->
+                                                <label for="" class="sty-label">Vehicle Chargeable</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3" id="addCharge0">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="number" class="w-100 sty-inp form-control"
+                                                    id="related_selectCharge0" disabled />
+                                                <label for="" class="sty-label">Charge Amount</label>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                    </div>
+                                    <div class="row" id="newVehicleContainer"></div>
+                                </div>
+
+                                <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4"
+                                    style="justify-content: space-between;">
+                                    <button type="button" name="" class="btn btn-primary" id=""
+                                        onclick="addVehicle()"> Add Vehicle
+                                    </button>
+                                    <div class="two-btn">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <!-- </div> -->
+                </div>
+                <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary">Save changes</button>
+    </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+  

@@ -1,376 +1,327 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}  <title>Society Management | Member-Master-Creation</title> {% endblock title %}
+{% block title %} <title>Society Management | Member-Master-Creation</title> {% endblock title %}
 
 {% block body %}
 
 
-  <!-- page content -->
-  <div class="container-fluid">
+<!-- page content -->
+<div class="container-fluid">
     <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item " role="presentation">
-        <button class="nav-link abc active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Society Details</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link abc" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Bank Details</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link abc" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Documents</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link abc" id="wing-tab" data-bs-toggle="tab" data-bs-target="#wing-tab-pane" type="button" role="tab" aria-controls="wing-tab-pane" aria-selected="false">Wings & Units</button>
-    </li>
-    <!-- <li class="nav-item" role="presentation">
+        <li class="nav-item " role="presentation">
+            <button class="nav-link abc active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Society Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link abc" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Bank Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link abc" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
+                type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Documents</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link abc" id="wing-tab" data-bs-toggle="tab" data-bs-target="#wing-tab-pane"
+                type="button" role="tab" aria-controls="wing-tab-pane" aria-selected="false">Wings & Units</button>
+        </li>
+        <!-- <li class="nav-item" role="presentation">
         <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
     </li> -->
     </ul>
 </div>
 <div class="container-fluid">
-<div class="tab-content" id="myTabContent">
-<div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-    <div class="row mt-3 p-2">
-        <!-- <h3 class="text-center mb-4" id="heading">Calibri Font </h3> -->
-        <div class="col-3">
-            <p class="ms-3 view-label">Society Name</p>
-        </div>
-        <div class="col-9">
-        <p class="view-inps">SITA PARK CO-OPERATIVE HOUSING SOCIETY</p>
-        </div>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+            tabindex="0">
+            <div class="row mt-3 p-2">
+                {% for item in soc_object %}
+                <div class="col-3">
+                    <p class="ms-3 view-label">Society Name</p>
+                </div>
+                <div class="col-9">
+                    <p class="view-inps">{{item.society_name}}</p>
+                </div>
 
-        
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Registration Number</p>
-        </div>
-        <div class="col-4">
-        <p class="view-inps">S-32570</p>
-        </div>
-        <div class="col-5">
-            <p class="view-label">Attached Document:-&nbsp;&nbsp;&nbsp; <span class="hovme view-inps"> Society-Register.pdf</span></p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">PAN Number</p>
-        </div>
-        <div class="col-4">
-        <p class="view-inps">AATTS0780Q</p>
-        </div>
-        <div class="col-5">
-            <p class="view-label">Attached Document:-&nbsp;&nbsp;&nbsp; <span class="hovme view-inps"> Society-PAN.pdf</span></p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">GST Number</p>
-        </div>
-        <div class="col-4">
-        <p class="view-inps">07AAECR2971C1Z</p>
-        </div>
-        <div class="col-5">
-            <p class="view-label">Attached Document:-&nbsp;&nbsp;&nbsp; <span class="hovme view-inps"> Society-GST.pdf</span></p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Administrator Email</p>
-        </div>
-        <div class="col-4">
-        <p class="view-inps">admin.8066@sitapark.com</p>
-        </div>
-
-        <div class="col-5">
-            <p class="view-label">Alternate Email &nbsp;&nbsp;&nbsp; <span class="hovme view-inps">sitapark.admin.8066@gmail.com</span></p>
-        
-            <!-- <p style="font-size: 14px;"></p> -->
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Administrator Mobile Number</p>
-        </div>
-        <div class="col-4">
-        <p class="view-inps">+91 8820527490</p>
-        </div>
-
-        <div class="col-5">
-            <p class="view-label">Alternate Mobile Number  &nbsp;&nbsp;&nbsp; <span class="hovme view-inps">+91 7977318426</span></p>
-            <!-- <p style="font-size: 14px;">+91 7977318426</p> -->
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Interest %</p>
-        </div>
-        <div class="col-9">
-        <p class="view-inps">12%</p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Society's Registered Address</p>
-        </div>
-        <div class="col-9">
-        <p class="view-inps">3, Zaco Computers Pvt. Ltd., Dlh Park, Swami Vivekananda Rd, Malad, Sunder Nagar, Goregaon West, Mumbai, Maharashtra 400062</p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Society's Correspondence Address</p>
-        </div>
-        <div class="col-9">
-        <p class="view-inps">3, Zaco Computers Pvt. Ltd., Dlh Park, Swami Vivekananda Rd, Malad, Sunder Nagar, Goregaon West, Mumbai, Maharashtra 400062</p>
-        </div>
-    </div>
-
-</div>
-<div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-    <div class="row mt-3 p-2">
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
+                <div class="col-3">
+                    <p class="ms-3 view-label">Registration Number</p>
+                </div>
                 <div class="col-4">
-                    <p class=" view-label">Beneficiary Name</p>
+                    <p class="view-inps">{{item.registration_number}}</p>
                 </div>
-                <div class="col-8">
-                    <p class="view-inps">SAMEER NASIR SHAIKH</p>
+                <div class="col-5">
+                    <p class="view-label">Registration Document:-&nbsp;&nbsp;&nbsp; <span class="hovme view-inps">
+                            {{item.registration_doc}}</span></p>
                 </div>
-            </div>                
-        </div>
 
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
+                <div class="col-3">
+                    <p class="ms-3 view-label">PAN Number</p>
+                </div>
                 <div class="col-4">
-                    <p class="view-label">Beneficiary IFSC Code</p>
+                    <p class="view-inps">{{item.pan_number}}</p>
                 </div>
-                <div class="col-8">
-                    <p class="view-inps">ICIC0000418</p>
+                <div class="col-5">
+                    <p class="view-label">Pan Document:-&nbsp;&nbsp;&nbsp; <span class="hovme view-inps">
+                            {{item.pan_number_doc}}</span></p>
                 </div>
-            </div>                
-        </div>
-        
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
+
+                <div class="col-3">
+                    <p class="ms-3 view-label">GST Number</p>
+                </div>
                 <div class="col-4">
-                    <p class="view-label">Beneficiary Account Number</p>
+                    <p class="view-inps">{{item.gst_number}}</p>
                 </div>
-                <div class="col-8">
-                    <p class="view-inps">400229057624510</p>
+                <div class="col-5">
+                    <p class="view-label">GST Document:-&nbsp;&nbsp;&nbsp; <span
+                            class="hovme view-inps">{{item.gst_number_doc}}</span></p>
                 </div>
-            </div>                
-        </div>
-        
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
+
+                <div class="col-3">
+                    <p class="ms-3 view-label">Administrator Email</p>
+                </div>
                 <div class="col-4">
-                    <p class="view-label">Beneficiary Bank Name & Branch</p>
+                    <p class="view-inps">{{item.admin_email}}</p>
                 </div>
-                <div class="col-8">
-                    <p class="view-inps">The Industrial Credit and Investment Corporation of India (ICICI)</p>
-                    <!-- <p style="font-size: 14px;">SAMEER NASIR SHAIKH</p> -->
+
+                <div class="col-5">
+                    <p class="view-label">Alternate Email &nbsp;&nbsp;&nbsp; <span
+                            class="hovme view-inps">{{item.alternate_email}}</span></p>
+
+                    <!-- <p style="font-size: 14px;"></p> -->
+                </div>
+
+                <div class="col-3">
+                    <p class="ms-3 view-label">Administrator Mobile Number</p>
+                </div>
+                <div class="col-4">
+                    <p class="view-inps">{{item.admin_mobile_number}}</p>
+                </div>
+
+                <div class="col-5">
+                    <p class="view-label">Alternate Mobile Number &nbsp;&nbsp;&nbsp; <span
+                            class="hovme view-inps">{{item.alternate_mobile_number}}</span></p>
+                    <!-- <p style="font-size: 14px;">+91 7977318426</p> -->
+                </div>
+
+                <div class="col-3">
+                    <p class="ms-3 view-label">Interest %</p>
+                </div>
+                <div class="col-9">
+                    <p class="view-inps">{{item.interest}}</p>
+                </div>
+
+                <div class="col-3">
+                    <p class="ms-3 view-label">Society's Registered Address</p>
+                </div>
+                <div class="col-9">
+                    <!-- <p class="view-inps">3, Zaco Computers Pvt. Ltd., Dlh Park, Swami Vivekananda Rd, Malad, Sunder Nagar, Goregaon West, Mumbai, Maharashtra 400062</p> -->
+                    <p class="view-inps">{{item.society_reg_address}}, {{item.socity_state}}, {{item.society_city}},
+                        {{item.pin_code}}</p>
+                </div>
+
+                <div class="col-3">
+                    <p class="ms-3 view-label">Society's Correspondence Address</p>
+                </div>
+                <div class="col-9">
+                    <p class="view-inps">{{item.society_corr_reg_address}}</p>
                 </div>
             </div>
-        </div>
-        
-    </div>
-    <hr class="m-0 p-0">
+            {% endfor %}
 
-    <div class="row mt-3 p-2">
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class=" view-label">Beneficiary Name</p>
-                </div>
-                <div class="col-8">
-                    <p class="view-inps">SAMEER NASIR SHAIKH</p>
-                </div>
-            </div>                
-        </div>
 
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Beneficiary IFSC Code</p>
-                </div>
-                <div class="col-8">
-                    <p class="view-inps">ICIC0000418</p>
-                </div>
-            </div>                
         </div>
-        
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Beneficiary Account Number</p>
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="row mt-3 p-2">
+                {% for item in soc_bank_object %}
+                <div class="d-flex w-75" style="justify-content: space-between;">
+                    <div class="headingg">
+                        <p class="lead" style="font-family:'Calibri', sans-serif;">
+                            <b>Bank Detail 1:</b>
+                        </p>
+                    </div>
+                    <div class="optionn">
+                        <p class="ms-auto">
+                            <span>
+                                <i class="fa-solid fa-pen fa-xs pe-2" style="color: black"></i>
+                                <i class="fa-solid fa-trash-can fa-xs" style="color: black;"></i>
+                            </span>
+                        </p>
+                    </div>
                 </div>
-                <div class="col-8">
-                    <p class="view-inps">400229057624510</p>
+                <div class="col-lg-6">
+                    <div class="row d-flex" style="align-items: baseline;">
+                        <div class="col-4">
+                            <p class=" view-label">Beneficiary Name</p>
+                        </div>
+                        <div class="col-8">
+                            <p class="view-inps">{{item.beneficiary_name}}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>                
-        </div>
-        
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Beneficiary Bank Name & Branch</p>
-                </div>
-                <div class="col-8">
-                    <p class="view-inps">The Industrial Credit and Investment Corporation of India (ICICI)</p>
-                    <!-- <p style="font-size: 14px;">SAMEER NASIR SHAIKH</p> -->
-                </div>
-            </div>
-        </div>
-        
-    </div>
-    
-</div>
-<div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-    
-    
-    <div class="row mt-3 p-2">
-        <!-- <h3 class="text-center mb-3" id="heading">DOCUMENTS</h3> -->
-        <div class="col-lg-6">
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Completion Certificate</p>
-                </div>
-                <div class="col-8">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" download="Society-Registration-Certificate.jpg" href="./images/my-images/Society-Registration-Certificate.jpg">Society-Completion-Certificate.jpg</a></p>
-                </div>
-            </div>
 
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Occupancy Certificate</p>
+                <div class="col-lg-6">
+                    <div class="row d-flex" style="align-items: baseline;">
+                        <div class="col-4">
+                            <p class="view-label">Beneficiary IFSC Code</p>
+                        </div>
+                        <div class="col-8">
+                            <p class="view-inps">{{item.beneficiary_code}}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-8">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/occupancy-certificate-example.png">Society-Occupancy-Certificate.png</a></p>
-                </div>
-            </div>
 
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Deed of Conveyance</p>
+                <div class="col-lg-6">
+                    <div class="row d-flex" style="align-items: baseline;">
+                        <div class="col-4">
+                            <p class="view-label">Beneficiary Account Number</p>
+                        </div>
+                        <div class="col-8">
+                            <p class="view-inps">{{item.beneficiary_acc_number}}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-8">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/deed-of-conveyance-example.jpg">Society-Deed-Of-Conveyance.jpg</a></p>
-                </div>
-            </div>
 
-            <div class="row d-flex" style="align-items: baseline;">
-                <div class="col-4">
-                    <p class="view-label">Society Bye Laws</p>
+                <div class="col-lg-6">
+                    <div class="row d-flex" style="align-items: baseline;">
+                        <div class="col-4">
+                            <p class="view-label">Bank Name & Branch</p>
+                        </div>
+                        <div class="col-8">
+                            <p class="view-inps">{{item.beneficiary_bank}}</p>
+                            <!-- <p style="font-size: 14px;">SAMEER NASIR SHAIKH</p> -->
+                        </div>
+                    </div>
                 </div>
-                <div class="col-8">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/Society-Bye-Laws.pdf">Society-Bye-Laws.pdf</a></p>
+
+                <div class="col-lg-6">
+                    <div class="row d-flex" style="align-items: baseline;">
+                        <div class="col-4">
+                            <p class="view-label">Is Primary</p>
+                        </div>
+                        <div class="col-8">
+                            <!-- <p class="view-inps">{{item.is_primary}}</p> -->
+                            {% if item.is_primary %}
+                            <p class="view-inps"><i class="fa-solid fa-check" style="color: green;"></i></p>
+                            {% else %}
+                            <p class="view-inps"><i class="fa-solid fa-xmark" style="color: red;"></i></p>
+                            {% endif %}
+                            <!-- <p style="font-size: 14px;">SAMEER NASIR SHAIKH</p> -->
+                        </div>
+                    </div>
                 </div>
+                <hr class="">
+                {% endfor %}
             </div>
         </div>
 
-        <div class="col-lg-6">
-            <div class="row">
-                <div class="col-4">
-                    <p class="view-label">Other Documents</p>
+        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+            <div class="row mt-3 p-2">
+                <div class="col-lg-6">
+                    <div class="row">
+                        
+                        <p class="lead">Society Documents</p>
+                        {% for item in soc_document_object %}
+                        <div class="col-4">
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Completion Certificate</b></p>
+                        </div>
+                        <div class="col-8">
+                            <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
+                                rel="noopener" download="Society-Registration-Certificate.jpg"
+                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.completion_cert}}</a>
+                        </p>
+                        </div>
+
+                        <div class="col-4">
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Occupancy Certificate</b></p>
+                        </div>
+                        <div class="col-8">
+                            <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
+                                rel="noopener" download="Society-Registration-Certificate.jpg"
+                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.occupancy_cert}}</a>
+                        </p>
+                        </div>
+
+                        <div class="col-4">
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Deed of Conveyance</b></p>
+                        </div>
+                        <div class="col-8">
+                            <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
+                                rel="noopener" download={{item.deed_of_conveyance}}
+                                href="">{{item.deed_of_conveyance}}</a>
+                        </p>
+                        </div>
+
+                        <div class="col-4">
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Scoiety Bye Laws</b></p>
+                        </div>
+                        <div class="col-8">
+                            <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
+                                rel="noopener" download="Society-Registration-Certificate.jpg"
+                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.society_by_law}}</a>
+                        </p>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-4">
-                    <p class="view-inps">Society's Blue Print</p>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <p class="lead">Other Documents</p>
+                        {% for item in soc_other_document_object %}
+                        <!-- <div class="col-3">
+                        </div> -->
+                        <div class="col-6">
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>{{item.other_document_specification}}</b></p>
+                        </div>
+                        <div class="col-3">
+                            <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
+                                rel="noopener" download="Society-Registration-Certificate.jpg"
+                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.other_document}}</a>
+                        </p>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-4">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/Society-Bye-Laws.pdf">Society-Bye-Laws.pdf</a></p>
-                </div>
+                <!-- <h3 class="text-center mb-3" id="heading">DOCUMENTS</h3> -->
+                
+
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-4">
-                    <p class="view-label">Other Documents</p>
+        <div class="tab-pane fade" id="wing-tab-pane" role="tabpanel" aria-labelledby="wing-tab" tabindex="0">
+            <div class="row mt-3 p-2">
+                <!-- <h3 class="text-center mb-3" id="heading">wings & units</h3> -->
+                {% for wing, flats in wing_flat_list %}
+                <div class="col-3">
+                    <p class="ms-3 view-label">Wing & Flat Numbers</p>
                 </div>
-                <div class="col-4">
-                    <p class="view-inps">Society's Blue Print</p>
+                
+                <div class="col-2">                    
+                    <p class="view-inps"><i class="fa-solid fa-pen fa-xs pe-2" style="color: black"></i> {{wing}}</p>
                 </div>
-                <div class="col-4">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/Society-Bye-Laws.pdf">Society-Bye-Laws.pdf</a></p>
+                <div class="col-6">
+                    <p class="view-inps">
+                        {% for flat in flats %}
+                        {{ flat }}{% if not loop.last %}, {% endif %}
+                      {% endfor %}</p>
                 </div>
+                <hr>
+                {% endfor %}
             </div>
-
-            <div class="row">
-                <div class="col-4">
-                    <p class="view-label">Other Documents</p>
-                </div>
-                <div class="col-4">
-                    <p class="view-inps">Society's Blue Print</p>
-                </div>
-                <div class="col-4">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/Society-Bye-Laws.pdf">Society-Bye-Laws.pdf</a></p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-4">
-                    <p class="view-label">Other Documents</p>
-                </div>
-                <div class="col-4">
-                    <p class="view-inps">Society's Blue Print</p>
-                </div>
-                <div class="col-4">
-                    <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank" rel="noopener" href="./images/my-images/Society-Bye-Laws.pdf">Society-Bye-Laws.pdf</a></p>
-                </div>
-            </div>                
-        </div> 
-    </div>      
-    
-</div>
-<div class="tab-pane fade" id="wing-tab-pane" role="tabpanel" aria-labelledby="wing-tab" tabindex="0">
-
-    <div class="row mt-3 p-2">
-        <!-- <h3 class="text-center mb-3" id="heading">wings & units</h3> -->
-        <div class="col-3">
-            <p class="ms-3 view-label">Wing & Flat Numbers</p>
-        </div>
-        <div class="col-2">
-            <p class="view-inps">A-Wing</p>
-        </div>
-        <div class="col-6">
-            <p class="view-inps">101, 102, 103, 104, 201, 202, 203, 204, 301, 302, 303, 304, 401, 402, 403, 404, 501, 502, 503, 504, 601, 602, 603, 604, 701, 702, 703, 704</p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Wing & Flat Numbers</p>
-        </div>
-        <div class="col-2">
-            <p class="view-inps">B-Wing</p>
-        </div>
-        <div class="col-6">
-            <p class="view-inps">101, 102, 103, 104, 201, 202, 203, 204, 301, 302, 303, 304, 401, 402, 403, 404, 501, 502, 503, 504, 601, 602, 603, 604, 701, 702, 703, 704</p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Wing & Flat Numbers</p>
-        </div>
-        <div class="col-2">
-            <p class="view-inps">C-Wing</p>
-        </div>
-        <div class="col-6">
-            <p class="view-inps">101, 102, 103, 104, 201, 202, 203, 204, 301, 302, 303, 304, 401, 402, 403, 404, 501, 502, 503, 504, 601, 602, 603, 604, 701, 702, 703, 704</p>
-        </div>
-
-        <div class="col-3">
-            <p class="ms-3 view-label">Wing & Flat Numbers</p>
-        </div>
-        <div class="col-2">
-            <p class="view-inps">D-Wing</p>
-        </div>
-        <div class="col-6">
-            <p class="view-inps">101, 102, 103, 104, 201, 202, 203, 204, 301, 302, 303, 304, 401, 402, 403, 404, 501, 502, 503, 504, 601, 602, 603, 604, 701, 702, 703, 704</p>
         </div>
     </div>
 </div>
-</div>
-</div>
 
-    
+
 <script>
     $('ul.tabs li').click(function () {
-  var tab_id = $(this).attr('href');
+        var tab_id = $(this).attr('href');
 
-  $('ul.tabs li').removeClass('current');
-  $('.tab-content').removeClass('current');
+        $('ul.tabs li').removeClass('current');
+        $('.tab-content').removeClass('current');
 
-  $(this).addClass('current');
-  $("#" + tab_id).addClass('current');
-})
+        $(this).addClass('current');
+        $("#" + tab_id).addClass('current');
+    })
 </script>
 
 {% endblock body %}

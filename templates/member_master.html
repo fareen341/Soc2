@@ -15,15 +15,15 @@
           <p style="color: #616161">
             Fill all form field to go to next step
           </p>
-          <form name="main-member-form" id="msform">
+          <form name="main-member-form" id="msform" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <!-- progressbar -->
             <ul id="progressbar" class="col-10 ms-auto me-auto" style="padding: 0 !important">
-              <li class="active" id="member"><strong>Members Details</strong></li>
-              <li id="shares"><strong>Shares Details</strong></li>
-              <li id="homeLoan"><strong>Home Loan Details</strong></li>
-              <li id="gst"><strong>GST Details</strong></li>
-              <li id="vehicle"><strong>Vehicle Details</strong></li>
+              <li class="active" style="width: 20% !important;" id="member"><strong>Members Details</strong></li>
+              <li id="shares" style="width: 20% !important;"><strong>Shares Details</strong></li>
+              <li id="homeLoan" style="width: 20% !important;"><strong>Home Loan Details</strong></li>
+              <li id="gst" style="width: 20% !important;"><strong>GST Details</strong></li>
+              <li id="vehicle" style="width: 20% !important;"><strong>Vehicle Details</strong></li>
             </ul>
             <!-- <div class="progress">
                               <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -32,6 +32,7 @@
 
             <fieldset>
               <!-- <div class=""> -->
+                <!-- <p id="id_member_ownership_Error_details" style="color:red;">Ownership details</p> -->
 
               <div id="forms-container">
                 <div class="form-container">
@@ -39,7 +40,7 @@
                     <div class="col-lg-4 mb-3">
                       <div class="w-100 sty-input-wrapper">
                         <!-- <input type="text" class="w-100 sty-inp "> -->
-                        <select name="wing_flat_select" id="id_wing_flat" class="w-100 sty-inp">
+                        <select name="wing_flat_select" id="id_wing_flat" class="w-100 sty-inp form-control">
                           {% for key, value in wing_flat_no.items %}
                           <option value="{{ key }}">{{ value }}</option>
                           {% endfor %}
@@ -160,7 +161,7 @@
                     <div class="col-lg-4 d-flex align-items-center">
                       <small id="id_is_primary">
                         <span>
-                          <input type="checkbox" class="sty-inp" />
+                          <input type="checkbox" class="sty-inp" id="id_is_primary_val" />
                         </span>&nbsp;Make this Member as a Primary Member
                       </small>
                       <small id="id_is_primary_Error" class="error-message"></small>
@@ -226,8 +227,8 @@
                       </div>
                       <div class="col-lg-4 mb-3">
                         <div class="w-100 sty-input-wrapper">
-                          <input type="email" class="w-100 sty-inp" id="id_nominee_email" />
-                          <label for="" class="sty-label">Nominee Email</label>
+                          <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
+                          <label for="id_nominee_email" class="sty-label">Nominee Email</label>
                           <small id="id_nominee_email_Error" class="error-message"></small>
                         </div>
                       </div>
@@ -281,9 +282,8 @@
 
               <input type="button" name="" class="add-mem-btn float-start" id="" value="Add Nominee"
                 onclick="addNominee()" />
-              <input type="button" name="next" class="next action-button" id="save_and_next_member"
-                value="Save & Next" />
-              <input class="add-mem-btn" type="submit" name="addMember" id="save_and_add_member"
+              <input type="button" name="" class="next action-button" id="save_and_next_member" value="Save & Next" />
+              <input class="add-mem-btn" type="button" name="addMember" id="save_and_add_member"
                 value="Save & Add Member" />
             </fieldset>
             <fieldset>
@@ -408,11 +408,25 @@
               <div class="row">
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
+                    <!-- <input type="number" class="w-100 sty-inp" /> -->
+                    <select name="" id="id_home_loan_flat_select" class="w-100 sty-inp">
+                      {% for key, value in wing_flat_no.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="id_home_loan_flat_select" class="sty-label">Wing & Flat No.</label>
+                    <small id="id_home_loan_flat_select_Error" class="error-message"></small>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
                     <input type="text" class="w-100 sty-inp" id="id_bank_loan_name" />
                     <label for="id_bank_loan_name" class="sty-label">Hypothication Bank Name</label>
                     <small id="id_bank_loan_name_Error" class="error-message"></small>
                   </div>
                 </div>
+
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
                     <input type="text" class="w-100 sty-inp" id="id_bank_loan_object" />
@@ -462,7 +476,7 @@
                 </div>
                 <div class="col-lg-4 mb-3" id="toggleChangeNoc" style="display: none;">
                   <div class="w-100 sty-input-wrapper">
-                    <input type="file" class="w-100 sty-inp form-control" id="id_bank_loan_noc_file"  />
+                    <input type="file" class="w-100 sty-inp form-control" id="id_bank_loan_noc_file" />
                     <label for="id_bank_loan_noc_file" class="sty-label">Attach NOC</label>
                     <small id="id_bank_loan_noc_file_Error" class="error-message"></small>
                   </div>
@@ -503,18 +517,31 @@
               <div class="row">
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <input type="text" class="w-100 sty-inp" id="id_member_gst_number"/>
-                    <label for="id_member_gst_number" class="sty-label">GST Number</label>
-                    <small id="id_member_gst_number_Error" class="error-message"></small>
+                    <!-- <input type="number" class="w-100 sty-inp" /> -->
+                    <select name="" id="id_gst_flat_select" class="w-100 sty-inp">
+                      {% for key, value in wing_flat_no.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="id_gst_flat_select_select" class="sty-label">Wing & Flat No.</label>
+                    <small id="id_gst_flat_select_Error" class="error-message"></small>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <input type="text" class="w-100 sty-inp" id="id_gst_number" />
+                    <label for="id_gst_number" class="sty-label">GST Number</label>
+                    <small id="id_gst_number_Error" class="error-message"></small>
                   </div>
                 </div>
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
                     <select name="state" id="id_gst_state" class="w-100 sty-inp">
                       {% for key, value in state_names.items %}
-                          <option value="{{ key }}">{{ value }}</option>
+                      <option value="{{ key }}">{{ value }}</option>
                       {% endfor %}
-                  </select>
+                    </select>
                     <small id="id_gst_state_Error" class="error-message"></small>
                   </div>
                 </div>
@@ -527,7 +554,8 @@
                 </div>
                 <div class="col-lg-4 mb-3">
                   <div class="w-100 sty-input-wrapper">
-                    <textarea class="w-100 sty-inp form-control" name="" id="id_gst_billing_address" cols="30" rows="1"></textarea>
+                    <textarea class="w-100 sty-inp form-control" name="" id="id_gst_billing_address" cols="30"
+                      rows="1"></textarea>
                     <label for="id_gst_billing_address" class="sty-label">Billing Address</label>
                     <small id="id_gst_billing_address_Error" class="error-message"></small>
                   </div>
@@ -566,6 +594,18 @@
                                   </div>
                               </div> -->
               <div id="newVehicle">
+                <div class="col-lg-4 mb-3">
+                  <div class="w-100 sty-input-wrapper">
+                    <!-- <input type="number" class="w-100 sty-inp" /> -->
+                    <select name="" id="id_vehicle_flat_select" class="w-100 sty-inp">
+                      {% for key, value in wing_flat_no.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="id_vehicle_flat_select" class="sty-label">Wing & Flat No.</label>
+                    <small id="id_vehicle_flat_select_Error" class="error-message"></small>
+                  </div>
+                  </div>
                 <div class="row mt-3" id="cloneVehicle">
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
@@ -614,8 +654,8 @@
                       <select class="w-100 sty-inp form-control" name="" id="id_select_charge0"
                         onchange="selectChange(this.id, ('related_' + this.id), ('vehicle_' + this.id))">
                         <option value="#" selected>YES / NO</option>
-                        <option id="optN0" value="option1">NO</option>
-                        <option id="optY0" value="option2">YES</option>
+                        <option id="optN0" value="no">NO</option>
+                        <option id="optY0" value="yes">YES</option>
                       </select>
                       <!-- <input type="text" class="w-100 sty-inp"> -->
                       <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
