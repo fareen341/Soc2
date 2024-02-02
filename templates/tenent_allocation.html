@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} <title>Society Management | Member-Master-Creation</title> {% endblock title %}
+
+{% block body %}
+
+<div class="container">
+    <div class="member-title mt-4 d-flex" style="justify-content: space-between;">
+        <h3 class="lead" style="font-size: 27px;">Tenant Allocation</h3>
+        <div class="gap-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#tenentAllocation">Allocate Tenant</button>
+        </div>
+    </div>
+    <div class="mt-4">
+        <table id="example" class="display dt-table order-column" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="exclude-print">Actions</th>
+                    {% for item in tenant_allocation_lable %}
+                    <th>{{ item }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in tenant_allocation_objects %}
+                <tr>
+                    <td><button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#tenentAllocationEdit"><i
+                        class="fa-solid fa-pen-to-square" onclick="editAllocatedTenant(`{{item.id}}`)"></i></button></td>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.wing_flat__unit_flat_unique }}</td>
+                    <td>{{ item.tenent_name__tenent_name }}</td>
+                    <td>{{ item.flat_primary_owner }}</td>
+                    <td>{{ item.tenant_aadhar_number }}</td>
+                    <td>{{ item.tenant_pan_number }}</td>
+                    <td>{{ item.tenant_from_date }}</td>
+                    <td>{{ item.tenant_to_date }}</td>
+                    <td>{{ item.tenant_agreement }}</td>
+                    <td>{{ item.tenant_noc }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="tenentAllocation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Allocate Tenant</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="allocateTenantForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <select name="wing_flat_select" id="id_get_owner_name"
+                                        class="w-100 sty-inp form-control">
+                                        {% for key, value in wing_flat_no.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label for="id_get_owner_name" class="sty-label">Wing & Flat No.</label>
+                                    <small id="id_get_owner_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_flat_primary_owner">
+                                    <label for="id_flat_primary_owner" class="sty-label">Owner Name</label>
+                                    <small id="id_flat_primary_owner_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_tenant_aadhar_pan">
+                                    <label for="id_tenant_aadhar_pan" class="sty-label">Aadhaar / PAN No.</label>
+                                    <small id="id_tenant_aadhar_pan_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_tenant_name">
+                                    <label for="id_tenant_name" class="sty-label">Tenant Name</label>
+                                    <small id="id_tenant_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_from">
+                                    <label for="id_tenant_period_from" class="sty-label">Period From</label>
+                                    <small id="id_tenant_period_from_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_to" disabled>
+                                    <label for="id_tenant_period_to" class="sty-label">Period To</label>
+                                    <small id="id_tenant_period_to_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-2 d-flex">
+                                <div class="w-100 sty-input-wrapper">
+                                    <input type="file" class="w-100 sty-inp form-control" id="id_tenant_agreement">
+                                    <label for="id_tenant_agreement" class="sty-label">Attach Agreement</label>
+                                    <small id="id_tenant_agreement_Error" class="error-message"></small>
+                                </div>
+                                <div class="prev">
+                                    <button type="button" class="sty-inp form-control"
+                                        onclick="PreviewImage('id_tenant_agreement')">
+                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-2 d-flex">
+                                <div class="w-100 sty-input-wrapper">
+                                    <input type="file" class="w-100 sty-inp form-control" id="id_tenant_noc">
+                                    <label for="id_tenant_noc" class="sty-label">Attach NOC</label>
+                                    <small id="id_tenant_noc_Error" class="error-message"></small>
+                                </div>
+                                <div class="prev">
+                                    <button type="button" class="sty-inp form-control" onclick="PreviewImage('id_tenant_noc')">
+                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="allocateTenant">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="tenentAllocationEdit" tabindex="-1" aria-labelledby="exampleModalLabelEdit" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabelEdit">Edit Tenant Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="allocateTenantFormEdit">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <select name="wing_flat_select" id="id_get_owner_name_Edit"
+                                        class="w-100 sty-inp form-control">
+                                        {% for key, value in wing_flat_no.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label for="id_get_owner_name" class="sty-label">Wing & Flat No.</label>
+                                    <small id="id_get_owner_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_flat_primary_owner_Edit">
+                                    <label for="id_flat_primary_owner_Edit" class="sty-label">Owner Name</label>
+                                    <small id="id_flat_primary_owner_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_tenant_aadhar_pan_Edit">
+                                    <label for="id_tenant_aadhar_pan_Edit" class="sty-label">Aadhaar / PAN No.</label>
+                                    <small id="id_tenant_aadhar_pan_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_tenant_name_Edit">
+                                    <label for="id_tenant_name_Edit" class="sty-label">Tenant Name</label>
+                                    <small id="id_tenant_name_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_from_Edit" disabled>
+                                    <label for="id_tenant_period_from_Edit" class="sty-label">Period From</label>
+                                    <small id="id_tenant_period_from_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_to_Edit">
+                                    <label for="id_tenant_period_to_Edit" class="sty-label">Period To</label>
+                                    <small id="id_tenant_period_to_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-2 d-flex">
+                                <div class="w-100 sty-input-wrapper">
+                                    <input type="file" class="w-100 sty-inp form-control" id="id_tenant_agreement_Edit" disabled>
+                                    <label for="id_tenant_agreement_Edit" class="sty-label">Attach Agreement</label>
+                                    <small id="id_tenant_agreement_Edit_Error" class="error-message"></small>
+                                </div>
+                                <div class="prev">
+                                    <button type="button" class="sty-inp form-control"
+                                        onclick="PreviewImage('id_tenant_agreement')">
+                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-2 d-flex">
+                                <div class="w-100 sty-input-wrapper">
+                                    <input type="file" class="w-100 sty-inp form-control" id="id_tenant_noc_Edit" disabled>
+                                    <label for="id_tenant_noc_Edit" class="sty-label">Attach NOC</label>
+                                    <small id="id_tenant_noc_Edit_Error" class="error-message"></small>
+                                </div>
+                                <div class="prev">
+                                    <button type="button" class="sty-inp form-control" onclick="PreviewImage('id_tenant_noc')">
+                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="allocateTenant_Edit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+{% endblock body %}

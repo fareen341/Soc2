@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} <title>Society Management | Member-Master-Creation</title> {% endblock title %}
+
+{% block body %}
+
+<div class="container">
+    <div class="member-title mt-4 d-flex" style="justify-content: space-between;">
+        <h3 class="lead" style="font-size: 27px;">House Help Details</h3>
+        <div class="gap-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tenentAllocation">Create House Help</button>
+        </div>
+    </div>
+    <div class="mt-4">
+        <table id="example" class="display dt-table order-column" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="exclude-print">Actions</th>
+                    {% for item in house_help_label %}
+                        <th>{{ item }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in house_help_objects %}
+                <tr>
+                    <td><button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#tenentAllocation"><i
+                            class="fa-solid fa-pen-to-square"></i></button></td>
+                    <td>{{ item.wing_flat }}</td>
+                    <td>{{ item.house_help_name }}</td>
+                    <td>{{ item.house_help_pan_number }}</td>
+                    <td>{{ item.house_help_pan_doc }}</td>
+                    <td>{{ item.house_help_contact }}</td>
+                    <td>{{ item.house_help_aadhar_number }}</td>
+                    <td>{{ item.se_help_aadhar_doc }}</td>
+                    <td>{{ item.house_help_address }}</td>
+                    <td>{{ item.house_help_city }}</td>
+                    <td>{{ item.house_help_state }}</td>
+                    <td>{{ item.house_help_pin }}</td>
+                    <td>{{ item.other_doc }}</td>
+                    <td>{{ item.document_specifications }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="tenentAllocation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                            <input type="text" class="w-100 sty-inp" id="id_house_help_name">
+                            <label for="id_house_help_name" class="sty-label">House-Help Name</label>
+                            <small id="id_house_help_name_Error" class="error-message"></small>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 mb-3">
+                        <div class="mb-2">
+                            
+                            <div class="input-group">
+                                <div class="firstinp w-50 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_house_help_pan_number"
+                                        placeholder="" required>
+                                    <label for="id_house_help_pan_number" class="sty-label">House-Help PAN No.</label>
+                                    <small id="id_house_help_pan_number_Error" class="error-message"></small>
+                                </div>
+                                <div class="secinp w-50 d-flex">
+                                    <div class="fileinp">
+                                        <input type="file" class="sty-inp form-control" style="color: #2b96f1 !important;" name="file" id="id_house_help_pan_doc" />
+                                        <small id="id_house_help_pan_doc_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="prev">
+                                        <button type="button" class="sty-inp form-control"
+                                            onclick="PreviewImage('houseHelpPanDoc')">
+                                            <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                        </button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                            <input type="number" class="w-100 sty-inp" id="id_house_help_contact">
+                            <label for="id_house_help_contact" class="sty-label">House-Help Contact No.</label>
+                            <small id="id_house_help_contact_Error" class="error-message"></small>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 mb-3">
+                        <div class="mb-2">
+                            
+                            <div class="input-group">
+                                <div class="firstinp w-50 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_house_help_aadhar_number">
+                                    <label for="id_house_help_aadhar_number" class="sty-label">House-Help Aadhaar No.</label>
+                                    <small id="id_house_help_aadhar_number_Error" class="error-message"></small>
+                                </div>
+                                <div class="secinp w-50 d-flex">
+                                    <div class="fileinp">
+                                        <input type="file" class="sty-inp form-control" style="color: #2b96f1 !important;" name="file" id="id_house_help_aadhar_doc"/>
+                                        <small id="id_house_help_aadhar_doc_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="prev">
+                                        <button type="button" class="sty-inp form-control"
+                                            onclick="PreviewImage('houseHelpAadhaarDoc')">
+                                            <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                        </button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <div class="row">
+                            <div class="col-lg-6  sty-input-wrapper">
+                                
+                                <textarea name="address" class="w-100 sty-inp" cols="30" rows="1" id="id_house_help_address">
+                                </textarea>
+                                <label for="id_house_help_address" class="sty-label">House-Help Address</label>
+                                <small id="id_house_help_address_Error" class="error-message"></small>
+                            </div>
+                            <div class="col-lg-2 sty-input-wrapper">
+                                
+                                <input type="text" class=" w-100 sty-inp" id="id_house_help_city">
+                                <label for="id_house_help_city" class="sty-label">City</label>
+                                <small id="id_house_help_city_Error" class="error-message"></small>
+                            </div>
+                            <div class="col-lg-2 sty-input-wrapper">
+                                
+                                <!-- <input type="text" class="form-control" id="state" required="" placeholder="Enter your State"> -->
+                                <select name="state" id="houseHelpState" class="w-100 sty-inp form-control" id="id_house_help_state">
+                                    <option value="#">Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                    <option value="Andaman and Nicobar ">Andaman and Nicobar </option>
+                                    <option value="Islands">Islands</option>
+                                    <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                    <option value="Daman and Diu">Daman and Diu</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Ladakh">Ladakh</option>
+                                    <option value="Lakshadweep">Lakshadweep</option>
+                                    <option value="Puducherry">Puducherry</option>
+
+
+                                </select>
+                                <label for="id_house_help_state" class="sty-label">State</label>
+                                <small id="id_house_help_state_Error" class="error-message"></small>
+                            </div>
+                            <div class="col-lg-2 sty-input-wrapper">
+                                
+                                <input type="number" class="w-100 sty-inp" id="tenentPinCode" id="id_house_help_pin">
+                                <label for="id_house_help_pin" class="sty-label">Pin Code</label>
+                                <small id="id_house_help_pin_Error" class="error-message"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                            <input type="email" class="w-100 sty-inp">
+                            <label for="" class="sty-label">Tenent Email</label>
+                        </div>
+                    </div> -->
+                    <div class="col-lg-6 mb-3 d-flex">
+                        <div class="w-100 sty-input-wrapper">
+                            <input type="file" class="w-100 sty-inp form-control" id="id_other_doc">
+                            <label for="id_other_doc" class="sty-label">Other Documents</label>
+                            <small id="id_other_doc_Error" class="error-message"></small>
+                        </div>
+                        <div class="w-100 sty-input-wrapper">
+                            <input type="text" name="" class="w-100 sty-inp" id="id_document_specifications">
+                            <label for="id_document_specifications" class="sty-label">Specify your Document</label>
+                            <small id="id_document_specifications_Error" class="error-message"></small>
+                        </div>
+                        <div class="prev">
+                            <button type="button" class="sty-inp form-control"
+                                onclick="PreviewImage('houseHelpOtherDoc')">
+                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                <hr>
+
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="tenentCreation" value="Submit" >Save changes</button>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+    
+
+{% endblock body %}

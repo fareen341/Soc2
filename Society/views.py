@@ -4,10 +4,11 @@ from django.http import JsonResponse
 from .models import (
     SocietyCreation, SocietyBankCreation, SocietyDocumentCreation, SocietyUnitFlatCreation,
     MemberMasterCreation, MemberNomineeCreation, FlatSharesDetails, FlatHomeLoanDetails, FlatGSTDetails,
-    FlatVehicleDetails
+    FlatVehicleDetails, TenentMasterCreation, TenantAllocationCreation, HouseHelpCreation, HouseHelpAllocation
 )
 from SocietyManagementProject import constants
 from django.db.models import Count, Sum
+from django.db.models import Q
 
 
 # Create your views here.
@@ -166,7 +167,7 @@ def member_master_creation(request):
     memberData = request.POST.get("memberData")
     nomineeData = request.POST.get("nomineeData")
     print("IN IF========")
-    if form_name == "member_form_creation" and (memberData and nomineeData):
+    if (form_name in ["member_form_creation", "add_member_from_modal"]) and (memberData and nomineeData):
         wing_flat_number = request.POST.get("wing_flat_number")
         print("WING===============", wing_flat_number)
         wing_flat = SocietyUnitFlatCreation.objects.get(unit_flat_unique=wing_flat_number)
@@ -226,10 +227,6 @@ def member_master_creation(request):
                 **vehicle
             )
     return render(request,'member_master.html')
-
-
-def tenant(request):
-    return render(request,'tenant.html')
 
 
 def house_help_master(request):
@@ -294,19 +291,25 @@ def date_handler(obj):
 
 
 def member_details_view(request):
+    flat_numbers_queryset = SocietyUnitFlatCreation.objects.values_list("unit", "flat")
+    wing_flat_no = {
+        "": "Select Flat No",
+        **{f"{wing}-{flat}": f"{wing}-{flat}" for wing, flat in flat_numbers_queryset}
+    }
+    
     model_fields = MemberMasterCreation._meta.get_fields()
     member_data_label = [
-        "id", "wing_flat", "member_name", "ownership_percent", "member_position", "member_dob", 
+        "wing_flat__id", "wing_flat__unit_flat_unique", "member_name", "ownership_percent", "member_position", "member_dob", 
         "member_pan_no", "member_aadhar_no", "member_address", "member_state", "member_pin_code", 
         "member_email", "member_contact", "member_emergency_contact", "member_occupation", 
-        "member_is_primary" 
+        "member_is_primary", "date_of_admission", "date_of_entrance_fees", "date_of_cessation", "reason_for_cessation", "status"
     ]
     data = [field.name for field in model_fields if field.name not in ['wing_flat']]
     member_details = MemberMasterCreation.objects.filter(member_is_primary=True).values(
         "wing_flat__id", "wing_flat__unit_flat_unique", "member_name", "ownership_percent", "member_position", "member_dob", 
         "member_pan_no", "member_aadhar_no", "member_address", "member_state", "member_pin_code", 
         "member_email", "member_contact", "member_emergency_contact", "member_occupation", 
-        "member_is_primary"
+        "member_is_primary", "date_of_admission", "date_of_entrance_fees", "date_of_cessation", "reason_for_cessation", "status"
     )
     flat_id = None
     if request.method == "POST":
@@ -336,6 +339,7 @@ def member_details_view(request):
                 
                 'nominee_Details': [
                     {
+                        'nominee_id': child.pk,
                         'nominee_name': child.nominee_name,
                         'date_of_nomination': child.date_of_nomination,
                         'nominee_name': child.nominee_name,
@@ -356,7 +360,6 @@ def member_details_view(request):
             }
             combined_data.append(parent_data)
         
-        print("parents===========================", combined_data)
 
 
         # Shared details
@@ -375,7 +378,8 @@ def member_details_view(request):
                 'shares_details': json.dumps(shares_obj, default=date_handler),
                 'home_loan_obj': json.dumps(home_loan_obj, default=date_handler),
                 'gst_obj': json.dumps(gst_obj, default=date_handler),
-                'vehicle_obj': json.dumps(vehicle_obj, default=date_handler)
+                'vehicle_obj': json.dumps(vehicle_obj, default=date_handler),
+                'wing_flat_no': json.dumps(wing_flat_no)
             })
 
     return render(request, "member_master_table.html", {
@@ -388,9 +392,306 @@ def member_details_view(request):
 
 def member_edit_view(request):
     if request.method == "POST":
-        print("edit view==================")
+        '''
+        NOTE:
+        Create history in same models, the moment i change the member to inactive capture date and a unique memberid as in MEM001, MEM002:
+
+        {70: {'flat_details': {'unit_flat_unique': 'C-WING-9'}, 
+        members_details = 'members001': [
+                    {
+                        'member_id': 91, 'member_name': 'Fareen Ansari', 'member_unique_id': 'MEM001', is_primary': True,
+                        'nominee_Details': [{'nominee_name': 'fareen 1'}, {'nominee_name': 'fareen 2'}]}, 
+                        {'member_id': 96, 'member_name': 'New Member', 'nominee_Details': []}
+                    },
+                    {
+                        'member_id': 99, 'member_name': 'Ariba Ansari', 'member_unique_id': 'MEM002', is_primary': True,
+                        'nominee_Details': [{'nominee_name': 'fareen 1'}, {'nominee_name': 'fareen 2'}]}, 
+                        {'member_id': 96, 'member_name': 'New Member', 'nominee_Details': []}
+                    },
+        ]
+
+        IN FRONT END:
+        '''
+        # flat_id = request.POST.get("flat_id")
+        # Fetch the queryset with prefetch_related
+        flat_with_members = SocietyUnitFlatCreation.objects.filter(id=70).prefetch_related('membermastercreation_set')
+
+        data_dict = {}
+        nominees = MemberNomineeCreation.objects.all()
+
+        # Iterate over each flat object in the queryset
+        for flat in flat_with_members:
+            # Create a list to store member data for this flat
+            member_data_list = []
+            
+            # Iterate over each member related to this flat
+            for member in flat.membermastercreation_set.all():
+                member_data = {
+                        'member_id': member.pk,
+                        'member_name': member.member_name,                        
+                        'nominee_Details': [
+                            {
+                                'nominee_name': nom.nominee_name,
+                                'nominee_name': nom.nominee_name,
+                            } for nom in nominees.filter(member_name=member.id)
+                        ]
+                    }
+                member_data_list.append(member_data)
+            
+            data_dict[flat.pk] = {
+                'flat_details': {
+                    'unit_flat_unique': flat.unit_flat_unique,
+                    # Add more flat details as needed
+                },
+                'members': member_data_list,
+            }
+        print("DATA=========", data_dict)
+
+        # print("edit view==================")
+        # # FLAT DETAILS START
+        # print("FLAT DETAILS===========================")
+        # # print("FLAT DETAILS===========================", flats)
+        # history_flat_data = SocietyUnitFlatCreation.objects.filter(pk=flat_id).values("membermastercreation__member_name")
+        # history_member_data = MemberMasterCreation.objects.all()
+        # # history_shares_data = FlatSharesDetails.objects.all()
+        # # history_home_load_data = FlatHomeLoanDetails.objects.all()
+        # # history_gst_data = FlatGSTDetails.objects.all()
+        # # history_vehicle_data = FlatVehicleDetails.objects.all()
+        # # combined_data = []
+
+        # member_history_data = []
+        # member_history_obj = MemberMasterCreation.objects.filter(wing_flat=flat_id)
+        # history_shares_obj = FlatSharesDetails.objects.filter(wing_flat=flat_id)
+        # for parent in member_history_obj:
+        #     parent_data = {
+        #         'member_id': parent.pk,
+        #         'member_name': parent.member_name,
+        #         'ownership_percent': parent.ownership_percent,
+        #         'member_position': parent.member_position,
+        #         'member_dob': parent.member_dob,
+        #         'member_pan_no': parent.member_pan_no,
+        #         'member_aadhar_no': parent.member_aadhar_no,
+        #         'member_address': parent.member_address,
+        #         'member_state': parent.member_state,
+        #         'member_pin_code': parent.member_pin_code,
+        #         'member_email': parent.member_email,
+        #         'member_contact': parent.member_contact,
+        #         'member_emergency_contact': parent.member_emergency_contact,
+        #         'member_occupation': parent.member_occupation,
+        #         'member_is_primary': parent.member_is_primary,
+                
+        #         'nominee_Details': [
+        #             {
+        #                 'nominee_name': child.nominee_name,
+        #                 'date_of_nomination': child.date_of_nomination,
+        #                 'nominee_name': child.nominee_name,
+        #                 'date_of_nomination': child.date_of_nomination,
+        #                 'relation_with_nominee': child.relation_with_nominee,
+        #                 'nominee_sharein_percent': child.nominee_sharein_percent,
+        #                 'nominee_dob': child.nominee_dob,
+        #                 'nominee_aadhar_no': child.nominee_aadhar_no,
+        #                 'nominee_pan_no': child.nominee_pan_no,
+        #                 'nominee_email': child.nominee_email,
+        #                 'nominee_address': child.nominee_address,
+        #                 'nominee_state': child.nominee_state,
+        #                 'nominee_pin_code': child.nominee_pin_code,
+        #                 'nominee_contact': child.nominee_contact,
+        #                 'nominee_emergency_contact': child.nominee_emergency_contact,
+        #             } for child in children.filter(member_name=parent.id)
+        #         ]
+        #     }
+        #     member_history_data.append(parent_data)
+
+        # for flat in history_flat_data:
+        #     flat_data = {
+        #         'flat_history_id': flat.pk,
+                
+        #     }
+
+        # FLAT DETAILS END
     return render(request, "member_master_table.html", {})
 
+def tenent_master(request):
+    flat_number = request.POST.get("flat_number")
+    print("FLAT================", flat_number)
+    tenant_master_lable = [
+        "wing_flat", "tenent_name", "tenent_pan_number", "tenent_pan_doc", "tenent_contact", "tenent_aadhar_number", "tenent_aadhar_doc",
+        "tenent_address", "tenent_city", "tenent_state", "tenent_pin_code", "tenent_email", "tenent_other_doc", "tenent_doc_specification",  
+    ]
+    tenant_objects = TenentMasterCreation.objects.filter(wing_flat__isnull=False).values(
+        "wing_flat", "tenent_name", "tenent_pan_number", "tenent_pan_doc", "tenent_contact", "tenent_aadhar_number", "tenent_aadhar_doc",
+        "tenent_address", "tenent_city", "tenent_state", "tenent_pin_code", "tenent_email", "tenent_other_doc", "tenent_doc_specification"
+    )
+
+    print("tenant_details=============", tenant_objects )
+
+    if request.method == "POST":
+        tenent_data = request.POST.get("tenentData")
+        if tenent_data:
+            tenent_data = json.loads(tenent_data)
+            print("tenent_data===============", tenent_data)
+            aadhar = request.FILES.get('tenent_aadhar_doc', None)
+            pan = request.FILES.get('tenent_pan_doc', None)
+            other_doc = request.FILES.get('tenent_other_doc', None)
+            print(f"AADHAR======{aadhar}, PAN======{pan}, Other dc========{other_doc}")
+            TenentMasterCreation.objects.create(
+                **tenent_data,
+                tenent_aadhar_doc = aadhar,
+                tenent_pan_doc = pan,
+                tenent_other_doc = other_doc
+            )
+            
+    return render(request, "tenent_master.html", {
+      "tenant_master_lable": tenant_master_lable,
+      "tenant_objects": tenant_objects
+    })
+
+
+
+def tenent_allocation(request):
+    # GET OWNER NAME BASED ON FLAT SELECTED
+    tenant_allocation_seleted_flat = request.POST.get("tenant_allocation_seleted_flat")
+    if tenant_allocation_seleted_flat:
+        try:
+            get_owner_obj = MemberMasterCreation.objects.get(wing_flat__unit_flat_unique=tenant_allocation_seleted_flat, member_is_primary=True)
+            get_owner_name = get_owner_obj.member_name
+            return JsonResponse({'get_owner_name': get_owner_name})
+        except MemberMasterCreation.DoesNotExist: 
+            owner_not_found_placeholder = "Not Found, This Flat Is Empty!"
+            return JsonResponse({'owner_not_found_placeholder': owner_not_found_placeholder})
+    
+    # GET TENANT NAME BASED ON AADHAR/PAN
+    tenant_pan_aadhar = request.POST.get("id_tenant_aadhar_pan")
+    if tenant_pan_aadhar:
+        try:
+            tenant_obj = TenentMasterCreation.objects.get(Q(tenent_pan_number=tenant_pan_aadhar) | Q(tenent_aadhar_number=tenant_pan_aadhar))
+            tenant_name = tenant_obj.tenent_name
+            return JsonResponse({'tenant_name': tenant_name})
+        except TenentMasterCreation.DoesNotExist:
+            tenant_name_placeholder = "No Tenant Found!"
+            return JsonResponse({'tenant_name_placeholder': tenant_name_placeholder})
+    
+    # TENENT ALLOCATION TABLE
+    flat_numbers_queryset = SocietyUnitFlatCreation.objects.values_list("unit", "flat")
+    wing_flat_no = {
+        "": "Select Flat No",
+        **{f"{wing}-{flat}": f"{wing}-{flat}" for wing, flat in flat_numbers_queryset}
+    }
+    tenant_allocation_lable = [
+        "id", "wing_flat", "tenent_name", "flat_primary_owner", "tenant_aadhar_number", "tenant_pan_number", "tenant_from_date", "tenant_to_date", "tenant_agreement", "tenant_noc",
+    ]
+    tenant_allocation_objects = TenantAllocationCreation.objects.filter(wing_flat__isnull=False).values(
+        "id", "wing_flat__unit_flat_unique", "tenent_name__tenent_name", "flat_primary_owner", "tenant_aadhar_number", "tenant_pan_number", "tenant_from_date", "tenant_to_date", "tenant_agreement", "tenant_noc",
+    )
+
+    # TENENT POST METHOD
+    tenant_creation = request.POST.get("tenentData")
+    if tenant_creation:
+        tenant_creation =json.loads(tenant_creation)
+        print("TENENT DATA============", tenant_creation)
+        tenant_agreement = request.FILES.get('tenant_agreement', None)
+        tenant_noc = request.FILES.get('tenant_noc', None)
+        print(f"tenant agreement: {tenant_agreement}, tenant noc: {tenant_noc}")
+        tenant_aadhar = ""
+        tenant_pan = ""
+        if tenant_creation.get('tenant_aadhar_pan'):
+            if len(tenant_creation.get('tenant_aadhar_pan')) > 10:
+                tenant_aadhar = tenant_creation.get('tenant_aadhar_pan')
+            else:
+                tenant_pan = tenant_creation.get('tenant_aadhar_pan')
+
+        # print("AADHAR NO............", tenant_creation.get('tenant_aadhar_pan'))
+        # tm = TenentMasterCreation.objects.get(Q(tenent_pan_number=tenant_pan) | Q(tenent_aadhar_number=tenant_aadhar))
+        # print("TM===============", tm)
+            
+        TenantAllocationCreation.objects.create(
+            wing_flat = SocietyUnitFlatCreation.objects.get(unit_flat_unique = tenant_creation.get('get_owner_name')),
+            flat_primary_owner = tenant_creation.get('flat_primary_owner'),
+            tenent_name = TenentMasterCreation.objects.get(Q(tenent_pan_number=tenant_pan) | Q(tenent_aadhar_number=tenant_aadhar)),
+            tenant_pan_number = tenant_pan,
+            tenant_aadhar_number = tenant_aadhar,
+            tenant_from_date = tenant_creation.get('tenant_period_from'),
+            tenant_to_date = tenant_creation.get('tenant_period_to'),
+            tenant_agreement = tenant_agreement, 
+            tenant_noc = tenant_noc
+        )
+
+    
+    return render(request,'tenent_allocation.html', {
+        "tenant_allocation_lable": tenant_allocation_lable,
+        "tenant_allocation_objects": tenant_allocation_objects,
+        "wing_flat_no": wing_flat_no
+    })
+
+
+
+def tenant_allocation_edit(request):
+    print("edit allocation!!!!!!!!!!!!!!!!!")
+    if request.method == "POST":
+        tenant_allocation_id = request.POST.get('tenant_allocation_id')
+        if tenant_allocation_id:
+            tenant_obj = list(TenantAllocationCreation.objects.filter(id=tenant_allocation_id).values(
+                "wing_flat__unit_flat_unique", "tenent_name__tenent_name", "flat_primary_owner", "tenant_aadhar_number", "tenant_pan_number",
+                  "tenant_from_date", "tenant_to_date", "tenant_agreement", "tenant_noc"
+                ))
+            print("tenant_allocation_id============", tenant_obj)
+            return JsonResponse({'tenant_obj': json.dumps(tenant_obj, default=date_handler)})
+    return render(request,'tenent_allocation.html')
+
+
+
+
+
+
+
+
+def house_help_allocation(request):
+    flat_numbers_queryset = SocietyUnitFlatCreation.objects.values_list("unit", "flat")
+    wing_flat_no = {
+        "": "Select Flat No",
+        **{f"{wing}-{flat}": f"{wing}-{flat}" for wing, flat in flat_numbers_queryset}
+    }
+    flat_number = request.POST.get("flat_number")
+    print("FLAT================", flat_number)
+    house_help_allocation_lable = [
+        "wing_flat", "owner_name", "house_help_aadhar", "house_help_pan", "house_help_name", "house_help_role", "house_help_period_from", "house_help_period_to", "status"
+    ]
+    house_help_allocation_objects = HouseHelpAllocation.objects.all().values(
+        "wing_flat", "owner_name__house_help_name", "house_help_aadhar__house_help_aadhar_number", "house_help_pan__house_help_pan_number", "house_help_name", "house_help_role", "house_help_period_from", "house_help_period_to", "status"
+    )
+
+    # GET OWNER NAME BASED ON FLAT SELECTED
+    hh_allocation_seleted_flat = request.POST.get("hh_flat_owner_name")
+    if hh_allocation_seleted_flat:
+        try:
+            get_owner_obj = MemberMasterCreation.objects.get(wing_flat__unit_flat_unique=hh_allocation_seleted_flat, member_is_primary=True)
+            get_owner_name = get_owner_obj.member_name
+            print("==================", get_owner_name)
+            return JsonResponse({'get_owner_name': get_owner_name})
+        except MemberMasterCreation.DoesNotExist: 
+            owner_not_found_placeholder = "Not Found, This Flat Is Empty!"
+            return JsonResponse({'owner_not_found_placeholder': owner_not_found_placeholder})
+        
+
+    # GET HH NAME BASED ON AADHAR/PAN
+    hh_pan_aadhar = request.POST.get("id_hh_aadhar_pan")
+    print("============", hh_pan_aadhar)
+    if hh_pan_aadhar:
+        try:
+            hh_obj = HouseHelpCreation.objects.get(Q(house_help_aadhar_number=hh_pan_aadhar) | Q(house_help_pan_number=hh_pan_aadhar))
+            hh_name = hh_obj.house_help_name
+            hh_role = hh_obj.house_help_city
+            print("============", hh_name)
+            return JsonResponse({'hh_name': hh_name, "hh_role": hh_role})
+        except HouseHelpCreation.DoesNotExist:
+            hh_name_placeholder = "No House Help Found!"
+            return JsonResponse({'hh_name_placeholder': hh_name_placeholder, "hh_role_placeholder": "Not Found!"})
+
+    return render(request,'house_help_allocation.html', {
+        "wing_flat_no": wing_flat_no,
+      "house_help_allocation_lable": house_help_allocation_lable,
+      "house_help_allocation_objects": house_help_allocation_objects
+    })
 
 
 
@@ -403,7 +704,61 @@ def member_edit_view(request):
 
 
 
-# def member_details_view(request):
-#     id = request.POST.get("id")
-#     print("id========", id)
-#     render(request, "member_master_table.html")
+
+def house_help_master(request):
+    flat_numbers_queryset = SocietyUnitFlatCreation.objects.values_list("unit", "flat")
+    wing_flat_no = {
+        "": "Select Flat No",
+        **{f"{wing}-{flat}": f"{wing}-{flat}" for wing, flat in flat_numbers_queryset}
+    }
+    # HH CREATION TABLE
+    house_help_label = [
+        "wing_flat", "house_help_name", "house_help_pan_number", "house_help_pan_doc", "house_help_contact", 
+        "house_help_aadhar_number", "se_help_aadhar_doc", "house_help_address", "house_help_city", 
+        "house_help_state", "house_help_pin", "other_doc", "document_specifications"
+        ]
+    house_help_objects = HouseHelpCreation.objects.filter(wing_flat__isnull=False).values(
+        "wing_flat__unit_flat_unique", "house_help_name", "house_help_pan_number", "house_help_pan_doc", "house_help_contact", 
+        "house_help_aadhar_number", "se_help_aadhar_doc", "house_help_address", "house_help_city", 
+        "house_help_state", "house_help_pin", "other_doc", "document_specifications"
+    )
+
+    return render(request,'house_help_master.html', {
+       "wing_flat_no": wing_flat_no,
+       "house_help_label": house_help_label,
+       "house_help_objects": house_help_objects
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def house_help_allocation_edit(request):
+    return render(request,'house_help_allocation.html')

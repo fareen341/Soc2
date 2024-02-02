@@ -82,6 +82,11 @@ class MemberMasterCreation(models.Model):
     member_emergency_contact = models.CharField(max_length=200, null=True, blank=True, verbose_name="Emerg. Contact No.")
     member_occupation = models.CharField(max_length=200, null=True, blank=True, verbose_name="Occupation")
     member_is_primary = models.BooleanField(default = False, null=True, blank=True, verbose_name="Primary")
+    date_of_admission = models.DateField(null=True, blank=True)
+    date_of_entrance_fees = models.DateField(null=True, blank=True)
+    date_of_cessation = models.CharField(max_length=200, null=True, blank=True)
+    reason_for_cessation = models.CharField(max_length=200, null=True, blank=True)
+    status = models.BooleanField(null=True, blank=True)
 
     def __str__(self):
         return self.member_name
@@ -152,3 +157,61 @@ class FlatVehicleDetails(models.Model):
     sticker_number = models.CharField(max_length=300, null=True, blank=True) 
     select_charge = models.CharField(max_length=300, null=True, blank=True) 
     new_vehicle_id_select_charge = models.CharField(max_length=300, null=True, blank=True) 
+
+
+class TenentMasterCreation(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    tenent_name = models.CharField(max_length=300, null=True, blank=True)
+    tenent_pan_number = models.CharField(max_length=300, null=True, blank=True)
+    tenent_pan_doc = models.FileField(upload_to='files/', null=True, blank=True)
+    tenent_contact = models.CharField(max_length=300, null=True, blank=True)
+    tenent_aadhar_number = models.CharField(max_length=300, null=True, blank=True)
+    tenent_aadhar_doc = models.FileField(upload_to='files/', null=True, blank=True)
+    tenent_address = models.CharField(max_length=300, null=True, blank=True)
+    tenent_city = models.CharField(max_length=300, null=True, blank=True)
+    tenent_state = models.CharField(max_length=300, null=True, blank=True)
+    tenent_pin_code = models.CharField(max_length=300, null=True, blank=True)
+    tenent_email = models.CharField(max_length=300, null=True, blank=True)
+    tenent_other_doc = models.FileField(upload_to='files/', null=True, blank=True)
+    tenent_doc_specification = models.CharField(max_length=300, null=True, blank=True)
+
+
+class TenantAllocationCreation(models.Model):
+    # change to foreign key
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    tenent_name = models.ForeignKey(TenentMasterCreation, on_delete=models.CASCADE)
+    flat_primary_owner = models.CharField(max_length=300, null=True, blank=True)
+    tenant_aadhar_number = models.CharField(max_length=300, null=True, blank=True)
+    tenant_pan_number = models.CharField(max_length=300, null=True, blank=True)
+    tenant_from_date = models.DateField(null=True, blank=True)
+    tenant_to_date = models.DateField(null=True, blank=True)
+    tenant_agreement = models.FileField(upload_to='files/', null=True, blank=True)
+    tenant_noc = models.FileField(upload_to='files/', null=True, blank=True)
+
+
+class HouseHelpCreation(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    house_help_name = models.CharField(max_length=300, null=True, blank=True)
+    house_help_pan_number = models.CharField(max_length=300, null=True, blank=True)
+    house_help_pan_doc = models.FileField(upload_to='files/', null=True, blank=True)
+    house_help_contact = models.CharField(max_length=300, null=True, blank=True)
+    house_help_aadhar_number = models.CharField(max_length=300, null=True, blank=True)
+    se_help_aadhar_doc = models.FileField(upload_to='files/', null=True, blank=True)
+    house_help_address = models.CharField(max_length=300, null=True, blank=True)
+    house_help_city = models.CharField(max_length=300, null=True, blank=True)
+    house_help_state = models.CharField(max_length=300, null=True, blank=True)
+    house_help_pin = models.CharField(max_length=300, null=True, blank=True)
+    other_doc = models.FileField(upload_to='files/', null=True, blank=True)
+    document_specifications = models.FileField(upload_to='files/', null=True, blank=True)
+
+
+class HouseHelpAllocation(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    owner_name = models.ForeignKey(HouseHelpCreation, on_delete=models.CASCADE, related_name='owner_allocations')
+    house_help_aadhar = models.ForeignKey(HouseHelpCreation, on_delete=models.CASCADE, null=True, blank=True, related_name='aadhar_allocations')
+    house_help_pan = models.ForeignKey(HouseHelpCreation, on_delete=models.CASCADE, null=True, blank=True, related_name='pan_allocations')
+    house_help_name = models.CharField(max_length=300, null=True, blank=True)
+    house_help_role = models.CharField(max_length=300, null=True, blank=True)
+    house_help_period_from = models.DateField(null=True, blank=True)
+    house_help_period_to = models.DateField(null=True, blank=True)
+    status = models.BooleanField(default=False, null=True, blank=True)

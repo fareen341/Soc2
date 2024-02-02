@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import (
     SocietyCreation, SocietyBankCreation, SocietyDocumentCreation, SocietyUnitFlatCreation,
     MemberMasterCreation, MemberNomineeCreation, FlatSharesDetails, FlatHomeLoanDetails,
-    FlatGSTDetails, FlatVehicleDetails
+    FlatGSTDetails, FlatVehicleDetails, TenentMasterCreation, TenantAllocationCreation, HouseHelpCreation,
+    HouseHelpAllocation
 )
 
 # Register your models here.
@@ -16,3 +17,7 @@ admin.site.register(FlatSharesDetails)
 admin.site.register(FlatHomeLoanDetails)
 admin.site.register(FlatGSTDetails)
 admin.site.register(FlatVehicleDetails)
+admin.site.register(TenentMasterCreation)
+admin.site.register(TenantAllocationCreation)
+admin.site.register(HouseHelpCreation)
+admin.site.register(HouseHelpAllocation)

@@ -53,6 +53,7 @@ $(document).ready(function () {
     // MEMBER ON-CHANGE END
 
     $('#save_and_next_member, #save_and_add_member').click(function (e) {
+        alert("call");
         clickedButton = this;
         let isValid = true;
         let ajax_ownsership = false;
@@ -670,11 +671,11 @@ $(document).ready(function () {
 
         let isValid = true;
         let required_fields = {
-            // "id_society_name": "Name cannot be empty",
-            // "id_admin_email": "Email cannnot be empty",
-            // // "id_alternate_email": "Alternate email cannot be empty",
-            // "id_registration_number": "Reg. No. cannot be empty!",
-            // "id_registration_doc": "Doc cannot be empty",
+            "id_society_name": "Name cannot be empty",
+            "id_admin_email": "Email cannnot be empty",
+            // "id_alternate_email": "Alternate email cannot be empty",
+            "id_registration_number": "Reg. No. cannot be empty!",
+            "id_registration_doc": "Doc cannot be empty",
             // "id_admin_mobile_number": "Mobile Number cannot be empty!",
             // "id_pan_number": "Pan No. cannot be empty",
             // "id_pan_number_doc": "Pan doc cannot be empty",
@@ -1092,6 +1093,7 @@ $(document).ready(function () {
             };
 
             var jsonData = JSON.stringify(documentKeyArray);
+            console.log("JSON============", jsonData)
 
             var formData = new FormData();
             form_fields.forEach(function (field) {
@@ -1372,6 +1374,359 @@ $(document).ready(function () {
 });
 
 
+
+$(document).ready(function () {
+    // GET OWNER NAME
+    $("#id_get_owner_name").change(function (e) {
+        let formData = new FormData();
+        formData.append('tenant_allocation_seleted_flat', this.value);
+        let headers = {
+            "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+        };
+
+        $.ajax({
+            url: '/tenent-allocation/',
+            method: 'POST',
+            data: formData,
+            headers: headers,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log("Success");
+                if(response.get_owner_name){
+                    $('#id_flat_primary_owner').val(response.get_owner_name)
+                }
+                if(response.owner_not_found_placeholder){
+                    $('#id_flat_primary_owner').val('');
+                    $('#id_flat_primary_owner').attr('placeholder', response.owner_not_found_placeholder);
+                }
+            },
+            error: function (xhr) {
+                alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+            }
+        });
+    });
+
+    // GET TENANT NAME BASED ON TENANT PAN
+    $("#id_tenant_aadhar_pan").on('input', function() {
+            let input_value = $(this).val();
+            // if (input_value.length >= 10) {
+                // 12 digits aadhar, 10 digits pan
+
+                let formData = new FormData();
+                formData.append('id_tenant_aadhar_pan', this.value);
+                let headers = {
+                    "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+                };
+
+                $.ajax({
+                    url: '/tenent-allocation/',
+                    method: 'POST',
+                    data: formData,
+                    headers: headers,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("Success");
+                        if(response.tenant_name){
+                            $('#id_tenant_name').val(response.tenant_name)
+                        }
+                        if(response.tenant_name_placeholder){
+                            $('#id_tenant_name').val('');
+                            $('#id_tenant_name').attr('placeholder', response.tenant_name_placeholder);
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            // }         
+        });   
+
+    // POST METHOD FOR TENANT ALLOCATION
+    $("#allocateTenant").click(function (e) {
+        let isValid = true;       
+
+        let required_fields = {
+            'id_get_owner_name': 'Pls select flat!',
+            'id_flat_primary_owner': 'Flat owner name is required!',
+            'id_tenant_name': 'Tenant name is required!',
+            'id_tenant_aadhar_pan': 'Tenant pan/aadhar is required!',
+            'id_tenant_period_from': 'Tenant from date is required!',
+            // 'id_tenant_period_to': 'Tenant to date is required!',
+            'id_tenant_agreement': 'Tenant agreement is required!',
+            'id_tenant_noc': 'Tenant NOC is required!',
+        }
+
+        function validateForm(step) {
+            for (let key in required_fields) {
+                let value = $("#" + key).val() ? $("#" + key).val().trim() : $("#" + key).val();
+                if (value === "") {
+                    isValid = false;
+                    $("#" + key).css("border-color", "red");
+                    $("#" + key + "_Error").text(required_fields[key]);
+                } else {
+                    $("#" + key).css("border-color", "");
+                    $("#" + key + "_Error").text("");
+                }
+            }
+            return isValid;
+        }
+
+        if (!validateForm()) {
+            return false;
+        } else {
+            let form_fields = [
+                'get_owner_name', 'flat_primary_owner', 'tenant_name', 'tenant_aadhar_pan', 'tenant_period_from', 
+                'tenant_period_to', 'tenant_agreement', 'tenant_noc'
+            ]
+            let tenentData = {};
+            let formData = new FormData();
+            form_fields.forEach(function (field) {
+                if ($('#id_' + field).prop('type') === 'file') {
+                    formData.append(field, $('#id_' + field)[0].files[0]);
+                } else {
+                    tenentData[field] = $('#id_' + field).val();
+                }
+            });
+            formData.append('tenentData', JSON.stringify(tenentData));
+            let headers = {
+                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+            };
+
+            $.ajax({
+                url: '/tenent-allocation/',
+                method: 'POST',
+                data: formData,
+                headers: headers,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("Success");
+                    toastr.success(response.message, "Tenent Allocated!");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 600);
+                },
+                error: function (xhr) {
+                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        }
+    });     
+
+
+
+    $('#tenentCreation').click(function (e) {
+        let isValid = true;       
+
+        let required_fields = {
+            'id_tenent_name': 'Name is required!',
+            'id_tenent_pan_number': 'PAN number is required!',
+            'id_tenent_pan_doc': 'PAN document is required!',
+            'id_tenent_contact': 'Contact number is required!',
+            'id_tenent_aadhar_number': 'Aadhar number is required!',
+            'id_tenent_aadhar_doc': 'Aadhar document is required!',
+            'id_tenent_address': 'Address is required!',
+            'id_tenent_state': 'State is required!',
+            'id_tenent_city': 'City is required!',
+            'id_tenent_pin_code': 'Pin code is required!',
+            'id_tenent_email': 'Email is required!',
+            'id_tenent_other_doc': 'Other document is required!',
+            'id_tenent_doc_specification': 'Document specification is required!'
+        }
+
+        function validateForm(step) {
+            for (let key in required_fields) {
+                let value = $("#" + key).val() ? $("#" + key).val().trim() : $("#" + key).val();
+                if (value === "") {
+                    isValid = false;
+                    $("#" + key).css("border-color", "red");
+                    $("#" + key + "_Error").text(required_fields[key]);
+                } else {
+                    $("#" + key).css("border-color", "");
+                    $("#" + key + "_Error").text("");
+                }
+            }
+            return isValid;
+        }
+
+        if (!validateForm()) {
+            return false;
+        } else {
+            let form_fields = [
+                "tenent_name", "tenent_pan_number", "tenent_pan_doc", "tenent_contact", "tenent_aadhar_number", 
+                "tenent_aadhar_doc", "tenent_address", "tenent_state", "tenent_city", "tenent_pin_code", 
+                "tenent_email", "tenent_other_doc", "tenent_doc_specification",
+            ]
+            let tenentData = {};
+            let formData = new FormData();
+            form_fields.forEach(function (field) {
+                if ($('#id_' + field).prop('type') === 'file') {
+                    formData.append(field, $('#id_' + field)[0].files[0]);
+                } else {
+                    tenentData[field] = $('#id_' + field).val();
+                }
+            });
+            formData.append('tenentData', JSON.stringify(tenentData));
+            let headers = {
+                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+            };
+
+            $.ajax({
+                url: '/tenent-allocation/',
+                method: 'POST',
+                data: formData,
+                headers: headers,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("Success");
+                    // if (response.reg_number) {
+                    // }
+                    toastr.success(response.message, "Tenent Added!");
+                    $("#tenentForm")[0].reset();
+                },
+                error: function (xhr) {
+                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        }
+    });
+
+    $('#tenentAllocation').on('hidden.bs.modal', function() {
+        form_fields = [
+            'id_get_owner_name', 'id_flat_primary_owner', 'id_tenant_name', 'id_tenant_aadhar_pan', 'id_tenant_period_from', 'id_tenant_agreement', 'id_tenant_noc'
+        ]
+        form_fields.forEach(function (key) {
+            $("#" + key + "_Error").text("");
+            $("#" + key).css("border-color", "");
+        });
+        $('#allocateTenantForm')[0].reset(); 
+      });
+    
+    // GET OWNER NAME FOR HOUSE HELP
+    $("#id_get_hh_flat_owner_name").change(function (e) {
+        let formData = new FormData();
+        formData.append('hh_flat_owner_name', this.value);
+        let headers = {
+            "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+        };
+
+        $.ajax({
+            url: '/house-help-allocation/',
+            method: 'POST',
+            data: formData,
+            headers: headers,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log("Success");
+                if(response.get_owner_name){
+                    console.log("OWNER NAME=====", response.get_owner_name)
+                    $('#id_flat_primary_owner_hh').val(response.get_owner_name)
+                }
+                if(response.owner_not_found_placeholder){
+                    $('#id_flat_primary_owner_hh').val('');
+                    $('#id_flat_primary_owner_hh').attr('placeholder', response.owner_not_found_placeholder);
+                }
+            },
+            error: function (xhr) {
+                alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+            }
+        });
+    });
+
+
+    // GET TENANT NAME BASED ON TENANT PAN
+    $("#id_hh_aadhar_pan").on('input', function() {
+        let input_value = $(this).val();
+        // if (input_value.length >= 10) {
+            // 12 digits aadhar, 10 digits pan
+
+            let formData = new FormData();
+            formData.append('id_hh_aadhar_pan', this.value);
+            let headers = {
+                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+            };
+
+            $.ajax({
+                url: '/house-help-allocation/',
+                method: 'POST',
+                data: formData,
+                headers: headers,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if(response.hh_name){
+                        $('#id_hh_name').val(response.hh_name)
+                        $('#id_hh_role').val(response.hh_role)                        
+                    }
+                    if(response.hh_name_placeholder){
+                        console.log("placehold=============")
+                        $('#id_hh_name').val('');
+                        $('#id_hh_name').attr('placeholder', response.hh_name_placeholder);
+                        $('#id_hh_role').val('');
+                        $('#id_hh_role').attr('placeholder', response.hh_role_placeholder);
+                    }
+                },
+                error: function (xhr) {
+                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        // }         
+    });
+      
+});
+
+
+
+function editAllocatedTenant(id){
+    let tenant_allocation_id = id;
+    let formData = new FormData();
+    formData.append('tenant_allocation_id', tenant_allocation_id);
+    let headers = {
+        "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+    };
+
+    $.ajax({
+        url: '/tenant-allocation-edit/',
+        method: 'POST',
+        data: formData,
+        headers: headers,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log("Success");
+            // toastr.success(response.message, "Tenent Added!");
+            // $("#tenentForm")[0].reset();
+            if (response.tenant_obj) {
+                let tenantJson = JSON.parse(response.tenant_obj);
+                console.log("tenantJson", tenantJson);
+                let htmlContent = '';
+                $('#allocateTenantFormEdit')[0].reset(); 
+                tenantJson.forEach(function(item) {
+                    console.log("DATA====")
+                    let aadhar_or_pan = item.tenant_aadhar_number || item.tenant_pan_number;
+                    $('#id_flat_primary_owner_Edit').val(item.flat_primary_owner);
+                    $('#id_get_owner_name_Edit').val(item.wing_flat__unit_flat_unique);
+                    $('#id_tenant_aadhar_pan_Edit').val(aadhar_or_pan);
+                    $('#id_tenant_name_Edit').val(item.tenent_name__tenent_name);
+                    $('#id_tenant_period_from_Edit').val(item.tenant_from_date);
+                    $('#id_tenant_period_to_Edit').val(item.tenant_to_date);
+                    // htmlContent =+ `
+                    // <h1>EDIT============</h1>
+                    // `;            
+                    // $('#allocateTenantForm').html(htmlContent);
+                    // SET THE VALUE OF DOC HERE 
+                });
+            }            
+        },
+        error: function (xhr) {
+            alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+        }
+    });
+}
 
 // preview file for every file input
 function PreviewImage(doc) {
@@ -1674,6 +2029,48 @@ function addWing() {
 // add nominee start
 var incNominee = 1;
 
+function addNomineeOnEditForm(id) {
+    const templateNominee = document.getElementById(id);
+    const clonedNominee = templateNominee.cloneNode(true);
+
+    // Remove red border color from the cloned form
+    const formInputs = clonedNominee.querySelectorAll("input, textarea, select");
+    formInputs.forEach(function (input) {
+        input.style.borderColor = ""; // Reset border color to default
+    });
+
+    // Remove error messages from the cloned form and update IDs
+    const errorMessages = clonedNominee.querySelectorAll(".error-message");
+    errorMessages.forEach(function (errorMsg) {
+        let currentId = errorMsg.getAttribute("id");
+        if (currentId) {
+            let newId = currentId.replace(/(\d+)?_Error$/, incNominee + "_Error");
+            errorMsg.setAttribute("id", newId);
+            errorMsg.textContent = ""; // Clear error message text
+        }
+    });
+
+    const inputs = clonedNominee.querySelectorAll("input, textarea, select");
+    inputs.forEach(function (input) {
+        let currentId = input.getAttribute("id");
+        if (currentId) {
+            let newId = currentId.replace(/\d+$/, incNominee);
+            input.setAttribute("id", newId + incNominee);
+            input.value = "";
+        }
+    });
+
+    incNominee++;
+    clonedNominee.id = "";
+    document.getElementById(id + '_cloned').appendChild(clonedNominee);
+    // document.getElementById(id + '_heading').innerHTML("New Heading");
+
+
+}
+// add nomine end
+
+
+// ADD NOMINEE ON EDIT VIEW
 function addNominee() {
     const templateNominee = document.getElementById("cloneNominee");
     const clonedNominee = templateNominee.cloneNode(true);
@@ -1708,13 +2105,9 @@ function addNominee() {
     incNominee++;
     clonedNominee.id = "";
     document.getElementById("newNominee").appendChild(clonedNominee);
-
 }
+// ADD NOMINEE ON EDIT VIEW
 
-
-
-
-// add nomine end
 
 
 
@@ -1871,70 +2264,117 @@ function addVehicle() {
 
 // MEMBER TABLE SCRIPT
 $(document).ready(function () {
+    // Define a custom filter function
+    $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            // Customize this logic based on your needs
+            var customStatus = data[1]; // Assuming the status is in the third column (adjust as needed)
+
+            // Get the selected value from the dropdown
+            var selectedStatus = $('#statusFilterDropdown').val();
+            console.log("selectedStatus==========", selectedStatus)
+            
+            if (selectedStatus === 'Active') {
+                return customStatus === 'Active';
+            } else if (selectedStatus === 'Inactive') {
+                return customStatus === 'Inactive';
+            }
+            return true;
+            // Apply the filter based on the selected status
+            
+        }
+    );
     var table = $('#example').DataTable({
         // dom: 'Bfrtip', // Include the buttons extension
-        "dom": '<"dt-buttons"lBr><"clear">ftip',         //Qlfrtip
+        "dom": '<"dt-buttons"Br><"clear">ftipl',         //Qlfrtip
         // buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         responsive: true,
-
+        
         buttons: [
             {
-                extend: 'colvis',
-                text: 'Hidden Columns',
-                postfixButtons: [
-                    'colvisRestore'
-                ]
-            },
-            {
-                extend: 'searchBuilder',
-                text: 'Advance Filter'
-            },
-            {
-                extend: 'print',
-                exportOptions: {
-                    // columns: ':visible',
-                    columns: ':visible:not(.exclude-print)', // Exclude columns with the class 'exclude-print'
-                    modifier: { search: 'applied', order: 'applied' },
+        extend: 'colvis',
+        text: 'More Column',
+        postfixButtons: [
+        'colvisRestore'
+        ]
+    },
+    {
+        extend: 'searchBuilder',
+        text: 'Filter'
+    },
+    {
+        extend: 'print',
+        exportOptions: {
+            // columns: ':visible',
+            columns: ':visible:not(.exclude-print)', // Exclude columns with the class 'exclude-print'
+            modifier: { search: 'applied', order: 'applied' },
+            
+        }
+    },
+    {
+        extend: 'print',
+        text: 'Print All',
+        exportOptions: {
+            columns: '*:not(.exclude-print)' // Exclude columns with the class 'exclude-print'
+            // modifier: { search: 'applied', order: 'applied' },
+            
+        }
+    },
+    
+    
+],
 
-                }
-            },
-            {
-                extend: 'print',
-                text: 'Print All Data',
-                exportOptions: {
-                    columns: '*:not(.exclude-print)' // Exclude columns with the class 'exclude-print'
-                    // modifier: { search: 'applied', order: 'applied' },
+order: [],
+"stripeClasses": [],
 
-                }
-            }
+columnDefs: [
+    
+    {"visible": true, "targets": [0,1,2,3,4]},
+    {"visible": false, "targets": '_all'},
+],
+fixedColumns: {
+    left: 2
+},
+// "paging": true,
+// 'pageLength': '5',
+pagingType: "simple",
+  paginate: {
+    previous: "<",
+    next: ">"
+  },
+scrollCollapse: false,
+scrollX: true
+});
 
-        ],
+let statusDD = $(
+    '<select class="dt-button ms-2 dt-button-custom dataTable-Text" id="statusFilterDropdown"><option value="all">All</option><option value="Active">Active</option><option value="Inactive">Inactive</option></select>')
+.on('change', function () {
+    table.draw();
+});
 
-        order: [],
-        "stripeClasses": [],
+$('#example_filter').append(statusDD);
 
-        columnDefs: [
+// Set the DataTable info text to be centered
+$('#example_info').css({
+    'text-align': 'center',
+    'position': 'relative',
+    'left': '40%',
+    'padding-top': '20px',
+    // 'margin-right': 'auto',
+    'display': 'block'
+});
 
-            { "visible": true, "targets": [0, 1, 2, 3, 4, 5] },
-            { "visible": false, "targets": '_all' },
-        ],
-        fixedColumns: {
-            left: 2
-        },
-        "paging": true,
-        scrollCollapse: false,
-        scrollX: true
+// Adjust the info text position when the table is redrawn
+table.on('draw.dt', function () {
+    $('#example_info').css({
+        'text-align': 'center',
+        'margin-left': 'auto',
+        'margin-right': 'auto'
     });
+});
+
 
 });
-// $('#example tr').css('height', '10px');
-
-
-
-// VIEW MEMBER DETAILS START 
-console.log("DATA==========")
-
-// VIEW MEMBER DETAILS END 
 
 
 // GET CSRF TOKEN
@@ -2850,124 +3290,123 @@ function editMemberDetails(id){
                 let homeLoanData = JSON.parse(response.home_loan_obj)
                 let gstData = JSON.parse(response.gst_obj)
                 let vehicleData = JSON.parse(response.vehicle_obj)
+                let wing_flat_no = JSON.parse(response.wing_flat_no)
                 let htmlContent = '';
                 let sharedContent = '';
                 let homeLoanContent = '';
                 let gstContent = '';
                 let vehicleContent = '';
+                let nomineeIdIncCount = 1;
+                let memberIdIncCount = 1;
+                let flat_and_ownership_ids = [];
                 memberData.forEach(function (item) {
+                    console.log("memberIdIncCount============", memberIdIncCount)
                     // Append member details
                     htmlContent +=
                         `
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button id="heading" class="accordion-button" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#collapse_edit${item.member_id}" aria-expanded="true" aria-controls="collapse_edit${item.member_id}"
-                                    aria-controls="collapseOne">
+                                    data-bs-toggle="collapse" data-bs-target="#collapse_edit${item.member_id}" aria-expanded="true" aria-controls="collapse_edit${item.member_id}">
                                     ${item.member_name}
                                 </button>
                             </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show"
+                            <div id="collapse_edit${item.member_id}" class="accordion-collapse collapse show"
                                 data-bs-parent="#member-edit-accordian">
                                 <div class="accordion-body">
                                     <form action="">
                                         <div class="row mt-3 ps-4 pe-4" style="text-align: left">
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <select name="" id="" class="w-100 form-control sty-inp">
-                                                        <option value="#">
-                                                            Select your Wing & Flat No.
-                                                        </option>
-                                                        <option value="#">A-Wing(101)</option>
-                                                        <option value="#">B-Wing(201)</option>
-                                                        <option value="#">C-Wing(301)</option>
+                                                    <select id="id_wing_flat" class="w-100 sty-inp">
+                                            `
+                                                    Object.keys(wing_flat_no).forEach(function(key) {
+                                                        htmlContent += `
+                                                            <option value="${key}">${wing_flat_no[key]}</option>;
+                                                            `
+                                                        });
+                                                htmlContent += `
                                                     </select>
-                                                    <label for="" class="sty-label">Wing & Flat No.</label>
+                                                    </div>
+                                                    <label for="id_wing_flat" class="sty-label">Wing & Flat No.</label>
+                                                    <small id="id_wing_flat_Error" class="error-message"></small>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="text" class="w-100 sty-inp" value="${item.member_name}" id="id_member_name" />
+                                                    <label for="id_member_name" class="sty-label">Member's Name</label>
+                                                    <small id="id_member_name_Error" class="error-message"></small>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" value=${item.member_name} />
-                                                    <label for="" class="sty-label">Member's Name</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp percentage-input" />
-                                                    <label for="" class="sty-label">Ownership %</label>
+                                                    <input type="text" class="w-100 sty-inp percentage-input" id="id_member_ownership${memberIdIncCount}" />
+                                                    <label for="id_member_ownership${memberIdIncCount}" class="sty-label">Ownership %</label>
+                                                    <small id="id_member_ownership${memberIdIncCount}_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <select name="" class="w-100 sty-inp form-control" id="">
-                                                        <option value="#">Select Position</option>
-                                                        <option value="associate-member">
-                                                            Associate Member
-                                                        </option>
+                                                    <select class="w-100 sty-inp form-control" id="id_member_position">
+                                                        <option value="">Select Position</option>
+                                                        <option value="associate-member">Associate Member</option>
                                                         <option value="chairman">Chairman</option>
                                                         <option value="secretary">Secretary</option>
                                                         <option value="treasurer">Treasurer</option>
                                                     </select>
-                                                    <label for="" class="sty-label">Position</label>
+                                                    <label for="id_member_position" class="sty-label">Position</label>
+                                                    <small id="id_member_position_Error" class="error-message"></small>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="date" class="w-100 sty-inp form-control" />
-                                                    <label for="" class="sty-label">Member DOB</label>
+                                                    <input type="date" class="w-100 sty-inp form-control" id="id_member_dob" />
+                                                    <label for="id_member_dob" class="sty-label">Member DOB</label>
+                                                    <small id="id_member_dob_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" />
-                                                    <label for="" class="sty-label">Member PAN No</label>
+                                                    <input type="text" class="w-100 sty-inp" id="id_member_pan_number"/>
+                                                    <label for="id_member_pan_number" class="sty-label">Member PAN No</label>
+                                                    <small id="id_member_pan_number_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp" />
-                                                    <label for="" class="sty-label">Member Aadhaar No</label>
+                                                    <input type="number" class="w-100 sty-inp" id="id_member_aadhar_no"/>
+                                                    <label for="id_member_aadhar_no" class="sty-label">Member Aadhaar No</label>
+                                                    <small id="id_member_aadhar_no_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <textarea class="w-100 sty-inp form-control" name="" id=""
-                                                        cols="30" rows="1"></textarea>
-                                                    <label for="" class="sty-label">Member Permanent
-                                                        Address</label>
+                                                    <textarea class="w-100 sty-inp form-control" id="id_member_address" cols="30" rows="1"></textarea>
+                                                    <label for="id_member_address" class="sty-label">Member Permanent Address</label>
+                                                    <small id="id_member_address_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <select class="w-100 sty-inp form-control" name="" id="">
-                                                        <option value="#">Select your State</option>
-                                                        <option value="Andhra Pradesh">
-                                                            Andhra Pradesh
-                                                        </option>
-                                                        <option value="Arunachal Pradesh">
-                                                            Arunachal Pradesh
-                                                        </option>
+                                                    <select class="w-100 sty-inp form-control" id="id_member_state">
+                                                        <option value="">Select your State</option>
+                                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
                                                         <option value="Assam">Assam</option>
                                                         <option value="Bihar">Bihar</option>
                                                         <option value="Chhattisgarh">Chhattisgarh</option>
                                                         <option value="Goa">Goa</option>
                                                         <option value="Gujarat">Gujarat</option>
                                                         <option value="Haryana">Haryana</option>
-                                                        <option value="Himachal Pradesh">
-                                                            Himachal Pradesh
-                                                        </option>
-                                                        <option value="Jammu and Kashmir">
-                                                            Jammu and Kashmir
-                                                        </option>
+                                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
                                                         <option value="Jharkhand">Jharkhand</option>
                                                         <option value="Karnataka">Karnataka</option>
                                                         <option value="Kerala">Kerala</option>
-                                                        <option value="Madhya Pradesh">
-                                                            Madhya Pradesh
-                                                        </option>
+                                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
                                                         <option value="Maharashtra">Maharashtra</option>
                                                         <option value="Manipur">Manipur</option>
                                                         <option value="Meghalaya">Meghalaya</option>
@@ -3000,44 +3439,105 @@ function editMemberDetails(id){
                                                         <option value="Lakshadweep">Lakshadweep</option>
                                                         <option value="Puducherry">Puducherry</option>
                                                     </select>
-                                                    <label for="" class="sty-label">State</label>
+                                                    <label for="id_member_state" class="sty-label">State</label>
+                                                    <small id="id_member_state_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp" />
-                                                    <label for="" class="sty-label">Pin Code</label>
+                                                    <input type="number" class="w-100 sty-inp" id="id_member_pin_code"/>
+                                                    <label for="id_member_pin_code" class="sty-label">Pin Code</label>
+                                                    <small id="id_member_pin_code_Error" class="error-message"></small>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="email" class="w-100 sty-inp" />
-                                                    <label for="" class="sty-label">Member Email</label>
+                                                    <input type="email" class="w-100 sty-inp" id="id_member_email" />
+                                                    <label for="id_member_email" class="sty-label">Member Email</label>
+                                                    <small id="id_member_email_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp form-control" />
-                                                    <label for="" class="sty-label">Member Contact No.</label>
+                                                    <input type="number" class="w-100 sty-inp form-control" id="id_member_contact"/>
+                                                    <label for="id_member_contact" class="sty-label">Member Contact No.</label>
+                                                    <small id="id_member_contact_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp" />
-                                                    <label for="" class="sty-label">Emergency Contact
-                                                        No.</label>
+                                                    <input type="number" class="w-100 sty-inp" id="id_member_emergency_contact"/>
+                                                    <label for="id_member_emergency_contact" class="sty-label">Emergency Contact No.</label>
+                                                    <small id="id_member_emergency_contact_Error" class="error-message"></small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 mb-3">
                                                 <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" />
-                                                    <label for="" class="sty-label">Occupation</label>
+                                                    <input type="text" class="w-100 sty-inp" id="id_member_occupation" />
+                                                    <label for="id_member_occupation" class="sty-label">Occupation</label>
+                                                    <small id="id_member_occupation_Error" class="error-message"></small>
                                                 </div>
+                                            </div>
+                                            
+
+                                            <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="date" class="w-100 sty-inp" id="id_date_of_admission" />
+                                                <label for="id_date_of_admission" class="sty-label">Date of admission</label>
+                                                <small id="id_date_of_admission_Error" class="error-message"></small>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <select id="id_flat_status" class="w-100 sty-inp" id="id_member_flat_status">
+                                                <option value="">Select Status</option>
+                                                <option value="owned">Owned</option>
+                                                <option value="rented">Rented</option>
+                                                <option value="vacant">Vacant</option>
+                                                <option value="black_listed">Black Listed</option>
+                                                </select>
+                                                <label for="id_member_flat_status" class="sty-label">Status</label>
+                                                <small id="id_member_flat_status_Error" class="error-message"></small>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="date" class="w-100 sty-inp" id="id_date_of_entrance_fees" />
+                                                <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance fees</label>
+                                                <small id="id_date_of_entrance_fees_Error" class="error-message"></small>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="date" class="w-100 sty-inp" id="id_date_of_cessation"/>
+                                                    <label for="id_date_of_cessation" class="sty-label">Date of cessation</label>
+                                                    <small id="id_date_of_cessation_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="text" class="w-100 sty-inp" id="id_cessation_reason" />
+                                                    <label for="id_cessation_reason" class="sty-label">Reason for cessation</label>
+                                                    <small id="id_cessation_reason_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 d-flex align-items-center">
+                                            <small id="id_is_primary">
+                                                <span>
+                                                <input type="checkbox" class="sty-inp" id="id_is_primary_val" />
+                                                </span>&nbsp;Make this Member as a Primary Member
+                                            </small>
+                                            <small id="id_is_primary_Error" class="error-message"></small>
                                             </div>
                                         </div>
 
-                                        <hr>
+                                        <div class="hr-container">
+                                            <hr class="hr-text text-center" style="font-size: 27px; color: #2b96f1" data-content="Nominee Details"/>
+                                        </div>
                     `
 
                     // Append nominee details
@@ -3046,80 +3546,80 @@ function editMemberDetails(id){
                             htmlContent +=
                             `
                             <div id="newNominee">
-                                <div class="row ps-4 pe-4 abcd" id="cloneNominee">
-                                <h2 id="heading" class="mb-3 text-center">Nominee: ${nominee.nominee_name}</h2>
+                            <div class="row ps-4 pe-4 abcd" id="cloneNominee_${item.member_id}">
+                            <h2 id="heading" class="mb-3 text-center">Nominee: ${nominee.nominee_name}</h2>
                                         <div class="col-lg-4 mb-3">
                                             <div class="w-100 sty-input-wrapper">
-                                                <input type="text" class="w-100 sty-inp" id="nomName0" value=${nominee.nominee_name} />
-                                                <label for="" class="sty-label">Nominee Name</label>
+                                                <input type="text" class="w-100 sty-inp" id="id_nominee_name${nomineeIdIncCount}" value="${nominee.nominee_name}" />
+                                                <label for="id_nominee_name${nomineeIdIncCount}" class="sty-label">Nominee Name</label>
+                                                <small id="id_nominee_name${nomineeIdIncCount}_Error" class="error-message"></small>
+                                                </div>
+                                        </div>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date${nomineeIdIncCount}" />
+                                            <label for="" class="sty-label">Date of Nomination</label>
+                                            <small id="id_nomination_date${nomineeIdIncCount}_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <input class="w-100 sty-inp form-control" type="text" name="" id="id_nominee_relation" />
+                                            <label for="" class="sty-label">Relation with Nominator</label>
+                                            <small id="id_nominee_relation_Error" class="error-message"></small>
                                             </div>
                                         </div>
 
                                         <div class="col-lg-4 mb-3">
                                             <div class="w-100 sty-input-wrapper">
-                                                <input type="date" class="w-100 sty-inp form-control"
-                                                    id="nomDate0" />
-                                                <label for="" class="sty-label">Date of
-                                                    Nomination</label>
+                                            <input type="text" class="w-100 sty-inp form-control percentage-input"
+                                                id="id_naminee_sharein" />
+                                            <label for="" class="sty-label">Nominee Sharein %</label>
+                                            <small id="id_naminee_sharein_Error" class="error-message"></small>
                                             </div>
                                         </div>
                                         <div class="col-lg-4 mb-3">
                                             <div class="w-100 sty-input-wrapper">
-                                                <input class="w-100 sty-inp form-control" type="text"
-                                                    name="" id="nomRelation0" />
-                                                <label for="" class="sty-label">Relation with
-                                                    Nominator</label>
+                                            <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
+                                            <label for="" class="sty-label">Nominee DOB</label>
+                                            <small id="id_nominee_dob_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
+                                            <label for="" class="sty-label">Nominee Aadhaar No</label>
+                                            <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
+                                            <label for="" class="sty-label">Nominee PAN No</label>
+                                            <small id="id_nominee_pan_no_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
+                                            <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+                                            <small id="id_nominee_email_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address" cols="30"
+                                                rows="1"></textarea>
+                                            <label for="" class="sty-label">Nominee Permanent Address</label>
+                                            <small id="id_nominee_address_Error" class="error-message"></small>
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="text"
-                                                    class="w-100 sty-inp form-control percentage-input"
-                                                    id="nomShares0" />
-                                                <label for="" class="sty-label">Nominee Sharein
-                                                    %</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="date" class="w-100 sty-inp" id="nomDOB0" />
-                                                <label for="" class="sty-label">Nominee DOB</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="number" class="w-100 sty-inp"
-                                                    id="nomAadhaar0" />
-                                                <label for="" class="sty-label">Nominee Aadhaar
-                                                    No</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="text" class="w-100 sty-inp" id="nomPan0" />
-                                                <label for="" class="sty-label">Nominee PAN No</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="email" class="w-100 sty-inp"
-                                                    id="nomeEmail0" />
-                                                <label for="" class="sty-label">Nominee Email</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <textarea class="w-100 sty-inp form-control" name=""
-                                                    id="nomAddress0" cols="30" rows="1"></textarea>
-                                                <label for="" class="sty-label">Nominee Permanent
-                                                    Address</label>
-                                            </div>
-                                        </div>
                                         <div class="col-lg-4 mb-3">
                                             <div class="w-100 sty-input-wrapper">
                                                 <select class="w-100 sty-inp form-control" name=""
-                                                    id="nomState0">
+                                                    id="id_nominee_state">
                                                     <option value="#">Select your State</option>
                                                     <option value="Andhra Pradesh">
                                                         Andhra Pradesh
@@ -3179,58 +3679,73 @@ function editMemberDetails(id){
                                                     <option value="Lakshadweep">Lakshadweep</option>
                                                     <option value="Puducherry">Puducherry</option>
                                                 </select>
-                                                <label for="" class="sty-label">State</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="number" class="w-100 sty-inp"
-                                                    id="nomPin0" />
-                                                <label for="" class="sty-label">Pin Code</label>
+                                                <label for="id_nominee_state" class="sty-label">State</label>
+                                                <small id="id_nominee_state_Error" class="error-message"></small>
                                             </div>
                                         </div>
 
                                         <div class="col-lg-4 mb-3">
                                             <div class="w-100 sty-input-wrapper">
-                                                <input type="number" class="w-100 sty-inp form-control"
-                                                    id="nomContact0" />
-                                                <label for="" class="sty-label">Nominee Contact
-                                                    No.</label>
+                                            <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
+                                            <label for="" class="sty-label">Pin Code</label>
+                                            <small id="id_nominee_pin_code_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number" />
+                                            <label for="" class="sty-label">Nominee Contact No.</label>
+                                            <small id="id_nominee_contact_number_Error" class="error-message"></small>
                                             </div>
                                         </div>
                                         <div class="col-lg-4 mb-3">
                                             <div class="w-100 sty-input-wrapper">
-                                                <input type="number" class="w-100 sty-inp"
-                                                    id="nomEmerContact0" />
-                                                <label for="" class="sty-label">Emergency Contact
-                                                    No.</label>
+                                            <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact" />
+                                            <label for="" class="sty-label">Emergency Contact No.</label>
+                                            <small id="id_nominee_emergency_contact_Error" class="error-message"></small>
                                             </div>
                                         </div>
-                                        <hr />
                                     </div>
-                                </div>                                                
+                                </div> 
+                                                                              
                             `
+                            nomineeIdIncCount = nomineeIdIncCount + 1;                            
                         });
-                        htmlContent +=
-                        `
-                        <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
-                            <button type="button" name="" class="btn btn-primary" onclick="addNominee()"> Add Nominee</button>
-                            <div class="two-btn">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Update</button>
-                            </div>
-                        </div>
-                        `;
                     }
                     htmlContent +=
+                        `        
+                        <div class="row ps-4 pe-4 abcd" id="cloneNominee_${item.member_id}_cloned">
+
+                        </div>
+                        <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
+                            <button type="button" id="newNominee_${item.member_id}" class="btn btn-primary" onclick="addNomineeOnEditForm('cloneNominee_${item.member_id}')"> Add Nominee</button>
+                        </div>                 
+                        </form>
+                        </div>
+                        </div>
+                        </div>
                         `
-                            </form>
-                            </div>
-                            </div>
-                            </div>
-                        `
+                    memberIdIncCount = memberIdIncCount + 1;
+                    // TO BE CONTINUE WITH OWNERSHIP
+                    flat_and_ownership_ids.push({
+                        flat: "#id_wing_flat" + memberIdIncCount, 
+                        ownership: "#id_member_ownership" + memberIdIncCount, 
+                    });
+                    
+                    
                 });
+                console.log("flat_and_ownership_ids=============", flat_and_ownership_ids)
+                htmlContent += `
+                    <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
+                        <div class="two-btn">
+                            <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" onclick="save_and_edit_member()">Update</button>
+                        </div>
+                    </div>
+                `
+
                 sharedContent =
                 `
                 <form action="">
@@ -3550,3 +4065,1038 @@ function editMemberDetails(id){
         }
     });
 }
+
+
+
+function save_and_edit_member() {
+    clickedButton = this;
+    let isValid = true;
+    let ajax_ownsership = false;
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // const max100NumberRegex = /^(?:[1-9]\d{2,}|1000+)$/;
+    let numberregex = /^([1-9]\d{0,1}|100)$/;
+    
+    let required_fields = {
+        // members ids
+        "id_wing_flat": "Pls select the flat number!",
+        "id_member_name": "Member name is required!",
+        "id_member_ownership": "Member ownership is required!",
+        // "id_member_position": "Member position is required!",
+        // "id_member_dob": "Date of birth is required!",
+        // "id_member_pan_number": "Member pan number is required!",
+        // "id_member_aadhar_no": "Member aadhar number is required!",
+        // "id_member_address": "Address is required!",
+        // "id_member_state": "State is required!",
+        // "id_member_pin_code": "Pin code is required",
+        // "id_member_email": "Email is reqired!",
+        // "id_member_contact": "Contact number is required!",
+        // "id_member_emergency_contact": "Emergency contact no. is required!",
+        // "id_member_occupation": "Occupation is required!",
+        // "id_date_of_admission": "Date of admission is required!",
+        // "id_member_flat_status": "Flat status is required!",
+        // "id_date_of_entrance_fees": "Date of entrance fees is required!",
+        // "id_date_of_cessation": "Date of admission is required!",
+        // "id_cessation_reason": "Cessation reason is reqired!",
+    };
+
+    let memberIds = {
+        // members ids
+        "id_wing_flat": "Pls select the flat number!",
+        "id_member_name": "Member name is required!",
+        "id_member_ownership": "Member ownership is required!",
+        // "id_member_position": "Member position is required!",
+        // "id_member_dob": "Date of birth is required!",
+        // "id_member_pan_number": "Member pan number is required!",
+        // "id_member_aadhar_no": "Member aadhar number is required!",
+        // "id_member_address": "Address is required!",
+        // "id_member_state": "State is required!",
+        // "id_member_pin_code": "Pin code is required",
+        // "id_member_email": "Email is reqired!",
+        // "id_member_contact": "Contact number is required!",
+        // "id_member_emergency_contact": "Emergency contact no. is required!",
+        // "id_member_occupation": "Occupation is required!",
+        // "id_date_of_admission": "Date of admission is required!",
+        // "id_member_flat_status": "Flat status is required!",
+        // "id_date_of_entrance_fees": "Date of entrance fees is required!",
+        // "id_date_of_cessation": "Date of admission is required!",
+        // "id_cessation_reason": "Cessation reason is reqired!",
+    };
+
+
+    let get_nominee_detail = {
+        // nominee ids
+        "id_nominee_name": "Nominee name is required!",
+        // "id_nomination_date": "Date of nomination is required!",
+        // "id_nominee_relation": "Nominee relation is required!",
+        // "id_naminee_sharein": "Nominee sharein is required!",
+        // "id_nominee_dob": "Nominee date of birth is required!",
+        // "id_nominee_aadhar_no": "Nominee aadhar no. is required!",
+        // "id_nominee_pan_no": "Nominee pan no. is required!",
+        // "id_nominee_email": "Nominee email is required!",
+        // "id_nominee_address": "Nominee address is required!",
+        // "id_nominee_state": "Nominee state is required!",
+        // "id_nominee_pin_code": "Nominee pin code is required!",
+        // "id_nominee_contact_number": "Nominee contact number is required!",
+        // "id_nominee_emergency_contact": "Nominee emergency contact is required!",
+    };
+
+    
+
+    let email_fields = {
+        // "id_member_email": "Invalid Email",
+        // "id_nominee_email": "Invalid Email"
+    }
+
+    // ADD INCREMENTED NOMINEE IN required_fields
+    for (let key in get_nominee_detail) {
+        Array.from(document.querySelectorAll('[id^="' + key + '"]'))
+            .filter(element => !element.id.includes('_Error'))
+            .map(element => {
+                required_fields[element.id] = get_nominee_detail[key];
+                return element;
+            });
+    }
+
+    // ADD INCREMENTED MEMBER IN required_fields
+    for (let key in memberIds) {
+        Array.from(document.querySelectorAll('[id^="' + key + '"]'))
+            .filter(element => !element.id.includes('_Error'))
+            .map(element => {
+                required_fields[element.id] = memberIds[key];
+                return element;
+            });
+    }
+
+
+
+    function validateForm(step) {
+        for (let key in required_fields) {
+            let inputValue = $("#" + key).val();
+            let value = (inputValue !== null && inputValue !== undefined) ? inputValue.trim() : "";
+            console.log("val============", value)
+
+            if ((value === "") || (
+                (key.startsWith("id_nominee_state")) && (value == "#") ||
+                (key == "id_member_position") && (value == "#") ||
+                (key == "id_member_state") && (value == "#")
+            )) {
+                isValid = false;
+                $("#" + key).css("border-color", "red");
+                $("#" + key + "_Error").text(required_fields[key]);
+            } else if (value && ((key === "id_member_email") && !emailRegex.test(value) || (key.startsWith("id_nominee_email")) && !emailRegex.test(value))) {
+                isValid = false;
+                $("#" + key).css("border-color", "red");
+                $("#" + key + "_Error").text("Invalid Email!");
+            } else if (value && ((key === "id_member_ownership") && !numberregex.test(value))) {
+                // console.log("NUMBER===============")
+                isValid = false;
+                $("#" + key).css("border-color", "red");
+                $("#" + key + "_Error").text("Percentage shoule be below 100");
+            } else {
+                if(key.startsWith("id_member_ownership") || key.startsWith("id_wing_flat")){
+                    data = $("#" + key).val();
+                    console.log("data======================", data)
+                }
+                $("#" + key).css("border-color", ""); // Reset to default
+                $("#" + key + "_Error").text(""); // Clear the error message
+            }
+        }
+
+        for (let key in email_fields) {
+            let value = $("#" + key).val().trim();
+            if (value && (!emailRegex.test(value))) {
+                isValid = false;
+                $("#" + key).css("border-color", "red");
+                $("#" + key + "_Error").text("Invalid Email");
+            } else {
+                $("#" + key).css("border-color", ""); // Reset to default
+                $("#" + key + "_Error").text(""); // Clear the error message
+            }
+        }
+
+        // OWNERSHIP VALIDATION
+        // let formData = new FormData();
+        // formData.append('get_ownership_ajax', true);
+        // formData.append('ajax_get_primary', false);
+        // formData.append('member_ownership', $('#id_member_ownership').val());
+        // formData.append('wing_flat_number', $('#id_wing_flat').val());
+
+        // let headers = {
+        //     "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+        // };
+
+        // $.ajax({
+        //     url: '/member-master/',
+        //     method: 'POST',
+        //     data: formData,
+        //     headers: headers,
+        //     processData: false,
+        //     contentType: false,
+        //     async: false,
+        //     success: function (response) {
+        //         console.log("Success=======Success");
+        //         if (response.ownership) {
+        //             $("#id_member_ownership").css("border-color", "red");
+        //             $("#id_member_ownership_Error").text(response.ownership);
+        //             ajax_ownsership = true;
+        //             isValid = false;
+        //             console.log("in if=====================in if")
+        //         } else {
+        //             $("#id_member_ownership").css("border-color", "");
+        //             $("#id_member_ownership_Error").text("");
+        //             console.log("in else=====================in else")
+
+        //             // tryna fix it might create problem later
+        //             // stopNext = false
+        //         }
+        //     },
+        //     error: function (xhr) {
+        //         console.log("Something went wrong! " + xhr.status + " " + xhr.statusText);
+        //     }
+        // });
+
+        return isValid;
+    }
+
+
+    // if (ajax_ownsership){}
+    if (!validateForm(1)) {
+        console.log("INVALID========================");
+        console.log("ajax_ownsership=========", ajax_ownsership)
+        toastr.error("Please correct all error to proceed!!");
+        stopNext = false
+    } else {
+        console.log("VALID========================")
+        stopNext = true;
+        const nominee_form_count = Array.from(document.querySelectorAll('[id^="id_nominee_name"]'))
+            .filter(element => !element.id.endsWith('_Error')).length;
+
+        for (var i = 0; i < nominee_form_count + 1; i++) {
+            let count = i
+            if (count === 0) {
+                count = "";
+            }
+            console.log("number is===========", count)
+            nomineeData.push({
+                ["nominee_name"]: $('#id_nominee_name' + count).val(),
+                ["date_of_nomination"]: $('#id_nomination_date' + count).val() === "" ? null : $('#id_nomination_date' + count).val(),
+                ["relation_with_nominee"]: $('#id_nominee_relation' + count).val(),
+                ["nominee_sharein_percent"]: $('#id_naminee_sharein' + count).val() === "" ? 0 : $('#id_naminee_sharein' + count).val(),
+                ["nominee_dob"]: $('#id_nominee_dob' + count).val() === "" ? null : $('#id_nominee_dob' + count).val(),
+                ["nominee_aadhar_no"]: $('#id_nominee_aadhar_no' + count).val(),
+                ["nominee_pan_no"]: $('#id_nominee_pan_no' + count).val(),
+                ["nominee_email"]: $('#id_nominee_email' + count).val(),
+                ["nominee_address"]: $('#id_nominee_address' + count).val(),
+                ["nominee_state"]: $('#id_nominee_state' + count).val(),
+                ["nominee_pin_code"]: $('#id_nominee_pin_code' + count).val(),
+                ["nominee_contact"]: $('#id_nominee_contact_number' + count).val(),
+                ["nominee_emergency_contact"]: $('#id_nominee_emergency_contact' + count).val(),
+            });
+        }
+        memberData.push({
+            ["member_name"]: $('#id_member_name').val(),
+            ["ownership_percent"]: $('#id_member_ownership').val(),
+            ["member_position"]: $('#id_member_position').val(),
+            ["member_dob"]: $('#id_member_dob').val() === "" ? null : $('#id_member_dob').val(),
+            ["member_pan_no"]: $('#id_member_pan_number').val(),
+            ["member_aadhar_no"]: $('#id_member_aadhar_no').val(),
+            ["member_address"]: $('#id_member_address').val(),
+            ["member_state"]: $('#id_member_state').val(),
+            ["member_pin_code"]: $('#id_member_pin_code').val(),
+            ["member_email"]: $('#id_member_email').val(),
+            ["member_contact"]: $('#id_member_contact').val(),
+            ["member_emergency_contact"]: $('#id_member_emergency_contact').val(),
+            ["member_occupation"]: $('#id_member_occupation').val(),
+            ["member_is_primary"]: $('#id_is_primary_val').prop('checked')
+
+        });
+
+        let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        let headers = {
+            "X-CSRFToken": csrfToken
+        };
+        let formData = new FormData();
+        let memberDataJson = JSON.stringify(memberData);
+        let nomineeDataJson = JSON.stringify(nomineeData);
+        formData.append('form_name', 'member_form_creation');
+        formData.append('memberData', memberDataJson);
+        formData.append('nomineeData', nomineeDataJson);
+        formData.append('member_ownership', $('#id_member_ownership').val());
+        formData.append('wing_flat_number', $('#id_wing_flat').val());
+
+
+        $.ajax({
+            url: '/member-master-creation/',
+            method: 'POST',
+            data: formData,
+            headers: headers,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log("Success");
+                toastr.success(response.message, "Member Details Added!");
+                // $("#msform")[0].reset();
+                if ($(clickedButton).is('#save_and_add_member')) {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
+                }
+
+            },
+            error: function (xhr) {
+                alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+            }
+        });
+    }
+}
+
+
+// Add member details
+function addMemberDetails(id){
+    let formData = new FormData();
+    formData.append('member_id', id);
+    formData.append('form_name', 'add_member_from_modal');
+
+    $.ajax({
+        url: '/member-master-creation/',
+        method: 'POST',
+        data: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log("Success");
+        },
+        error: function (xhr) {
+            alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+        }
+    });
+}
+
+
+
+function flatHistoryDetails(id){
+    let formData = new FormData();
+    formData.append('flat_id', id);
+
+    $.ajax({
+        url: '/member-edit-view/',
+        method: 'POST',
+        data: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log("Success");
+            // if (response.all_member_json) {
+            //     let memberData = JSON.parse(response.all_member_json)
+            //     let sharesData = JSON.parse(response.shares_details)
+            //     let homeLoanData = JSON.parse(response.home_loan_obj)
+            //     let gstData = JSON.parse(response.gst_obj)
+            //     let vehicleData = JSON.parse(response.vehicle_obj)
+            //     let htmlContent = '';
+            //     let sharedContent = '';
+            //     let homeLoanContent = '';
+            //     let gstContent = '';
+            //     let vehicleContent = '';
+            //     memberData.forEach(function (item) {
+            //         // Append member details
+            //         htmlContent +=
+            //             `
+            //             <div class="accordion-item">
+            //                 <h2 class="accordion-header">
+            //                     <button id="heading" class="accordion-button" type="button"
+            //                         data-bs-toggle="collapse" data-bs-target="#collapse_edit${item.member_id}" aria-expanded="true" aria-controls="collapse_edit${item.member_id}"
+            //                         aria-controls="collapseOne">
+            //                         ${item.member_name}
+            //                     </button>
+            //                 </h2>
+            //                 <div id="collapseOne" class="accordion-collapse collapse show"
+            //                     data-bs-parent="#member-edit-accordian">
+            //                     <div class="accordion-body">
+            //                         <form action="">
+            //                             <div class="row mt-3 ps-4 pe-4" style="text-align: left">
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <select name="" id="" class="w-100 form-control sty-inp">
+            //                                             <option value="#">
+            //                                                 Select your Wing & Flat No.
+            //                                             </option>
+            //                                             <option value="#">A-Wing(101)</option>
+            //                                             <option value="#">B-Wing(201)</option>
+            //                                             <option value="#">C-Wing(301)</option>
+            //                                         </select>
+            //                                         <label for="" class="sty-label">Wing & Flat No.</label>
+            //                                     </div>
+            //                                 </div>
+
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="text" class="w-100 sty-inp" value=${item.member_name} />
+            //                                         <label for="" class="sty-label">Member's Name</label>
+            //                                     </div>
+            //                                 </div>
+
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="text" class="w-100 sty-inp percentage-input" />
+            //                                         <label for="" class="sty-label">Ownership %</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <select name="" class="w-100 sty-inp form-control" id="">
+            //                                             <option value="#">Select Position</option>
+            //                                             <option value="associate-member">
+            //                                                 Associate Member
+            //                                             </option>
+            //                                             <option value="chairman">Chairman</option>
+            //                                             <option value="secretary">Secretary</option>
+            //                                             <option value="treasurer">Treasurer</option>
+            //                                         </select>
+            //                                         <label for="" class="sty-label">Position</label>
+            //                                     </div>
+            //                                 </div>
+
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="date" class="w-100 sty-inp form-control" />
+            //                                         <label for="" class="sty-label">Member DOB</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="text" class="w-100 sty-inp" />
+            //                                         <label for="" class="sty-label">Member PAN No</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="number" class="w-100 sty-inp" />
+            //                                         <label for="" class="sty-label">Member Aadhaar No</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <textarea class="w-100 sty-inp form-control" name="" id=""
+            //                                             cols="30" rows="1"></textarea>
+            //                                         <label for="" class="sty-label">Member Permanent
+            //                                             Address</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <select class="w-100 sty-inp form-control" name="" id="">
+            //                                             <option value="#">Select your State</option>
+            //                                             <option value="Andhra Pradesh">
+            //                                                 Andhra Pradesh
+            //                                             </option>
+            //                                             <option value="Arunachal Pradesh">
+            //                                                 Arunachal Pradesh
+            //                                             </option>
+            //                                             <option value="Assam">Assam</option>
+            //                                             <option value="Bihar">Bihar</option>
+            //                                             <option value="Chhattisgarh">Chhattisgarh</option>
+            //                                             <option value="Goa">Goa</option>
+            //                                             <option value="Gujarat">Gujarat</option>
+            //                                             <option value="Haryana">Haryana</option>
+            //                                             <option value="Himachal Pradesh">
+            //                                                 Himachal Pradesh
+            //                                             </option>
+            //                                             <option value="Jammu and Kashmir">
+            //                                                 Jammu and Kashmir
+            //                                             </option>
+            //                                             <option value="Jharkhand">Jharkhand</option>
+            //                                             <option value="Karnataka">Karnataka</option>
+            //                                             <option value="Kerala">Kerala</option>
+            //                                             <option value="Madhya Pradesh">
+            //                                                 Madhya Pradesh
+            //                                             </option>
+            //                                             <option value="Maharashtra">Maharashtra</option>
+            //                                             <option value="Manipur">Manipur</option>
+            //                                             <option value="Meghalaya">Meghalaya</option>
+            //                                             <option value="Mizoram">Mizoram</option>
+            //                                             <option value="Nagaland">Nagaland</option>
+            //                                             <option value="Odisha">Odisha</option>
+            //                                             <option value="Punjab">Punjab</option>
+            //                                             <option value="Rajasthan">Rajasthan</option>
+            //                                             <option value="Sikkim">Sikkim</option>
+            //                                             <option value="Tamil Nadu">Tamil Nadu</option>
+            //                                             <option value="Telangana">Telangana</option>
+            //                                             <option value="Tripura">Tripura</option>
+            //                                             <option value="Uttar Pradesh">
+            //                                                 Uttar Pradesh
+            //                                             </option>
+            //                                             <option value="Uttarakhand">Uttarakhand</option>
+            //                                             <option value="West Bengal">West Bengal</option>
+            //                                             <option value="Andaman and Nicobar ">
+            //                                                 Andaman and Nicobar
+            //                                             </option>
+            //                                             <option value="Islands">Islands</option>
+            //                                             <option value="Dadra and Nagar Haveli">
+            //                                                 Dadra and Nagar Haveli
+            //                                             </option>
+            //                                             <option value="Daman and Diu">
+            //                                                 Daman and Diu
+            //                                             </option>
+            //                                             <option value="Delhi">Delhi</option>
+            //                                             <option value="Ladakh">Ladakh</option>
+            //                                             <option value="Lakshadweep">Lakshadweep</option>
+            //                                             <option value="Puducherry">Puducherry</option>
+            //                                         </select>
+            //                                         <label for="" class="sty-label">State</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="number" class="w-100 sty-inp" />
+            //                                         <label for="" class="sty-label">Pin Code</label>
+            //                                     </div>
+            //                                 </div>
+
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="email" class="w-100 sty-inp" />
+            //                                         <label for="" class="sty-label">Member Email</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="number" class="w-100 sty-inp form-control" />
+            //                                         <label for="" class="sty-label">Member Contact No.</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="number" class="w-100 sty-inp" />
+            //                                         <label for="" class="sty-label">Emergency Contact
+            //                                             No.</label>
+            //                                     </div>
+            //                                 </div>
+            //                                 <div class="col-lg-4 mb-3">
+            //                                     <div class="w-100 sty-input-wrapper">
+            //                                         <input type="text" class="w-100 sty-inp" />
+            //                                         <label for="" class="sty-label">Occupation</label>
+            //                                     </div>
+            //                                 </div>
+            //                             </div>
+
+            //                             <hr>
+            //         `
+
+            //         // Append nominee details
+            //         if (item.nominee_Details.length > 0) {
+            //             item.nominee_Details.forEach(function (nominee) {
+            //                 htmlContent +=
+            //                 `
+            //                 <div id="newNominee">
+            //                     <div class="row ps-4 pe-4 abcd" id="cloneNominee">
+            //                     <h2 id="heading" class="mb-3 text-center">Nominee: ${nominee.nominee_name}</h2>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="text" class="w-100 sty-inp" id="nomName0" value=${nominee.nominee_name} />
+            //                                     <label for="" class="sty-label">Nominee Name</label>
+            //                                 </div>
+            //                             </div>
+
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="date" class="w-100 sty-inp form-control"
+            //                                         id="nomDate0" />
+            //                                     <label for="" class="sty-label">Date of
+            //                                         Nomination</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input class="w-100 sty-inp form-control" type="text"
+            //                                         name="" id="nomRelation0" />
+            //                                     <label for="" class="sty-label">Relation with
+            //                                         Nominator</label>
+            //                                 </div>
+            //                             </div>
+
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="text"
+            //                                         class="w-100 sty-inp form-control percentage-input"
+            //                                         id="nomShares0" />
+            //                                     <label for="" class="sty-label">Nominee Sharein
+            //                                         %</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="date" class="w-100 sty-inp" id="nomDOB0" />
+            //                                     <label for="" class="sty-label">Nominee DOB</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="number" class="w-100 sty-inp"
+            //                                         id="nomAadhaar0" />
+            //                                     <label for="" class="sty-label">Nominee Aadhaar
+            //                                         No</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="text" class="w-100 sty-inp" id="nomPan0" />
+            //                                     <label for="" class="sty-label">Nominee PAN No</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="email" class="w-100 sty-inp"
+            //                                         id="nomeEmail0" />
+            //                                     <label for="" class="sty-label">Nominee Email</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <textarea class="w-100 sty-inp form-control" name=""
+            //                                         id="nomAddress0" cols="30" rows="1"></textarea>
+            //                                     <label for="" class="sty-label">Nominee Permanent
+            //                                         Address</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <select class="w-100 sty-inp form-control" name=""
+            //                                         id="nomState0">
+            //                                         <option value="#">Select your State</option>
+            //                                         <option value="Andhra Pradesh">
+            //                                             Andhra Pradesh
+            //                                         </option>
+            //                                         <option value="Arunachal Pradesh">
+            //                                             Arunachal Pradesh
+            //                                         </option>
+            //                                         <option value="Assam">Assam</option>
+            //                                         <option value="Bihar">Bihar</option>
+            //                                         <option value="Chhattisgarh">
+            //                                             Chhattisgarh
+            //                                         </option>
+            //                                         <option value="Goa">Goa</option>
+            //                                         <option value="Gujarat">Gujarat</option>
+            //                                         <option value="Haryana">Haryana</option>
+            //                                         <option value="Himachal Pradesh">
+            //                                             Himachal Pradesh
+            //                                         </option>
+            //                                         <option value="Jammu and Kashmir">
+            //                                             Jammu and Kashmir
+            //                                         </option>
+            //                                         <option value="Jharkhand">Jharkhand</option>
+            //                                         <option value="Karnataka">Karnataka</option>
+            //                                         <option value="Kerala">Kerala</option>
+            //                                         <option value="Madhya Pradesh">
+            //                                             Madhya Pradesh
+            //                                         </option>
+            //                                         <option value="Maharashtra">Maharashtra</option>
+            //                                         <option value="Manipur">Manipur</option>
+            //                                         <option value="Meghalaya">Meghalaya</option>
+            //                                         <option value="Mizoram">Mizoram</option>
+            //                                         <option value="Nagaland">Nagaland</option>
+            //                                         <option value="Odisha">Odisha</option>
+            //                                         <option value="Punjab">Punjab</option>
+            //                                         <option value="Rajasthan">Rajasthan</option>
+            //                                         <option value="Sikkim">Sikkim</option>
+            //                                         <option value="Tamil Nadu">Tamil Nadu</option>
+            //                                         <option value="Telangana">Telangana</option>
+            //                                         <option value="Tripura">Tripura</option>
+            //                                         <option value="Uttar Pradesh">
+            //                                             Uttar Pradesh
+            //                                         </option>
+            //                                         <option value="Uttarakhand">Uttarakhand</option>
+            //                                         <option value="West Bengal">West Bengal</option>
+            //                                         <option value="Andaman and Nicobar ">
+            //                                             Andaman and Nicobar
+            //                                         </option>
+            //                                         <option value="Islands">Islands</option>
+            //                                         <option value="Dadra and Nagar Haveli">
+            //                                             Dadra and Nagar Haveli
+            //                                         </option>
+            //                                         <option value="Daman and Diu">
+            //                                             Daman and Diu
+            //                                         </option>
+            //                                         <option value="Delhi">Delhi</option>
+            //                                         <option value="Ladakh">Ladakh</option>
+            //                                         <option value="Lakshadweep">Lakshadweep</option>
+            //                                         <option value="Puducherry">Puducherry</option>
+            //                                     </select>
+            //                                     <label for="" class="sty-label">State</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="number" class="w-100 sty-inp"
+            //                                         id="nomPin0" />
+            //                                     <label for="" class="sty-label">Pin Code</label>
+            //                                 </div>
+            //                             </div>
+
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="number" class="w-100 sty-inp form-control"
+            //                                         id="nomContact0" />
+            //                                     <label for="" class="sty-label">Nominee Contact
+            //                                         No.</label>
+            //                                 </div>
+            //                             </div>
+            //                             <div class="col-lg-4 mb-3">
+            //                                 <div class="w-100 sty-input-wrapper">
+            //                                     <input type="number" class="w-100 sty-inp"
+            //                                         id="nomEmerContact0" />
+            //                                     <label for="" class="sty-label">Emergency Contact
+            //                                         No.</label>
+            //                                 </div>
+            //                             </div>
+            //                             <hr />
+            //                         </div>
+            //                     </div>                                                
+            //                 `
+            //             });
+            //             htmlContent +=
+            //             `
+            //             <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
+            //                 <button type="button" name="" class="btn btn-primary" onclick="addNominee()"> Add Nominee</button>
+            //                 <div class="two-btn">
+            //                     <button type="button" class="btn btn-secondary"
+            //                         data-bs-dismiss="modal">Close</button>
+            //                     <button type="submit" class="btn btn-primary">Update</button>
+            //                 </div>
+            //             </div>
+            //             `;
+            //         }
+            //         htmlContent +=
+            //             `
+            //                 </form>
+            //                 </div>
+            //                 </div>
+            //                 </div>
+            //             `
+            //     });
+            //     sharedContent =
+            //     `
+            //     <form action="">
+            //         <div class="row pt-3 ps-4 pe-4">
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <!-- <input type="number" class="w-100 sty-inp" /> -->
+            //                     <select name="" id="" class="w-100 sty-inp form-control">
+            //                         <option value="#">Select your Wing & Flat No.</option>
+            //                         <option value="#">A-Wing(101)</option>
+            //                         <option value="#">B-Wing(301)</option>
+            //                         <option value="#">C-Wing(301)</option>
+            //                     </select>
+            //                     <label for="" class="sty-label">Wing & Flat No.</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" value="${sharesData[0]?.folio_number || ''}" />
+            //                     <label for="" class="sty-label">Folio Number</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="date" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Share Issue Date</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Application Number</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Serial No. of Certificate</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Allotment Number</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Share No. from</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Share No. To</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="date" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Share Transfer Date</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Total Amount Received</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="date" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Total Amount Received On</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Transfer from Folio Number</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Transfer to Folio Number</label>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //         <hr>
+
+
+            //         <div class="two-btn float-end pb-3 pe-4">
+            //             <button type="button" class="btn btn-secondary"
+            //                 data-bs-dismiss="modal">Close</button>
+            //             <button type="submit" class="btn btn-primary">Update</button>
+            //         </div>
+            //     </form>
+            //     `;
+            //     homeLoanContent = 
+            //     `
+            //     <form action="">
+            //         <div class="row pt-3 ps-4 pe-4">
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="text" class="w-100 sty-inp" value="${homeLoanData[0]?.bank_loan_name || '-'}" />
+            //                     <label for="" class="sty-label">Hypothication Bank Name</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="text" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Object of Loan</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="date" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Loan Issue Date</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Loan Value</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Account Number</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Installment</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <!-- <input type="text" class="w-100 sty-inp" /> -->
+            //                     <select name="" class="w-100 form-control sty-inp" id="selectStatus">
+            //                         <option value="#">Select Status</option>
+            //                         <option value="option1">Active</option>
+            //                         <option value="option2">Closed</option>
+            //                     </select>
+            //                     <label for="" class="sty-label">Loan Status</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3" id="attachNOC" style="display: none;">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="file" class="w-100 sty-inp form-control" />
+            //                     <label for="" class="sty-label">Attach NOC</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="text" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Remarks</label>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //         <hr>
+
+
+            //         <div class="two-btn float-end pb-3 pe-4">
+            //             <button type="button" class="btn btn-secondary"
+            //                 data-bs-dismiss="modal">Close</button>
+            //             <button type="submit" class="btn btn-primary">Update</button>
+            //         </div>
+            //     </form>
+            //     `;
+
+            //     gstContent = 
+            //     `
+            //     <form action="">
+            //         <div class="row pt-3 ps-4 pe-4">
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="text" class="w-100 sty-inp" value="${gstData[0]?.gst_number || '-'}" />
+            //                     <label for="" class="sty-label">GST Number</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="text" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Billing State</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="text" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Billing Name</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <textarea class="w-100 sty-inp form-control" name="" id="" cols="30"
+            //                         rows="1"></textarea>
+            //                     <label for="" class="sty-label">Billing Address</label>
+            //                 </div>
+            //             </div>
+            //             <div class="col-lg-4 mb-3">
+            //                 <div class="w-100 sty-input-wrapper">
+            //                     <input type="number" class="w-100 sty-inp" />
+            //                     <label for="" class="sty-label">Contact Number</label>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //         <hr>
+
+            //         <div class="two-btn float-end pb-3 pe-4">
+            //             <button type="button" class="btn btn-secondary"
+            //                 data-bs-dismiss="modal">Close</button>
+            //             <button type="submit" class="btn btn-primary">Update</button>
+            //         </div>
+            //     </form>
+            //     `;
+
+            //     if (vehicleData && vehicleData.length > 0) {
+            //         vehicleData.forEach(function (item) {
+            //             vehicleContent += 
+            //             `
+            //             <form action="">
+            //                 <h1>===============VEHICLE=========</h1>
+            //                 <div id="newVehicle">                                    
+            //                     <div class="row mt-3" id="cloneVehicle">
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <input type="text" class="w-100 sty-inp" id="id_parking_lot0" value="${vehicleData[0]?.parking_lot || ''}" />
+            //                         <label for="id_parking_lot0" class="sty-label">Parking Lot</label>
+            //                         <small id="Error_id_parking_lot0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <input type="text" class="w-100 sty-inp" id="id_vehicle_type0" />
+            //                         <label for="id_vehicle_type0" class="sty-label">Vehicle Type</label>
+            //                         <small id="Error_id_vehicle_type0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <input type="text" class="w-100 sty-inp" id="id_vehicle_number0" />
+            //                         <label for="id_vehicle_number0" class="sty-label">Vehicle Number</label>
+            //                         <small id="Error_id_vehicle_number0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <input type="text" class="w-100 sty-inp" id="id_vehicle_brand0" />
+            //                         <label for="id_vehicle_brand0" class="sty-label">Brand & Model</label>
+            //                         <small id="Error_id_vehicle_brand0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <input type="file" class="w-100 sty-inp form-control" id="id_rc_copy0" />
+            //                         <label for="id_rc_copy0" class="sty-label">RC Copy</label>
+            //                         <small id="Error_id_rc_copy0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <input type="text" class="w-100 sty-inp form-control" id="id_sticker_number0" />
+            //                         <label for="id_sticker_number0" class="sty-label">Sticker Number</label>
+            //                         <small id="Error_id_sticker_number0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3">
+            //                         <div class="w-100 sty-input-wrapper">
+            //                         <select class="w-100 sty-inp form-control" name="" id="id_select_charge0"
+            //                             onchange="selectChange(this.id, ('related_' + this.id), ('vehicle_' + this.id))">
+            //                             <option value="#" selected>YES / NO</option>
+            //                             <option id="optN0" value="no">NO</option>
+            //                             <option id="optY0" value="yes">YES</option>
+            //                         </select>
+            //                         <!-- <input type="text" class="w-100 sty-inp"> -->
+            //                         <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
+            //                         <small id="Error_id_select_charge0" class="error-message"></small>
+            //                         </div>
+            //                     </div>
+            //                     <div class="col-lg-4 mb-3" id="addCharge0">
+            //                         <div class="w-100 sty-input-wrapper" id="vehicle_id_select_charge0">
+            //                     </div>
+            //                     </div>
+            //                     <hr />
+            //                 </div>
+            //                 <div class="row" id="newVehicleContainer"></div>
+            //                 </div>
+            //             </form> 
+
+            //             `;
+            //         });
+            //         vehicleContent += 
+            //         `
+            //             <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
+            //         `;
+            //     }else{
+            //         vehicleContent += 
+            //         `
+            //             <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
+            //         `;
+            //     }
+                
+            //     $('#memberEditForm').html(htmlContent);
+            //     $('#sharedmemberEditForm').html(sharedContent);
+            //     $('#homeloanEditForm').html(homeLoanContent);
+            //     $('#gstEditform').html(gstContent);
+            //     $('#vehicleEditForm').html(vehicleContent);
+            // }
+        
+        },
+        error: function (xhr) {
+            alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+        }
+    });
+}
+
+

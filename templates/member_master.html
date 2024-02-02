@@ -158,6 +158,38 @@
                         <small id="id_member_occupation_Error" class="error-message"></small>
                       </div>
                     </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="date" class="w-100 sty-inp" id="id_date_of_admission" />
+                        <label for="id_date_of_admission" class="sty-label">Date of admission</label>
+                        <small id="id_date_of_admission_Error" class="error-message"></small>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <select id="id_flat_status" class="w-100 sty-inp" id="id_member_flat_status">
+                          <option value="">Select Status</option>
+                          <option value="owned">Owned</option>
+                          <option value="rented">Rented</option>
+                          <option value="vacant">Vacant</option>
+                          <option value="black_listed">Black Listed</option>
+                        </select>
+                        <label for="id_member_flat_status" class="sty-label">Status</label>
+                        <small id="id_member_flat_status_Error" class="error-message"></small>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-3">
+                      <div class="w-100 sty-input-wrapper">
+                        <input type="date" class="w-100 sty-inp" id="id_date_of_entrance_fees" />
+                        <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance fees</label>
+                        <small id="id_date_of_entrance_fees_Error" class="error-message"></small>
+                      </div>
+                    </div>
+
+
                     <div class="col-lg-4 d-flex align-items-center">
                       <small id="id_is_primary">
                         <span>
@@ -166,10 +198,13 @@
                       </small>
                       <small id="id_is_primary_Error" class="error-message"></small>
                     </div>
+                    
                   </div>
                   <!-- ---Nominee Details--- -->
-                  <hr />
-                  <h2 id="heading" class="mb-3">Nominee Details</h2>
+                  <div class="hr-container">
+                    <hr class="hr-text text-center" style="font-size: 27px; color: #2b96f1" data-content="Nominee Details"/>
+                  </div>
+                  
                   <div id="newNominee">
                     <div class="row abcd" id="cloneNominee">
                       <!-- <center>h3</center> -->

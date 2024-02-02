@@ -1,0 +1,85 @@
+<div class="modal fade" id="tenentAllocation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="sty-input-wrapper w-100">
+                                <input type="text" class="sty-inp form-control w-100" name="" id="">
+                                <label for="" class="sty-label">Flat No.</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <div class="sty-input-wrapper w-100">
+                                <input type="text" class="sty-inp form-control w-100" name="" id="">
+                                <label for="" class="sty-label">Owner Name</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <div class="sty-input-wrapper w-100">
+                                <input type="text" class="sty-inp form-control w-100" name="" id="">
+                                <label for="" class="sty-label">Aadhaar / PAN No.</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <div class="sty-input-wrapper w-100">
+                                <input type="text" class="sty-inp form-control w-100" name="" id="">
+                                <label for="" class="sty-label">Tenant Name</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <div class="sty-input-wrapper w-100">
+                                <input type="text" class="sty-inp form-control w-100" name="" id="">
+                                <label for="" class="sty-label">Period From</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <div class="sty-input-wrapper w-100">
+                                <input type="text" class="sty-inp form-control w-100" name="" id="">
+                                <label for="" class="sty-label">Period To</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mb-2 d-flex">
+                            <div class="w-100 sty-input-wrapper">
+                                <input type="file" class="w-100 sty-inp form-control" name="" id="agreementDoc">
+                                <label for="" class="sty-label">Attach Agreement</label>
+                            </div>
+                            <div class="prev">
+                                <button type="button" class="sty-inp form-control"
+                                    onclick="PreviewImage('agreementDoc')">
+                                    <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mb-2 d-flex">
+                            <div class="w-100 sty-input-wrapper">
+                                <input type="file" class="w-100 sty-inp form-control" name="" id="NOCDoc">
+                                <label for="" class="sty-label">Attach NOC</label>
+                            </div>
+                            <div class="prev">
+                                <button type="button" class="sty-inp form-control"
+                                    onclick="PreviewImage('NOCDoc')">
+                                    <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+                </div>
+            </div>

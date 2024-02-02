@@ -363,34 +363,11 @@
                                   <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                             </fieldset>
                             <fieldset>
-                                <!-- <div class="form-card">
-                                    <div class="row">
-                                        <div class="col-7">
-                                            <h2 class="fs-title">Image Upload:</h2>
-                                        </div>
-                                        <div class="col-5">
-                                            <h2 class="steps">Step 3 - 4</h2>
-                                        </div>
-                                    </div> <label class="fieldlabels">Upload Your Photo:</label> <input type="file" name="pic" accept="image/*"> <label class="fieldlabels">Upload Signature Photo:</label> <input type="file" name="pic" accept="image/*">
-                                </div>  -->
 
                                 <form action="" method="" id="socDocumentForm" class="form">
                                     {% csrf_token %}
                                 <div class="row p-2 mt-2">
                                     <div class="col-lg-4 mb-3 d-flex">
-                                        <!-- <div class="mb-2 d-flex gap-2">
-                                            <label for="completionCertificate" class="form-label">Completion
-                                                Certificate</label>
-                                            <label class="filelabel">
-                                                <i class="fa fa-paperclip">
-                                                </i>
-                                                <span class="title">
-                                                    Add File
-                                                </span>
-                                                <input class="FileUpload1" id="FileInput" name="completionCertificate"
-                                                    type="file" />
-                                            </label>
-                                        </div> -->
 
                                         <div class="w-100 sty-input-wrapper">
                                             <input type="file" class="w-100 sty-inp form-control" name="" id="id_completion_cert">
@@ -405,20 +382,6 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 mb-3 d-flex">
-                                        <!-- <div class="mb-2 d-flex gap-2">
-                                            <label for="occupancyCertificate" class="form-label">Occupancy
-                                                Certificate</label>
-                                            <label class="filelabel1">
-                                                <i class="fa fa-paperclip">
-                                                </i>
-                                                <span class="title">
-                                                    Add File
-                                                </span>
-                                                <input class="FileUpload2" id="FileInput1" name="occupancyCertificate"
-                                                    type="file" />
-                                            </label>
-                                        </div> -->
-
                                         <div class="w-100 sty-input-wrapper">
                                             <input type="file" class="w-100 sty-inp form-control" name="" id="id_occupancy_cert">
                                             <label for="" class="sty-label">Occupancy Certificate</label>
@@ -432,18 +395,6 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 mb-3 d-flex">
-                                        <!-- <div class="mb-2 d-flex gap-2">
-                                            <label for="deedConvey" class="form-label">Deed of Conveyance</label>
-                                            <label class="filelabel2">
-                                                <i class="fa fa-paperclip">
-                                                </i>
-                                                <span class="title">
-                                                    Add File
-                                                </span>
-                                                <input class="FileUpload3" id="FileInput2" name="deedConvey" type="file" />
-                                            </label>
-                                        </div> -->
-
                                         <div class="w-100 sty-input-wrapper">
                                             <input type="file" class="w-100 sty-inp form-control" name="" id="id_deed_of_conveyance">
                                             <label for="" class="sty-label">Deed of Conveyance</label>
@@ -457,18 +408,6 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 mb-3 d-flex">
-                                        <!-- <div class="mb-2 d-flex gap-2">
-                                            <label for="societyLaws" class="form-label">Society Bye Laws</label>
-                                            <label class="filelabel3" style="margin-left: 35px;">
-                                                <i class="fa fa-paperclip">
-                                                </i>
-                                                <span class="title">
-                                                    Add File
-                                                </span>
-                                                <input class="FileUpload4" id="FileInput3" name="societyLaws" type="file" />
-                                            </label>
-                                        </div> -->
-
                                         <div class="w-100 sty-input-wrapper">
                                             <input type="file" class="w-100 sty-inp form-control" name="" id="id_society_by_law">
                                             <label for="" class="sty-label">Society Bye Laws</label>
@@ -482,21 +421,6 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6 mb-3 d-flex">
-                                        <!-- <div class="mb-2 d-flex gap-2">
-                                            <label for="otherDocuments" class="form-label">Other Documents</label>
-                                            <label class="filelabel4" style="margin-left: 26px;">
-                                                <i class="fa fa-paperclip">
-                                                </i>
-                                                <span class="title">
-                                                    Add File
-                                                </span>
-                                                <input class="FileUpload5" id="FileInput4" name="otherDocuments"
-                                                    type="file" />
-
-                                            </label>
-                                            <input type="text" placeholder="Specify your Document"
-                                                style="border: 1px solid lightgray; border-radius: 5px; padding-left: 10px;">
-                                        </div> -->
 
                                         <div class="w-100 sty-input-wrapper">
                                             <input type="file" class="w-100 sty-inp form-control" name="" id="id_soc_other_document">
@@ -525,26 +449,6 @@
                                 <input type="button" id="SocietyDocumentForm" name="next" class="next action-button" value="Save & Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                             </fieldset>
                             <fieldset>
-                                <!-- <div class="form-card">
-                                    <div class="row">
-                                        <div class="col-7">
-                                            <h2 class="fs-title">Finish:</h2>
-                                        </div>
-                                        <div class="col-5">
-                                            <h2 class="steps">Step 4 - 4</h2>
-                                        </div>
-                                    </div> <br><br>
-                                    <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-3"> <img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> </div>
-                                    </div> <br><br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-7 text-center">
-                                            <h5 class="purple-text text-center">You Have Successfully Signed Up</h5>
-                                        </div>
-                                    </div>
-                                </div> -->
-
                                 <div class="row">
                                     <div class="wing-info" style="text-align: left;">
                                         <p style="color: #616161;">As a first Step to set up your Complex, create blocks of your Apartment Complex below

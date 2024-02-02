@@ -1,0 +1,18 @@
+id_house_help_name
+id_house_help_pan_number
+id_house_help_pan_doc
+id_house_help_contact
+id_house_help_aadhar_number
+house_help_aadhar_doc
+id_house_help_address
+id_house_help_city
+id_house_help_state
+id_house_help_pin
+id_other_doc
+id_document_specifications
+
+
+
+
+1. for house help and tenant allocation:
+when period to date is given then change the status to false(inactive)

@@ -35,6 +35,11 @@
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
             tabindex="0">
             <div class="row mt-3 p-2">
+                <div class="d-flex">
+                    <p class="lead">Society Details</p>
+                    <button type="button" class="btn btn-primary ms-auto me-5" data-bs-toggle="modal"
+                        data-bs-target="#editSocietyDetails">edit</button>
+                </div>
                 {% for item in soc_object %}
                 <div class="col-3">
                     <p class="ms-3 view-label">Society Name</p>
@@ -132,6 +137,11 @@
         </div>
         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             <div class="row mt-3 p-2">
+                <div class="d-flex">
+                    <p class="lead">Bank Details</p>
+                    <button class="btn btn-success ms-auto me-5" data-bs-toggle="modal"
+                        data-bs-target="#addBankDetails">Add</button>
+                </div>
                 {% for item in soc_bank_object %}
                 <div class="d-flex w-75" style="justify-content: space-between;">
                     <div class="headingg">
@@ -142,8 +152,10 @@
                     <div class="optionn">
                         <p class="ms-auto">
                             <span>
-                                <i class="fa-solid fa-pen fa-xs pe-2" style="color: black"></i>
-                                <i class="fa-solid fa-trash-can fa-xs" style="color: black;"></i>
+                                <i class="fa-solid fa-pen fa-xs pe-2" style="color: black" data-bs-toggle="modal"
+                                    data-bs-target="#editBankDetails"></i>
+                                <i class="fa-solid fa-trash-can fa-xs" style="color: black;" data-bs-toggle="modal"
+                                    data-bs-target="#deleteBankDetails"></i>
                             </span>
                         </p>
                     </div>
@@ -218,27 +230,29 @@
             <div class="row mt-3 p-2">
                 <div class="col-lg-6">
                     <div class="row">
-                        
+
                         <p class="lead">Society Documents</p>
                         {% for item in soc_document_object %}
                         <div class="col-4">
-                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Completion Certificate</b></p>
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Completion Certificate</b>
+                            </p>
                         </div>
                         <div class="col-8">
                             <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
-                                rel="noopener" download="Society-Registration-Certificate.jpg"
-                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.completion_cert}}</a>
-                        </p>
+                                    rel="noopener" download="Society-Registration-Certificate.jpg"
+                                    href="./images/my-images/Society-Registration-Certificate.jpg">{{item.completion_cert}}</a>
+                            </p>
                         </div>
 
                         <div class="col-4">
-                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Occupancy Certificate</b></p>
+                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>Occupancy Certificate</b>
+                            </p>
                         </div>
                         <div class="col-8">
                             <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
-                                rel="noopener" download="Society-Registration-Certificate.jpg"
-                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.occupancy_cert}}</a>
-                        </p>
+                                    rel="noopener" download="Society-Registration-Certificate.jpg"
+                                    href="./images/my-images/Society-Registration-Certificate.jpg">{{item.occupancy_cert}}</a>
+                            </p>
                         </div>
 
                         <div class="col-4">
@@ -246,9 +260,9 @@
                         </div>
                         <div class="col-8">
                             <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
-                                rel="noopener" download={{item.deed_of_conveyance}}
-                                href="">{{item.deed_of_conveyance}}</a>
-                        </p>
+                                    rel="noopener" download={{item.deed_of_conveyance}}
+                                    href="">{{item.deed_of_conveyance}}</a>
+                            </p>
                         </div>
 
                         <div class="col-4">
@@ -256,53 +270,65 @@
                         </div>
                         <div class="col-8">
                             <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
-                                rel="noopener" download="Society-Registration-Certificate.jpg"
-                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.society_by_law}}</a>
-                        </p>
+                                    rel="noopener" download="Society-Registration-Certificate.jpg"
+                                    href="./images/my-images/Society-Registration-Certificate.jpg">{{item.society_by_law}}</a>
+                            </p>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="row">
-                        <p class="lead">Other Documents</p>
+                        <div class="d-flex">
+                            <p class="lead">Other Documents</p>
+                            <button class="btn btn-success ms-auto me-5" data-bs-toggle="modal"
+                                data-bs-target="#addOtherDocuments">Add</button>
+                        </div>
                         {% for item in soc_other_document_object %}
                         <!-- <div class="col-3">
                         </div> -->
                         <div class="col-6">
-                            <p style="color: black; font-family: 'Calibri', sans-serif;"><b>{{item.other_document_specification}}</b></p>
+                            <p style="color: black; font-family: 'Calibri', sans-serif;">
+                                <b>{{item.other_document_specification}}</b>
+                            </p>
                         </div>
                         <div class="col-3">
                             <p class="hovme view-inps"><a style="text-decoration: none; color: grey;" target="_blank"
-                                rel="noopener" download="Society-Registration-Certificate.jpg"
-                                href="./images/my-images/Society-Registration-Certificate.jpg">{{item.other_document}}</a>
-                        </p>
+                                    rel="noopener" download="Society-Registration-Certificate.jpg"
+                                    href="./images/my-images/Society-Registration-Certificate.jpg">{{item.other_document}}</a>
+                            </p>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
                 <!-- <h3 class="text-center mb-3" id="heading">DOCUMENTS</h3> -->
-                
+
 
             </div>
         </div>
 
         <div class="tab-pane fade" id="wing-tab-pane" role="tabpanel" aria-labelledby="wing-tab" tabindex="0">
             <div class="row mt-3 p-2">
+                <div class="d-flex">
+                    <p class="lead">Wing-Flat Details</p>
+                    <button class="btn btn-success ms-auto me-5" data-bs-toggle="modal"
+                        data-bs-target="#addWingFlat">Add</button>
+                </div>
                 <!-- <h3 class="text-center mb-3" id="heading">wings & units</h3> -->
                 {% for wing, flats in wing_flat_list %}
                 <div class="col-3">
                     <p class="ms-3 view-label">Wing & Flat Numbers</p>
                 </div>
-                
-                <div class="col-2">                    
-                    <p class="view-inps"><i class="fa-solid fa-pen fa-xs pe-2" style="color: black"></i> {{wing}}</p>
+
+                <div class="col-2">
+                    <p class="view-inps"><i class="fa-solid fa-pen fa-xs pe-2" style="color: black"
+                            data-bs-toggle="modal" data-bs-target="#editWingFlatDetails"></i> {{wing}}</p>
                 </div>
                 <div class="col-6">
                     <p class="view-inps">
                         {% for flat in flats %}
                         {{ flat }}{% if not loop.last %}, {% endif %}
-                      {% endfor %}</p>
+                        {% endfor %}</p>
                 </div>
                 <hr>
                 {% endfor %}
@@ -310,6 +336,537 @@
         </div>
     </div>
 </div>
+
+
+
+<!-- EDIT MODAL START -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="editSocietyDetails" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="">Edit Society Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="Societyform" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row p-2">
+                        <div class="col-lg-4">
+                            <div class="mb-3 w-100 sty-input-wrapper">
+                                <input class="w-100 sty-inp" type="text" id="id_society_name" disabled>
+                                <label for="id_society_name" class="sty-label">Society Name</label>
+                                <small id="id_society_name_Error" class="error-message"></small>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3 w-100 sty-input-wrapper">
+
+                                <input class="w-100 sty-inp" type="email" id="id_admin_email" placeholder="">
+                                <label for="id_admin_email" class="sty-label"> Administrator Email
+                                </label>
+                                <small id="id_admin_email_Error" class="error-message"></small>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3 w-100 sty-input-wrapper">
+                                <input class="w-100 sty-inp" type="email" id="id_alternate_email" placeholder="">
+                                <label for="id_alternate_email" class="sty-label">Alternate Email</label>
+                                <small id="id_alternate_email_Error" class="error-message"></small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="mb-2">
+
+                                <div class="input-group">
+                                    <div class="firstinp w-50 sty-input-wrapper">
+                                        <input class="w-100 sty-inp" type="text" id="id_registration_number" disabled>
+                                        <label for="id_registration_number" class="sty-label">Registration
+                                            Number</label>
+                                        <small id="id_registration_number_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="secinp w-50 d-flex">
+                                        <div class="fileinp">
+                                            <input id="id_registration_doc" type="file" class="sty-inp form-control"
+                                                style="color: #2b96f1 !important;" name="file" disabled />
+                                            <small class="float-right" id="id_registration_doc_Error"
+                                                class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('id_registration_doc')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3 sty-input-wrapper w-100">
+
+                                <input class="w-100 sty-inp" type="number" id="id_admin_mobile_number" placeholder="">
+                                <label for="id_admin_mobile_number" class="sty-label">Administrator Mobile Number
+                                </label>
+                                <small id="id_admin_mobile_number_Error" class="error-message"></small>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="mb-2">
+                                <div class="input-group">
+                                    <div class="firstinp w-50 sty-input-wrapper">
+                                        <input class="w-100 sty-inp" type="text" id="id_pan_number" placeholder="">
+                                        <label for="id_pan_number" class="sty-label">PAN Number</label>
+                                        <small id="id_pan_number_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="secinp w-50 d-flex">
+                                        <div class="fileinp">
+                                            <input id="id_pan_number_doc" type="file" class="sty-inp form-control"
+                                                style="color: #2b96f1 !important;" name="file" />
+                                            {% comment %} {{ form.pan_doc }} {% endcomment %}
+                                            <small class="float-right" id="id_pan_number_doc_Error"
+                                                class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('id_pan_number_doc')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3 w-100 sty-input-wrapper">
+
+                                <input class="sty-inp w-100" type="number" id="id_alternate_mobile_number"
+                                    placeholder="">
+                                <label for="id_alternate_mobile_number" class="sty-label">Alternate Mobile
+                                    Number</label>
+                                <small id="id_alternate_mobile_number_Error" class="error-message"></small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="mb-2">
+                                <div class="input-group">
+                                    <div class="firstinp w-50 sty-input-wrapper">
+                                        <input class="form-control sty-inp" type="text" id="id_gst_number"
+                                            placeholder="">
+                                        <label for="id_gst_number" class="form-label sty-label">GST Number</label>
+                                        <small id="id_gst_number_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="secinp w-50 d-flex">
+                                        <div class="fileinp">
+                                            <input id="id_gst_number_doc" type="file" class="form-control sty-inp"
+                                                style="color: #2b96f1 !important;" name="file" />
+                                            <small id="id_gst_number_doc_Error" class="error-message"></small>
+                                            {% comment %} {{ form.gst_doc }} {% endcomment %}
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="form-control sty-inp"
+                                                onclick="PreviewImage('id_gst_number_doc')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="mb-3 w-100 sty-input-wrapper">
+                                <input class="w-100 sty-inp" type="number" id="id_interest" placeholder="">
+                                <label for="id_interest" class="sty-label">Interest</label>
+                                <small id="id_interest_Error" class="error-message"></small>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-6  sty-input-wrapper">
+                                    <textarea name="address" id="id_society_reg_address" class="w-100 sty-inp" cols="30"
+                                        rows="1"></textarea>
+                                    <label for="id_society_reg_address" class="sty-label">Society's Registered
+                                        Address</label>
+                                    <small id="id_society_reg_address_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-2 sty-input-wrapper">
+                                    <select name="state" id="id_socity_state" class="w-100 sty-inp">
+                                        {% for key, value in state_names.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="id_socity_state" class="sty-label">State</label>
+                                    <small id="id_socity_state_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-2 sty-input-wrapper">
+                                    <select name="state" id="id_society_city" class="w-100 sty-inp">
+                                        {% for key, value in city_names.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="id_society_city" class="sty-label">City</label>
+                                    <small id="id_society_city_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-2 sty-input-wrapper">
+                                    <input type="number" class="w-100 sty-inp" id="id_pin_code">
+                                    <label for="id_pin_code" class="sty-label">Pin Code</label>
+                                    <small id="id_pin_code_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-2">
+                            <div class="row">
+                                <div class="col-lg-6 sty-input-wrapper">
+                                    <textarea name="address" id="id_society_corr_reg_address" class="w-100 sty-inp"
+                                        cols="30" rows="1"></textarea>
+                                    <label for="id_society_corr_reg_address" class="sty-label">Society's Correspondence
+                                        Address
+                                    </label>
+                                    <small id="id_society_corr_reg_address_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-2 sty-input-wrapper">
+                                    <select name="state" id="id_socity_corr_state" class="w-100 sty-inp">
+                                        {% for key, value in state_names.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="id_socity_corr_state" class="sty-label">State</label>
+                                    <small id="id_socity_corr_state_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-2 sty-input-wrapper">
+                                    <select name="state" id="id_society_corr_city" class="w-100 sty-inp">
+                                        {% for key, value in state_names.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="id_society_corr_city" class="sty-label">City</label>
+                                    <small id="id_society_corr_city_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-2 sty-input-wrapper">
+                                    <input type="number" class="w-100 sty-inp" id="id_pin_corr_code" placeholder="">
+                                    <label for="id_pin_corr_code" class="sty-label">Pin Code</label>
+                                    <small id="id_pin_corr_code_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="button" id="SocSubmit" name="next" class="btn btn-primary" value="Save & Next" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addBankDetails" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="">Add Bank</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bankForm" , class="form">
+                    {% csrf_token %}
+                    <div id="bankclonedFieldsContainer">
+                        <div class="row p-2 mt-2">
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_name1" placeholder="">
+                                    <label for="id_beneficiary_name" class="sty-label">Beneficiary Name</label>
+                                    <small id="id_beneficiary_name1_Error" class="error-message"></small>
+                                </div>
+                                <small id="beneficiaryName1_Error" class="error-message"></small>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_code1" placeholder="">
+                                    <label for="id_beneficiary_code" class="sty-label">Beneficiary IFSC Code</label>
+                                    <small id="id_beneficiary_code1_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="number" id="id_beneficiary_acc_number1"
+                                        placeholder="">
+                                    <label for="id_beneficiary_acc_number" class="sty-label">Beneficiary Account
+                                        Number</label>
+                                    <small id="id_beneficiary_acc_number1_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_bank1" placeholder="">
+                                    <label for="id_beneficiary_bank" class="sty-label">Beneficiary Bank Name &
+                                        Branch</label>
+                                    <small id="id_beneficiary_bank1_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-lg-4 mb-4">
+                        <div class="mb-2 w-100 sty-input-wrapper">
+                        <input type="checkbox" id="id_isPrimary1" name="" value="yes" class="sty-inp">
+                        <label for="">Make primary?</label>
+                        <small id="id_isPrimary1_Error"  class="error-message"></small>
+                    </div> -->
+                            <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                <input type="checkbox" class="sty-inp" id="id_isPrimary1">
+                                <label>Make this Primary</label>
+                                <small class="mb-3 error-message" id="id_isPrimary1_Error"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="" id="bankCloneContainer"></div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editBankDetails" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="">Edit Bank Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bankForm" , class="form">
+                    {% csrf_token %}
+                    <div id="bankclonedFieldsContainer">
+                        <div class="row p-2 mt-2">
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_name1" placeholder="">
+                                    <label for="id_beneficiary_name" class="sty-label">Beneficiary Name</label>
+                                    <small id="id_beneficiary_name1_Error" class="error-message"></small>
+                                </div>
+                                <small id="beneficiaryName1_Error" class="error-message"></small>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_code1" placeholder="">
+                                    <label for="id_beneficiary_code" class="sty-label">Beneficiary IFSC Code</label>
+                                    <small id="id_beneficiary_code1_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="number" id="id_beneficiary_acc_number1"
+                                        placeholder="">
+                                    <label for="id_beneficiary_acc_number" class="sty-label">Beneficiary Account
+                                        Number</label>
+                                    <small id="id_beneficiary_acc_number1_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="mb-2 w-100 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_bank1" placeholder="">
+                                    <label for="id_beneficiary_bank" class="sty-label">Beneficiary Bank Name &
+                                        Branch</label>
+                                    <small id="id_beneficiary_bank1_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                <input type="checkbox" class="sty-inp" id="id_isPrimary1">
+                                <label>Make this Primary</label>
+                                <small class="mb-3 error-message" id="id_isPrimary1_Error"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="" id="bankCloneContainer"></div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addOtherDocuments" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="">Add Other Document</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="otherDocumentForm">
+                    <div class="row">
+                        <div class="col-lg-9 mb-3 d-flex">
+                            <div class="sty-input-wrapper">
+                                <input type="file" class="sty-inp form-control" id="attachDoc">
+                                <label class="sty-label">Other Document</label>
+                                <small class="mb-3 error-message" id="attachDoc_Error"></small>
+                            </div>
+                            <div class="sty-input-wrapper">
+                                <input type="text" class="sty-inp form-control" id="DocFieldAttach">
+                                <label class="sty-label">Specify your Document</label>
+                                <small class="mb-3 error-message" id="DocFieldAttach_Error"></small>
+                            </div>
+                            <div class="prev">
+                                <button type="button" class="sty-inp form-control" onclick="PreviewImage('otherDoc')">
+                                    <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-2 mt-2">
+                            <div id="CloneContainer" class="w-100"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="button" onclick="addOtherDoc()" name="addNewDocs" class="add-mem-btn float-start"
+                    value="Add Another Documents" />
+                <input type="button" id="SocietyDocumentForm" name="next" class="btn btn-primary" value="Save & Next" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addWingFlat" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="">Add Another Wing-Flat</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="wing-info dataTable-text" style="text-align: left;">
+                        <p style="color: #616161;">As a first Step to set up your Complex, create blocks of your
+                            Apartment Complex below
+                            .PLease Note: <br></p>
+                        <ul style="list-style:none;" id="blockList">
+                            <li>
+                                Blocks are also referred as Towers / Buildings in some apartment Complexes.
+                            </li>
+                            <li>
+                                Even incase your complex does not have blocks, you need to create atleast one block
+                                (you can call the block "Flat").
+                            </li>
+                            <li class="more-content">
+                                Do note that each block name must be different and should be less than 30 characters
+                                in length.
+                            </li>
+                            <li class="more-content">
+                                If you have multiple wings in each tower - create one block per tower-wing
+                                combination. <br> For example: Tower 1 - A wing, Tower 1 - B wing, etc...
+                            </li>
+                            <li class="more-content">
+                                You can always add more blocks here.
+                            </li>
+                            <span class="more" onclick="showMore()">Show More</span>
+                            <span class="less" onclick="showLess()">Show Less</span>
+                        </ul>
+                    </div>
+                    <script>
+                        // $(".more").toggle(function(){
+                        //     $(this).text("less..").siblings(".complete").show();
+                        // }, function(){
+                        //     $(this).text("more..").siblings(".complete").hide();
+                        // });
+
+                        function showMore() {
+                            $('.more-content').slideDown('slow');
+                            $('.more').hide();
+                            $('.less').show();
+                        }
+
+                        function showLess() {
+                            $('.more-content').slideUp('slow');
+                            $('.less').hide();
+                            $('.more').show();
+                        }
+                    </script>
+
+                    <div id="wingContainer">
+                        <form id="wingFlatForm" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row mb-3" id="wingContent1">
+                                <div class="col-lg-3 sty-input-wrapper">
+                                    <input class="w-100 sty-inp" type="text" name="wingName" id="wingName0"
+                                        placeholder="">
+                                    <label for="" class="sty-label">Enter your Wing Name</label>
+                                    <small id="wingName0_Error" class="error-message"></small>
+                                </div>
+                                <div class="col-lg-5 sty-input-wrapper">
+                                    <textarea class="w-100 sty-inp" name="unitName" id="unitName0" cols="30" rows="1"
+                                        placeholder=""></textarea>
+                                    <label for="" class="sty-label">Enter your Flat Numbers</label>
+                                    <small id="unitName0_Error" class="error-message"></small>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="newWingContainer"></div>
+                </div>
+                <div class="twoBtn float-start">
+                    <button type="button" class="add-mem-btn" onclick="addWing()">
+                        Add Another Wing
+                    </button>
+                    <!-- <button type="submit" class="sbmt-button  ms-2" >Submit</button> -->
+                </div>
+                <!-- <input type="button" id="wingSubmit" name="" class="action-button" value="SAVE====" /> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="wingSubmit" name="next" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editWingFlatDetails" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="">Edit Wing-Flat Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- EDIT MODAL END -->
 
 
 <script>
