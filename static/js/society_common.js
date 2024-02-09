@@ -39,9 +39,39 @@ $(document).ready(function () {
             success: function (response) {
                 // console.log("response ============");
                 if (response.is_primary) {
-                    $("#id_is_primary").hide();
+                    $("#id_is_primary").remove();
+                    $("#id_flat_status_div").remove();
                 } else {
-                    $("#id_is_primary").show();
+                    let htmlContent =
+                        `
+                    <div class="w-100 sty-input-wrapper" id="id_flat_status_div">
+                        <select id="id_flat_status" class="w-100 sty-inp" id="id_member_flat_status">
+                        <option value="">Select Flat Status</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="Not Occupied">Not Occupied</option>
+                        <option value="Rented">Rented</option>
+                        <option value="Japti">Japti</option>
+                        <option value="Builder Possession">Builder Possession</option>
+                        </select>
+                        <label for="id_flat_status_status" class="sty-label">Flat Status</label>
+                        <small id="id_flat_status_Error" class="error-message"></small>
+                    </div>
+                    ` ;
+
+                    let htmlContent2 =
+                        `
+                    <small id="id_is_primary">
+                      <span>
+                        <input type="checkbox" class="sty-inp" id="id_is_primary_val" />
+                      </span>&nbsp;Make Primary Member
+                      <small id="id_is_primary_val_Error" class="error-message"></small>
+                    </small>
+                    `
+                    $('#id_flat_status_div_container').html(htmlContent);
+                    $('#id_is_primary_container').html(htmlContent2);
+
+                    // $("#id_is_primary").show();
+                    // $("#id_flat_status_div").show();
                 }
                 console.log("Success");
             },
@@ -53,7 +83,6 @@ $(document).ready(function () {
     // MEMBER ON-CHANGE END
 
     $('#save_and_next_member, #save_and_add_member').click(function (e) {
-        alert("call");
         clickedButton = this;
         let isValid = true;
         let ajax_ownsership = false;
@@ -64,35 +93,41 @@ $(document).ready(function () {
             // members ids
             "id_wing_flat": "Pls select the flat number!",
             "id_member_name": "Member name is required!",
-            // "id_member_ownership": "Member ownership is required!",
-            // "id_member_position": "Member position is required!",
-            // "id_member_dob": "Date of birth is required!",
-            // "id_member_pan_number": "Member pan number is required!",
-            // "id_member_aadhar_no": "Member aadhar number is required!",
-            // "id_member_address": "Address is required!",
-            // "id_member_state": "State is required!",
-            // "id_member_pin_code": "Pin code is required",
-            // "id_member_email": "Email is reqired!",
-            // "id_member_contact": "Contact number is required!",
-            // "id_member_emergency_contact": "Emergency contact no. is required!",
-            // "id_member_occupation": "Occupation is required!",
+            "id_member_ownership": "Member ownership is required!",
+            "id_member_position": "Member position is required!",
+            "id_member_dob": "Date of birth is required!",
+            "id_member_pan_number": "Member pan number is required!",
+            "id_member_aadhar_no": "Member aadhar number is required!",
+            "id_member_address": "Address is required!",
+            "id_member_state": "State is required!",
+            "id_member_pin_code": "Pin code is required",
+            "id_member_email": "Email is reqired!",
+            "id_member_contact": "Contact number is required!",
+            "id_member_emergency_contact": "Emergency contact no. is required!",
+            "id_member_occupation": "Occupation is required!",
+            "id_flat_status": "Flat status is required!",
+            "id_is_primary_val": "Pls check this to make this member primary!",
+            "id_date_of_admission": "Date of admission is required!",
+            "id_sales_agreement": "Sales agreement is required!",
+            "id_date_of_entrance_fees": "Date of entrance is required!",
+            "id_other_attachment": "Other document is required!"
         };
 
         let get_nominee_detail = {
             // nominee ids
-            // "id_nominee_name": "Nominee name is required!",
-            // "id_nomination_date": "Date of nomination is required!",
-            // "id_nominee_relation": "Nominee relation is required!",
-            // "id_naminee_sharein": "Nominee sharein is required!",
-            // "id_nominee_dob": "Nominee date of birth is required!",
-            // "id_nominee_aadhar_no": "Nominee aadhar no. is required!",
-            // "id_nominee_pan_no": "Nominee pan no. is required!",
-            // "id_nominee_email": "Nominee email is required!",
-            // "id_nominee_address": "Nominee address is required!",
-            // "id_nominee_state": "Nominee state is required!",
-            // "id_nominee_pin_code": "Nominee pin code is required!",
-            // "id_nominee_contact_number": "Nominee contact number is required!",
-            // "id_nominee_emergency_contact": "Nominee emergency contact is required!",
+            "id_nominee_name": "Nominee name is required!",
+            "id_nomination_date": "Date of nomination is required!",
+            "id_nominee_relation": "Nominee relation is required!",
+            "id_naminee_sharein": "Nominee sharein is required!",
+            "id_nominee_dob": "Nominee date of birth is required!",
+            "id_nominee_aadhar_no": "Nominee aadhar no. is required!",
+            "id_nominee_pan_no": "Nominee pan no. is required!",
+            "id_nominee_email": "Nominee email is required!",
+            "id_nominee_address": "Nominee address is required!",
+            "id_nominee_state": "Nominee state is required!",
+            "id_nominee_pin_code": "Nominee pin code is required!",
+            "id_nominee_contact_number": "Nominee contact number is required!",
+            "id_nominee_emergency_contact": "Nominee emergency contact is required!",
         };
 
         let email_fields = {
@@ -114,13 +149,11 @@ $(document).ready(function () {
                 let inputValue = $("#" + key).val();
                 let value = (inputValue !== null && inputValue !== undefined) ? inputValue.trim() : "";
 
-                if ((value === "") || (
-                    (key.startsWith("id_nominee_state")) && (value == "#") ||
-                    (key == "id_wing_flat") && (value == "#") ||
-                    (key == "id_member_position") && (value == "#") ||
-                    (key == "id_member_state") && (value == "#")
-                )) {
+                if ((value === "") || (key === "id_is_primary_val" && !$('#id_is_primary_val').prop("checked"))) {
                     isValid = false;
+                    if (key === "id_is_primary_val") {
+                        console.log("========================")
+                    }
                     $("#" + key).css("border-color", "red");
                     $("#" + key + "_Error").text(required_fields[key]);
                 } else if (value && ((key === "id_member_email") && !emailRegex.test(value) || (key.startsWith("id_nominee_email")) && !emailRegex.test(value))) {
@@ -243,8 +276,8 @@ $(document).ready(function () {
                 ["member_contact"]: $('#id_member_contact').val(),
                 ["member_emergency_contact"]: $('#id_member_emergency_contact').val(),
                 ["member_occupation"]: $('#id_member_occupation').val(),
-                ["member_is_primary"]: $('#id_is_primary_val').prop('checked')
-
+                ["member_is_primary"]: $('#id_is_primary_val').prop('checked'),
+                ["flat_status"]: $('#id_flat_status').val()
             });
 
             let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
@@ -1393,10 +1426,10 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                 console.log("Success");
-                if(response.get_owner_name){
+                if (response.get_owner_name) {
                     $('#id_flat_primary_owner').val(response.get_owner_name)
                 }
-                if(response.owner_not_found_placeholder){
+                if (response.owner_not_found_placeholder) {
                     $('#id_flat_primary_owner').val('');
                     $('#id_flat_primary_owner').attr('placeholder', response.owner_not_found_placeholder);
                 }
@@ -1408,44 +1441,44 @@ $(document).ready(function () {
     });
 
     // GET TENANT NAME BASED ON TENANT PAN
-    $("#id_tenant_aadhar_pan").on('input', function() {
-            let input_value = $(this).val();
-            // if (input_value.length >= 10) {
-                // 12 digits aadhar, 10 digits pan
+    $("#id_tenant_aadhar_pan").on('input', function () {
+        let input_value = $(this).val();
+        // if (input_value.length >= 10) {
+        // 12 digits aadhar, 10 digits pan
 
-                let formData = new FormData();
-                formData.append('id_tenant_aadhar_pan', this.value);
-                let headers = {
-                    "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-                };
+        let formData = new FormData();
+        formData.append('id_tenant_aadhar_pan', this.value);
+        let headers = {
+            "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+        };
 
-                $.ajax({
-                    url: '/tenent-allocation/',
-                    method: 'POST',
-                    data: formData,
-                    headers: headers,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        console.log("Success");
-                        if(response.tenant_name){
-                            $('#id_tenant_name').val(response.tenant_name)
-                        }
-                        if(response.tenant_name_placeholder){
-                            $('#id_tenant_name').val('');
-                            $('#id_tenant_name').attr('placeholder', response.tenant_name_placeholder);
-                        }
-                    },
-                    error: function (xhr) {
-                        alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                    }
-                });
-            // }         
-        });   
+        $.ajax({
+            url: '/tenent-allocation/',
+            method: 'POST',
+            data: formData,
+            headers: headers,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log("Success");
+                if (response.tenant_name) {
+                    $('#id_tenant_name').val(response.tenant_name)
+                }
+                if (response.tenant_name_placeholder) {
+                    $('#id_tenant_name').val('');
+                    $('#id_tenant_name').attr('placeholder', response.tenant_name_placeholder);
+                }
+            },
+            error: function (xhr) {
+                alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+            }
+        });
+        // }         
+    });
 
     // POST METHOD FOR TENANT ALLOCATION
     $("#allocateTenant").click(function (e) {
-        let isValid = true;       
+        let isValid = true;
 
         let required_fields = {
             'id_get_owner_name': 'Pls select flat!',
@@ -1477,7 +1510,7 @@ $(document).ready(function () {
             return false;
         } else {
             let form_fields = [
-                'get_owner_name', 'flat_primary_owner', 'tenant_name', 'tenant_aadhar_pan', 'tenant_period_from', 
+                'get_owner_name', 'flat_primary_owner', 'tenant_name', 'tenant_aadhar_pan', 'tenant_period_from',
                 'tenant_period_to', 'tenant_agreement', 'tenant_noc'
             ]
             let tenentData = {};
@@ -1513,12 +1546,12 @@ $(document).ready(function () {
                 }
             });
         }
-    });     
+    });
 
 
 
     $('#tenentCreation').click(function (e) {
-        let isValid = true;       
+        let isValid = true;
 
         let required_fields = {
             'id_tenent_name': 'Name is required!',
@@ -1555,8 +1588,8 @@ $(document).ready(function () {
             return false;
         } else {
             let form_fields = [
-                "tenent_name", "tenent_pan_number", "tenent_pan_doc", "tenent_contact", "tenent_aadhar_number", 
-                "tenent_aadhar_doc", "tenent_address", "tenent_state", "tenent_city", "tenent_pin_code", 
+                "tenent_name", "tenent_pan_number", "tenent_pan_doc", "tenent_contact", "tenent_aadhar_number",
+                "tenent_aadhar_doc", "tenent_address", "tenent_state", "tenent_city", "tenent_pin_code",
                 "tenent_email", "tenent_other_doc", "tenent_doc_specification",
             ]
             let tenentData = {};
@@ -1594,7 +1627,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#tenentAllocation').on('hidden.bs.modal', function() {
+    $('#tenentAllocation').on('hidden.bs.modal', function () {
         form_fields = [
             'id_get_owner_name', 'id_flat_primary_owner', 'id_tenant_name', 'id_tenant_aadhar_pan', 'id_tenant_period_from', 'id_tenant_agreement', 'id_tenant_noc'
         ]
@@ -1602,9 +1635,9 @@ $(document).ready(function () {
             $("#" + key + "_Error").text("");
             $("#" + key).css("border-color", "");
         });
-        $('#allocateTenantForm')[0].reset(); 
-      });
-    
+        $('#allocateTenantForm')[0].reset();
+    });
+
     // GET OWNER NAME FOR HOUSE HELP
     $("#id_get_hh_flat_owner_name").change(function (e) {
         let formData = new FormData();
@@ -1622,11 +1655,11 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                 console.log("Success");
-                if(response.get_owner_name){
+                if (response.get_owner_name) {
                     console.log("OWNER NAME=====", response.get_owner_name)
                     $('#id_flat_primary_owner_hh').val(response.get_owner_name)
                 }
-                if(response.owner_not_found_placeholder){
+                if (response.owner_not_found_placeholder) {
                     $('#id_flat_primary_owner_hh').val('');
                     $('#id_flat_primary_owner_hh').attr('placeholder', response.owner_not_found_placeholder);
                 }
@@ -1639,49 +1672,49 @@ $(document).ready(function () {
 
 
     // GET TENANT NAME BASED ON TENANT PAN
-    $("#id_hh_aadhar_pan").on('input', function() {
+    $("#id_hh_aadhar_pan").on('input', function () {
         let input_value = $(this).val();
         // if (input_value.length >= 10) {
-            // 12 digits aadhar, 10 digits pan
+        // 12 digits aadhar, 10 digits pan
 
-            let formData = new FormData();
-            formData.append('id_hh_aadhar_pan', this.value);
-            let headers = {
-                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-            };
+        let formData = new FormData();
+        formData.append('id_hh_aadhar_pan', this.value);
+        let headers = {
+            "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+        };
 
-            $.ajax({
-                url: '/house-help-allocation/',
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if(response.hh_name){
-                        $('#id_hh_name').val(response.hh_name)
-                        $('#id_hh_role').val(response.hh_role)                        
-                    }
-                    if(response.hh_name_placeholder){
-                        console.log("placehold=============")
-                        $('#id_hh_name').val('');
-                        $('#id_hh_name').attr('placeholder', response.hh_name_placeholder);
-                        $('#id_hh_role').val('');
-                        $('#id_hh_role').attr('placeholder', response.hh_role_placeholder);
-                    }
-                },
-                error: function (xhr) {
-                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+        $.ajax({
+            url: '/house-help-allocation/',
+            method: 'POST',
+            data: formData,
+            headers: headers,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.hh_name) {
+                    $('#id_hh_name').val(response.hh_name)
+                    $('#id_hh_role').val(response.hh_role)
                 }
-            });
+                if (response.hh_name_placeholder) {
+                    console.log("placehold=============")
+                    $('#id_hh_name').val('');
+                    $('#id_hh_name').attr('placeholder', response.hh_name_placeholder);
+                    $('#id_hh_role').val('');
+                    $('#id_hh_role').attr('placeholder', response.hh_role_placeholder);
+                }
+            },
+            error: function (xhr) {
+                alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+            }
+        });
         // }         
     });
-      
+
 });
 
 
 
-function editAllocatedTenant(id){
+function editAllocatedTenant(id) {
     let tenant_allocation_id = id;
     let formData = new FormData();
     formData.append('tenant_allocation_id', tenant_allocation_id);
@@ -1704,8 +1737,8 @@ function editAllocatedTenant(id){
                 let tenantJson = JSON.parse(response.tenant_obj);
                 console.log("tenantJson", tenantJson);
                 let htmlContent = '';
-                $('#allocateTenantFormEdit')[0].reset(); 
-                tenantJson.forEach(function(item) {
+                $('#allocateTenantFormEdit')[0].reset();
+                tenantJson.forEach(function (item) {
                     console.log("DATA====")
                     let aadhar_or_pan = item.tenant_aadhar_number || item.tenant_pan_number;
                     $('#id_flat_primary_owner_Edit').val(item.flat_primary_owner);
@@ -1720,7 +1753,7 @@ function editAllocatedTenant(id){
                     // $('#allocateTenantForm').html(htmlContent);
                     // SET THE VALUE OF DOC HERE 
                 });
-            }            
+            }
         },
         error: function (xhr) {
             alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
@@ -2026,51 +2059,426 @@ function addWing() {
 
 
 
-// add nominee start
-var incNominee = 1;
-
-function addNomineeOnEditForm(id) {
-    const templateNominee = document.getElementById(id);
-    const clonedNominee = templateNominee.cloneNode(true);
-
-    // Remove red border color from the cloned form
-    const formInputs = clonedNominee.querySelectorAll("input, textarea, select");
-    formInputs.forEach(function (input) {
-        input.style.borderColor = ""; // Reset border color to default
-    });
-
-    // Remove error messages from the cloned form and update IDs
-    const errorMessages = clonedNominee.querySelectorAll(".error-message");
-    errorMessages.forEach(function (errorMsg) {
-        let currentId = errorMsg.getAttribute("id");
-        if (currentId) {
-            let newId = currentId.replace(/(\d+)?_Error$/, incNominee + "_Error");
-            errorMsg.setAttribute("id", newId);
-            errorMsg.textContent = ""; // Clear error message text
-        }
-    });
-
-    const inputs = clonedNominee.querySelectorAll("input, textarea, select");
-    inputs.forEach(function (input) {
-        let currentId = input.getAttribute("id");
-        if (currentId) {
-            let newId = currentId.replace(/\d+$/, incNominee);
-            input.setAttribute("id", newId + incNominee);
-            input.value = "";
-        }
-    });
-
-    incNominee++;
-    clonedNominee.id = "";
-    document.getElementById(id + '_cloned').appendChild(clonedNominee);
-    // document.getElementById(id + '_heading').innerHTML("New Heading");
-
-
-}
-// add nomine end
-
-
 // ADD NOMINEE ON EDIT VIEW
+// var incNominee = 1;
+
+// function addNomineeOnEditForm(id, newNomineeDiv, nomineeIdIncCount) {
+//     const templateNominee = document.getElementById(id, newNomineeDiv);
+//     // console.log("nomineeIdIncCount==============1", typeof(nomineeIdIncCount));
+//     if (templateNominee){
+//         console.log("IF========================")
+//         // const clonedNominee = templateNominee.cloneNode(true);
+//         // Remove red border color from the cloned form
+//         // const formInputs = clonedNominee.querySelectorAll("input, textarea, select");
+//         // formInputs.forEach(function (input) {
+//         //     input.style.borderColor = ""; // Reset border color to default
+//         // });
+
+//         // // Remove error messages from the cloned form and update IDs
+//         // const errorMessages = clonedNominee.querySelectorAll(".error-message");
+//         // errorMessages.forEach(function (errorMsg) {
+//         //     let currentId = errorMsg.getAttribute("id");
+//         //     if (currentId) {
+//         //         let newId = currentId.replace(/(\d+)?_Error$/, incNominee + "_Error");
+//         //         errorMsg.setAttribute("id", newId);
+//         //         errorMsg.textContent = ""; // Clear error message text
+//         //     }
+//         // });
+
+//         // const inputs = clonedNominee.querySelectorAll("input, textarea, select");
+//         // inputs.forEach(function (input) {
+//         //     let currentId = input.getAttribute("id");
+//         //     if (currentId) {
+//         //         let newId = currentId.replace(/\d+$/, incNominee);
+//         //         input.setAttribute("id", newId + incNominee);
+//         //         input.value = "";
+//         //     }
+//         // });
+
+//         // incNominee++;
+//         // clonedNominee.id = "";
+//         let htmlContent = '';
+//         htmlContent += 
+//         `
+//                     <div class="row abcd" id="cloneNominee">
+//                       <!-- <center>h3</center> -->
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp" id="id_nominee_name${nomineeIdIncCount}" />
+//                           <label for="" class="sty-label">Nominee Name</label>
+//                           <small id="id_nominee_name_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date" />
+//                           <label for="" class="sty-label">Date of Nomination</label>
+//                           <small id="id_nomination_date_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input class="w-100 sty-inp form-control" type="text" name="" id="id_nominee_relation" />
+//                           <label for="" class="sty-label">Relation with Nominator</label>
+//                           <small id="id_nominee_relation_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp form-control percentage-input"
+//                             id="id_naminee_sharein" />
+//                           <label for="" class="sty-label">Nominee Sharein %</label>
+//                           <small id="id_naminee_sharein_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
+//                           <label for="" class="sty-label">Nominee DOB</label>
+//                           <small id="id_nominee_dob_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
+//                           <label for="" class="sty-label">Nominee Aadhaar No</label>
+//                           <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
+//                           <label for="" class="sty-label">Nominee PAN No</label>
+//                           <small id="id_nominee_pan_no_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
+//                           <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+//                           <small id="id_nominee_email_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address" cols="30"
+//                             rows="1"></textarea>
+//                           <label for="" class="sty-label">Nominee Permanent Address</label>
+//                           <small id="id_nominee_address_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <select id="id_nominee_state" class="w-100 sty-inp">
+//                             {% for key, value in state_names.items %}
+//                             <option value="{{ key }}">{{ value }}</option>
+//                             {% endfor %}
+//                           </select>
+
+//                           <label for="" class="sty-label">State</label>
+//                           <small id="id_nominee_state_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
+//                           <label for="" class="sty-label">Pin Code</label>
+//                           <small id="id_nominee_pin_code_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number" />
+//                           <label for="" class="sty-label">Nominee Contact No.</label>
+//                           <small id="id_nominee_contact_number_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact" />
+//                           <label for="" class="sty-label">Emergency Contact No.</label>
+//                           <small id="id_nominee_emergency_contact_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <hr />
+//                     </div>
+//             `;
+//         $('#' + id + '_cloned').append(htmlContent);
+//         // document.getElementById(id + '_heading').innerHTML("New Heading");
+//     }else{
+//         console.log("ELSE==========================")
+//         let htmlContent = '';
+//         htmlContent += 
+//         `
+//                     <div class="row abcd" id="cloneNominee">
+//                       <!-- <center>h3</center> -->
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp" id="id_nominee_name_created" />
+//                           <label for="" class="sty-label">Nominee Name</label>
+//                           <small id="id_nominee_name_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date" />
+//                           <label for="" class="sty-label">Date of Nomination</label>
+//                           <small id="id_nomination_date_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input class="w-100 sty-inp form-control" type="text" name="" id="id_nominee_relation" />
+//                           <label for="" class="sty-label">Relation with Nominator</label>
+//                           <small id="id_nominee_relation_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp form-control percentage-input"
+//                             id="id_naminee_sharein" />
+//                           <label for="" class="sty-label">Nominee Sharein %</label>
+//                           <small id="id_naminee_sharein_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
+//                           <label for="" class="sty-label">Nominee DOB</label>
+//                           <small id="id_nominee_dob_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
+//                           <label for="" class="sty-label">Nominee Aadhaar No</label>
+//                           <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
+//                           <label for="" class="sty-label">Nominee PAN No</label>
+//                           <small id="id_nominee_pan_no_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
+//                           <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+//                           <small id="id_nominee_email_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address" cols="30"
+//                             rows="1"></textarea>
+//                           <label for="" class="sty-label">Nominee Permanent Address</label>
+//                           <small id="id_nominee_address_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <select id="id_nominee_state" class="w-100 sty-inp">
+//                             {% for key, value in state_names.items %}
+//                             <option value="{{ key }}">{{ value }}</option>
+//                             {% endfor %}
+//                           </select>
+
+//                           <label for="" class="sty-label">State</label>
+//                           <small id="id_nominee_state_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
+//                           <label for="" class="sty-label">Pin Code</label>
+//                           <small id="id_nominee_pin_code_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number" />
+//                           <label for="" class="sty-label">Nominee Contact No.</label>
+//                           <small id="id_nominee_contact_number_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <div class="col-lg-4 mb-3">
+//                         <div class="w-100 sty-input-wrapper">
+//                           <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact" />
+//                           <label for="" class="sty-label">Emergency Contact No.</label>
+//                           <small id="id_nominee_emergency_contact_Error" class="error-message"></small>
+//                         </div>
+//                       </div>
+//                       <hr />
+//                     </div>
+//             `;
+//         $('#' + newNomineeDiv).append(htmlContent);
+//         nomineeIdIncCount = parseInt(nomineeIdIncCount) + 1;
+//         console.log("nomineeIdIncCount==============", nomineeIdIncCount);
+//     }
+// }
+// ADD NOMINEE ON EDIT VIEW
+
+
+
+
+let nomineeIdIncCount = 1;
+
+function addNomineeOnEditForm(id, newNomineeDiv, member_id) {
+    const templateNominee = document.getElementById(id, newNomineeDiv);
+    // let memberFormId = memberNomineeObj[member_id];
+    console.log("member id =====================vvvvv", member_id)
+    console.log("member id ===============", memberNomineeObj)
+    console.log("member id ===============", memberNomineeObj[0][member_id])
+    let newFormId = 'nomineeForm' + nomineeIdIncCount + 'member' + member_id;
+    // memberNomineeObj[0].nomineeForm.push(newFormId)
+
+    for (let i = 0; i < memberNomineeObj.length; i++) {
+        let memberObj = memberNomineeObj[i];
+        if (memberObj.hasOwnProperty(member_id)) {
+            memberObj.nomineeForm.push(newFormId);
+            break; // Once the object is found and newFormId is pushed, exit the loop
+        }
+    }
+
+    let htmlContent = '';
+    htmlContent +=
+        `
+                <form id="nomineeForm${nomineeIdIncCount}member${member_id}">
+                    <input type="text" class="w-100 sty-inp" value="" name="nominee_id" hidden/>
+                    <hr>
+                    <div class="row abcd" id="cloneNominee">
+                      <!-- <center>h3</center> -->
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp" id="id_nominee_name${nomineeIdIncCount}" name="nominee_name" />
+                          <label for="" class="sty-label">Nominee Name</label>
+                          <small id="id_nominee_name_Error${nomineeIdIncCount}" class="error-message"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date${nomineeIdIncCount}" name="date_of_nomination" />
+                          <label for="" class="sty-label">Date of Nomination</label>
+                          <small id="id_nomination_date${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input class="w-100 sty-inp form-control" type="text" id="id_nominee_relation${nomineeIdIncCount}" name="relation_with_nominee" />
+                          <label for="" class="sty-label">Relation with Nominator</label>
+                          <small id="id_nominee_relation${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp form-control percentage-input" name="nominee_sharein_percent"
+                            id="id_naminee_sharein${nomineeIdIncCount}" />
+                          <label for="" class="sty-label">Nominee Sharein %</label>
+                          <small id="id_naminee_sharein${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="date" class="w-100 sty-inp" id="id_nominee_dob${nomineeIdIncCount}" name="nominee_dob" />
+                          <label for="" class="sty-label">Nominee DOB</label>
+                          <small id="id_nominee_dob${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no${nomineeIdIncCount}" name="nominee_aadhar_no" />
+                          <label for="" class="sty-label">Nominee Aadhaar No</label>
+                          <small id="id_nominee_aadhar_no${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no${nomineeIdIncCount}" name="nominee_pan_no" />
+                          <label for="" class="sty-label">Nominee PAN No</label>
+                          <small id="id_nominee_pan_no${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="text" class="w-100 sty-inp" id="id_nominee_email${nomineeIdIncCount}" name="nominee_email" />
+                          <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+                          <small id="id_nominee_email${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address${nomineeIdIncCount}" cols="30" name="nominee_address"
+                            rows="1"></textarea>
+                          <label for="" class="sty-label">Nominee Permanent Address</label>
+                          <small id="id_nominee_address${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <select class="w-100 sty-inp form-control" name="nominee_state"
+                            id="id_nominee_state${nomineeIdIncCount}">
+                            ${['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh'].map(option =>
+            `<option value="${option}">${option}</option>`
+        ).join('')}
+                          </select>
+
+                          <label for="" class="sty-label">State</label>
+                          <small id="id_nominee_state${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code${nomineeIdIncCount}" name="nominee_pin_code" />
+                          <label for="" class="sty-label">Pin Code</label>
+                          <small id="id_nominee_pin_code${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number${nomineeIdIncCount}" name="nominee_contact" />
+                          <label for="" class="sty-label">Nominee Contact No.</label>
+                          <small id="id_nominee_contact_number${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 mb-3">
+                        <div class="w-100 sty-input-wrapper">
+                          <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact${nomineeIdIncCount}" name="nominee_emergency_contact" />
+                          <label for="" class="sty-label">Emergency Contact No.</label>
+                          <small id="id_nominee_emergency_contact${nomineeIdIncCount}_Error" class="error-message"></small>
+                        </div>
+                      </div>
+                      <hr />
+                    </div>
+                </form>
+            `;
+
+    if (templateNominee) {
+
+        $('#' + id + '_cloned').append(htmlContent);
+        nomineeIdIncCount = nomineeIdIncCount + 1;
+        console.log("nomineeIdIncCount==============", nomineeIdIncCount);
+
+    } else {
+        $('#' + newNomineeDiv).append(htmlContent);
+        nomineeIdIncCount = nomineeIdIncCount + 1;
+        console.log("nomineeIdIncCount==============", nomineeIdIncCount);
+    }
+}
+
+
+incNominee = 1;
+// ADD NOMINEE ON CREATE
 function addNominee() {
     const templateNominee = document.getElementById("cloneNominee");
     const clonedNominee = templateNominee.cloneNode(true);
@@ -2106,7 +2514,7 @@ function addNominee() {
     clonedNominee.id = "";
     document.getElementById("newNominee").appendChild(clonedNominee);
 }
-// ADD NOMINEE ON EDIT VIEW
+// ADD NOMINEE ON CREATE VIEW
 
 
 
@@ -2272,8 +2680,8 @@ $(document).ready(function () {
 
             // Get the selected value from the dropdown
             var selectedStatus = $('#statusFilterDropdown').val();
-            console.log("selectedStatus==========", selectedStatus)
-            
+            // console.log("selectedStatus==========", selectedStatus)
+
             if (selectedStatus === 'Active') {
                 return customStatus === 'Active';
             } else if (selectedStatus === 'Inactive') {
@@ -2281,7 +2689,7 @@ $(document).ready(function () {
             }
             return true;
             // Apply the filter based on the selected status
-            
+
         }
     );
     var table = $('#example').DataTable({
@@ -2289,89 +2697,89 @@ $(document).ready(function () {
         "dom": '<"dt-buttons"Br><"clear">ftipl',         //Qlfrtip
         // buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         responsive: true,
-        
+
         buttons: [
             {
-        extend: 'colvis',
-        text: 'More Column',
-        postfixButtons: [
-        'colvisRestore'
-        ]
-    },
-    {
-        extend: 'searchBuilder',
-        text: 'Filter'
-    },
-    {
-        extend: 'print',
-        exportOptions: {
-            // columns: ':visible',
-            columns: ':visible:not(.exclude-print)', // Exclude columns with the class 'exclude-print'
-            modifier: { search: 'applied', order: 'applied' },
-            
-        }
-    },
-    {
-        extend: 'print',
-        text: 'Print All',
-        exportOptions: {
-            columns: '*:not(.exclude-print)' // Exclude columns with the class 'exclude-print'
-            // modifier: { search: 'applied', order: 'applied' },
-            
-        }
-    },
-    
-    
-],
+                extend: 'colvis',
+                text: 'More Column',
+                postfixButtons: [
+                    'colvisRestore'
+                ]
+            },
+            {
+                extend: 'searchBuilder',
+                text: 'Filter'
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    // columns: ':visible',
+                    columns: ':visible:not(.exclude-print)', // Exclude columns with the class 'exclude-print'
+                    modifier: { search: 'applied', order: 'applied' },
 
-order: [],
-"stripeClasses": [],
+                }
+            },
+            {
+                extend: 'print',
+                text: 'Print All',
+                exportOptions: {
+                    columns: '*:not(.exclude-print)' // Exclude columns with the class 'exclude-print'
+                    // modifier: { search: 'applied', order: 'applied' },
 
-columnDefs: [
-    
-    {"visible": true, "targets": [0,1,2,3,4]},
-    {"visible": false, "targets": '_all'},
-],
-fixedColumns: {
-    left: 2
-},
-// "paging": true,
-// 'pageLength': '5',
-pagingType: "simple",
-  paginate: {
-    previous: "<",
-    next: ">"
-  },
-scrollCollapse: false,
-scrollX: true
-});
+                }
+            },
 
-let statusDD = $(
-    '<select class="dt-button ms-2 dt-button-custom dataTable-Text" id="statusFilterDropdown"><option value="all">All</option><option value="Active">Active</option><option value="Inactive">Inactive</option></select>')
-.on('change', function () {
-    table.draw();
-});
 
-$('#example_filter').append(statusDD);
+        ],
 
-// Set the DataTable info text to be centered
-$('#example_info').css({
-    'text-align': 'center',
-    'position': 'relative',
-    'left': '40%',
-    'padding-top': '20px',
-    // 'margin-right': 'auto',
-    'display': 'block'
-});
+        order: [],
+        "stripeClasses": [],
 
-// Adjust the info text position when the table is redrawn
-table.on('draw.dt', function () {
+        columnDefs: [
+
+            { "visible": true, "targets": [0, 1, 2, 3, 4] },
+            { "visible": false, "targets": '_all' },
+        ],
+        fixedColumns: {
+            left: 2
+        },
+        // "paging": true,
+        // 'pageLength': '5',
+        pagingType: "simple",
+        paginate: {
+            previous: "<",
+            next: ">"
+        },
+        scrollCollapse: false,
+        scrollX: true
+    });
+
+    let statusDD = $(
+        '<select class="dt-button ms-2 dt-button-custom dataTable-Text" id="statusFilterDropdown"><option value="all">All</option><option value="Active">Active</option><option value="Inactive">Inactive</option></select>')
+        .on('change', function () {
+            table.draw();
+        });
+
+    $('#example_filter').append(statusDD);
+
+    // Set the DataTable info text to be centered
     $('#example_info').css({
         'text-align': 'center',
-        'margin-left': 'auto',
-        'margin-right': 'auto'
+        'position': 'relative',
+        'left': '40%',
+        'padding-top': '20px',
+        // 'margin-right': 'auto',
+        'display': 'block'
     });
-});
+
+    // Adjust the info text position when the table is redrawn
+    table.on('draw.dt', function () {
+        $('#example_info').css({
+            'text-align': 'center',
+            'margin-left': 'auto',
+            'margin-right': 'auto'
+        });
+    });
 
 
 });
@@ -2748,7 +3156,7 @@ function updateMemberDetails(id) {
                     `
                 });
                 sharedContent =
-                `
+                    `
                     <div class="col-lg-6">
                         <div class="row">
                             <div class="col-lg-6">
@@ -2875,8 +3283,8 @@ function updateMemberDetails(id) {
                         </div>
                     </div>
                 `
-                homeLoanContent = 
-                `
+                homeLoanContent =
+                    `
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-6">
@@ -2976,8 +3384,8 @@ function updateMemberDetails(id) {
                 </div>
                 `
 
-                gstContent = 
-                `
+                gstContent =
+                    `
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-6">
@@ -3037,8 +3445,8 @@ function updateMemberDetails(id) {
 
                 if (vehicleData && vehicleData.length > 0) {
                     vehicleData.forEach(function (item) {
-                        vehicleContent += 
-                        ` 
+                        vehicleContent +=
+                            ` 
                         <h4>=============== Vehicle Detail=====================</h4>
                             <div class="col-lg-6">
                                 <div class="row">
@@ -3141,8 +3549,8 @@ function updateMemberDetails(id) {
                             <hr class="m-3 p-2">
                         `
                     });
-                }else{
-                    vehicleContent += 
+                } else {
+                    vehicleContent +=
                         ` 
                             <div class="col-lg-6">
                                 <div class="row">
@@ -3245,7 +3653,7 @@ function updateMemberDetails(id) {
                             <hr class="m-3 p-2">
                         `
                 }
-                
+
                 $('#accordionExample').html(htmlContent);
                 $('#sharedContent').html(sharedContent);
                 $('#homeLoanContent').html(homeLoanContent);
@@ -3268,819 +3676,785 @@ function updateMemberDetails(id) {
 
 // =================================================================================
 
+let memberNomineeObj = [];
+// function editMemberDetails(id) {
+//     // let formData = new FormData();
+//     // formData.append('member_id', id);
 
-function editMemberDetails(id){
-    let formData = new FormData();
-    formData.append('member_id', id);
+//     // $.ajax({
+//     //     url: '/member-details-view/',
+//     //     method: 'POST',
+//     //     data: formData,
+//     //     headers: {
+//     //         'X-CSRFToken': csrftoken
+//     //     },
+//     //     processData: false,
+//     //     contentType: false,
+//     //     success: function (response) {
+//     //         console.log("Success");
+//     //         if (response.all_member_json) {
+//     //             let memberData = JSON.parse(response.all_member_json)
+//     //             let sharesData = JSON.parse(response.shares_details)
+//     //             let homeLoanData = JSON.parse(response.home_loan_obj)
+//     //             let gstData = JSON.parse(response.gst_obj)
+//     //             let vehicleData = JSON.parse(response.vehicle_obj)
+//     //             let wing_flat_no = JSON.parse(response.wing_flat_no)
+//     //             let htmlContent = '';
+//     //             let sharedContent = '';
+//     //             let homeLoanContent = '';
+//     //             let gstContent = '';
+//     //             let vehicleContent = '';
+//     //             let memberIdIncCount = 1;
+//     //             let flat_and_ownership_ids = [];
+//     //             let nomineeForm = [];
+//     //             memberData.forEach(function (item) {
+//     //                 // Append member details
+//     //                 htmlContent +=
+//     //                     `
+//     //                     <div class="accordion-item">
+//     //                         <h2 class="accordion-header">
+//     //                             <button id="heading" class="accordion-button" type="button"
+//     //                                 data-bs-toggle="collapse" data-bs-target="#collapse_edit${item.member_id}" aria-expanded="true" aria-controls="collapse_edit${item.member_id}">
+//     //                                 ${item.member_name}
+//     //                             </button>
+//     //                         </h2>
+//     //                         <div id="collapse_edit${item.member_id}" class="accordion-collapse collapse show"
+//     //                             data-bs-parent="#member-edit-accordian">
+//     //                             <div class="accordion-body">
+//     //                                 <form id="memberChildForm${item.member_id}">
+//     //                                     <input type="text" class="w-100 sty-inp" value="${item.member_id}" name="member_id" id="" hidden/>
+//     //                                     <div class="row mt-3 ps-4 pe-4" style="text-align: left">
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <select id="id_wing_flat" class="w-100 sty-inp">
+//     //                                                     <option value="${item.member_wing}">${item.member_wing}</option>;
+//     //                                                 </select>
+//     //                                                 </div>
+//     //                                                 <label for="id_wing_flat" class="sty-label">Wing & Flat No.</label>
+//     //                                                 <small id="id_wing_flat_Error" class="error-message"></small>
+//     //                                         </div>
 
-    $.ajax({
-        url: '/member-details-view/',
-        method: 'POST',
-        data: formData,
-        headers: {
-            'X-CSRFToken': csrftoken
-        },
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            console.log("Success");
-            if (response.all_member_json) {
-                let memberData = JSON.parse(response.all_member_json)
-                let sharesData = JSON.parse(response.shares_details)
-                let homeLoanData = JSON.parse(response.home_loan_obj)
-                let gstData = JSON.parse(response.gst_obj)
-                let vehicleData = JSON.parse(response.vehicle_obj)
-                let wing_flat_no = JSON.parse(response.wing_flat_no)
-                let htmlContent = '';
-                let sharedContent = '';
-                let homeLoanContent = '';
-                let gstContent = '';
-                let vehicleContent = '';
-                let nomineeIdIncCount = 1;
-                let memberIdIncCount = 1;
-                let flat_and_ownership_ids = [];
-                memberData.forEach(function (item) {
-                    console.log("memberIdIncCount============", memberIdIncCount)
-                    // Append member details
-                    htmlContent +=
-                        `
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button id="heading" class="accordion-button" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#collapse_edit${item.member_id}" aria-expanded="true" aria-controls="collapse_edit${item.member_id}">
-                                    ${item.member_name}
-                                </button>
-                            </h2>
-                            <div id="collapse_edit${item.member_id}" class="accordion-collapse collapse show"
-                                data-bs-parent="#member-edit-accordian">
-                                <div class="accordion-body">
-                                    <form action="">
-                                        <div class="row mt-3 ps-4 pe-4" style="text-align: left">
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <select id="id_wing_flat" class="w-100 sty-inp">
-                                            `
-                                                    Object.keys(wing_flat_no).forEach(function(key) {
-                                                        htmlContent += `
-                                                            <option value="${key}">${wing_flat_no[key]}</option>;
-                                                            `
-                                                        });
-                                                htmlContent += `
-                                                    </select>
-                                                    </div>
-                                                    <label for="id_wing_flat" class="sty-label">Wing & Flat No.</label>
-                                                    <small id="id_wing_flat_Error" class="error-message"></small>
-                                            </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="text" class="w-100 sty-inp" value="${item.member_name}" id="id_member_name${memberIdIncCount}" name="member_name" />
+//     //                                                 <label for="id_member_name" class="sty-label">Member's Name</label>
+//     //                                                 <small id="id_member_name${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
 
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" value="${item.member_name}" id="id_member_name" />
-                                                    <label for="id_member_name" class="sty-label">Member's Name</label>
-                                                    <small id="id_member_name_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="number" class="w-100 sty-inp percentage-input" name="ownership_percent" id="id_member_ownership${memberIdIncCount}" value="${item.ownership_percent !== null ? item.ownership_percent : ''}" />
+//     //                                                 <label for="id_member_ownership${memberIdIncCount}" class="sty-label">Ownership %</label>
+//     //                                                 <small id="id_member_ownership${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <select class="w-100 sty-inp form-control" id="id_member_position${memberIdIncCount}" name="member_position">
+//     //                                                     ${['Nominal Member', 'Committe Member', 'Member'].map(option =>
+//     //                         `<option value="${option}" ${option === item.member_position ? 'selected' : ''}>${option}</option>`
+//     //                     ).join('')}
+//     //                                                 </select>
+//     //                                               <label for="id_member_position" class="sty-label">Position</label>
+//     //                                               <small id="id_member_position${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
 
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp percentage-input" id="id_member_ownership${memberIdIncCount}" />
-                                                    <label for="id_member_ownership${memberIdIncCount}" class="sty-label">Ownership %</label>
-                                                    <small id="id_member_ownership${memberIdIncCount}_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <select class="w-100 sty-inp form-control" id="id_member_position">
-                                                        <option value="">Select Position</option>
-                                                        <option value="associate-member">Associate Member</option>
-                                                        <option value="chairman">Chairman</option>
-                                                        <option value="secretary">Secretary</option>
-                                                        <option value="treasurer">Treasurer</option>
-                                                    </select>
-                                                    <label for="id_member_position" class="sty-label">Position</label>
-                                                    <small id="id_member_position_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="date" class="w-100 sty-inp form-control" id="id_member_dob${memberIdIncCount}" name="member_dob" value="${item.member_dob !== null ? item.member_dob : ''}" name="member_dob" />
+//     //                                                 <label for="id_member_dob" class="sty-label">Member DOB</label>
+//     //                                                 <small id="id_member_dob${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="text" class="w-100 sty-inp" id="id_member_pan_number${memberIdIncCount}" value="${item.member_pan_no !== null ? item.member_pan_no : ''}" name="member_pan_no" />
+//     //                                                 <label for="id_member_pan_number" class="sty-label">Member PAN No</label>
+//     //                                                 <small id="id_member_pan_number${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="number" class="w-100 sty-inp" id="id_member_aadhar_no${memberIdIncCount}" value="${item.member_aadhar_no}" name="member_aadhar_no" />
+//     //                                                 <label for="id_member_aadhar_no" class="sty-label">Member Aadhaar No</label>
+//     //                                                 <small id="id_member_aadhar_no${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <textarea class="w-100 sty-inp form-control" id="id_member_address${memberIdIncCount}" cols="30" rows="1" name="member_address" >${item.member_address}</textarea>
+//     //                                                 <label for="id_member_address" class="sty-label">Member Permanent Address</label>
+//     //                                                 <small id="id_member_address${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <select class="w-100 sty-inp form-control" id="id_member_state${memberIdIncCount}" name="member_state">
+//     //                                                     ${['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh'].map(option =>
+//     //                         `<option value="${option}" ${option === item.member_state ? 'selected' : ''}>${option}</option>`
+//     //                     ).join('')}                                                        
+//     //                                                 </select>
+//     //                                                 <label for="id_member_state" class="sty-label">State</label>
+//     //                                                 <small id="id_member_state${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="number" class="w-100 sty-inp" id="id_member_pin_code${memberIdIncCount}" name="member_pin_code" value="${item.member_pin_code}" />
+//     //                                                 <label for="id_member_pin_code" class="sty-label">Pin Code</label>
+//     //                                                 <small id="id_member_pin_code${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
 
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="date" class="w-100 sty-inp form-control" id="id_member_dob" />
-                                                    <label for="id_member_dob" class="sty-label">Member DOB</label>
-                                                    <small id="id_member_dob_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" id="id_member_pan_number"/>
-                                                    <label for="id_member_pan_number" class="sty-label">Member PAN No</label>
-                                                    <small id="id_member_pan_number_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp" id="id_member_aadhar_no"/>
-                                                    <label for="id_member_aadhar_no" class="sty-label">Member Aadhaar No</label>
-                                                    <small id="id_member_aadhar_no_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <textarea class="w-100 sty-inp form-control" id="id_member_address" cols="30" rows="1"></textarea>
-                                                    <label for="id_member_address" class="sty-label">Member Permanent Address</label>
-                                                    <small id="id_member_address_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <select class="w-100 sty-inp form-control" id="id_member_state">
-                                                        <option value="">Select your State</option>
-                                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                                        <option value="Assam">Assam</option>
-                                                        <option value="Bihar">Bihar</option>
-                                                        <option value="Chhattisgarh">Chhattisgarh</option>
-                                                        <option value="Goa">Goa</option>
-                                                        <option value="Gujarat">Gujarat</option>
-                                                        <option value="Haryana">Haryana</option>
-                                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                                        <option value="Jharkhand">Jharkhand</option>
-                                                        <option value="Karnataka">Karnataka</option>
-                                                        <option value="Kerala">Kerala</option>
-                                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                                        <option value="Maharashtra">Maharashtra</option>
-                                                        <option value="Manipur">Manipur</option>
-                                                        <option value="Meghalaya">Meghalaya</option>
-                                                        <option value="Mizoram">Mizoram</option>
-                                                        <option value="Nagaland">Nagaland</option>
-                                                        <option value="Odisha">Odisha</option>
-                                                        <option value="Punjab">Punjab</option>
-                                                        <option value="Rajasthan">Rajasthan</option>
-                                                        <option value="Sikkim">Sikkim</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                        <option value="Telangana">Telangana</option>
-                                                        <option value="Tripura">Tripura</option>
-                                                        <option value="Uttar Pradesh">
-                                                            Uttar Pradesh
-                                                        </option>
-                                                        <option value="Uttarakhand">Uttarakhand</option>
-                                                        <option value="West Bengal">West Bengal</option>
-                                                        <option value="Andaman and Nicobar ">
-                                                            Andaman and Nicobar
-                                                        </option>
-                                                        <option value="Islands">Islands</option>
-                                                        <option value="Dadra and Nagar Haveli">
-                                                            Dadra and Nagar Haveli
-                                                        </option>
-                                                        <option value="Daman and Diu">
-                                                            Daman and Diu
-                                                        </option>
-                                                        <option value="Delhi">Delhi</option>
-                                                        <option value="Ladakh">Ladakh</option>
-                                                        <option value="Lakshadweep">Lakshadweep</option>
-                                                        <option value="Puducherry">Puducherry</option>
-                                                    </select>
-                                                    <label for="id_member_state" class="sty-label">State</label>
-                                                    <small id="id_member_state_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp" id="id_member_pin_code"/>
-                                                    <label for="id_member_pin_code" class="sty-label">Pin Code</label>
-                                                    <small id="id_member_pin_code_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="email" class="w-100 sty-inp" id="id_member_email" />
-                                                    <label for="id_member_email" class="sty-label">Member Email</label>
-                                                    <small id="id_member_email_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp form-control" id="id_member_contact"/>
-                                                    <label for="id_member_contact" class="sty-label">Member Contact No.</label>
-                                                    <small id="id_member_contact_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="number" class="w-100 sty-inp" id="id_member_emergency_contact"/>
-                                                    <label for="id_member_emergency_contact" class="sty-label">Emergency Contact No.</label>
-                                                    <small id="id_member_emergency_contact_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" id="id_member_occupation" />
-                                                    <label for="id_member_occupation" class="sty-label">Occupation</label>
-                                                    <small id="id_member_occupation_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            
-
-                                            <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="date" class="w-100 sty-inp" id="id_date_of_admission" />
-                                                <label for="id_date_of_admission" class="sty-label">Date of admission</label>
-                                                <small id="id_date_of_admission_Error" class="error-message"></small>
-                                            </div>
-                                            </div>
-
-                                            <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <select id="id_flat_status" class="w-100 sty-inp" id="id_member_flat_status">
-                                                <option value="">Select Status</option>
-                                                <option value="owned">Owned</option>
-                                                <option value="rented">Rented</option>
-                                                <option value="vacant">Vacant</option>
-                                                <option value="black_listed">Black Listed</option>
-                                                </select>
-                                                <label for="id_member_flat_status" class="sty-label">Status</label>
-                                                <small id="id_member_flat_status_Error" class="error-message"></small>
-                                            </div>
-                                            </div>
-
-                                            <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="date" class="w-100 sty-inp" id="id_date_of_entrance_fees" />
-                                                <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance fees</label>
-                                                <small id="id_date_of_entrance_fees_Error" class="error-message"></small>
-                                            </div>
-                                            </div>
-
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="date" class="w-100 sty-inp" id="id_date_of_cessation"/>
-                                                    <label for="id_date_of_cessation" class="sty-label">Date of cessation</label>
-                                                    <small id="id_date_of_cessation_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="w-100 sty-input-wrapper">
-                                                    <input type="text" class="w-100 sty-inp" id="id_cessation_reason" />
-                                                    <label for="id_cessation_reason" class="sty-label">Reason for cessation</label>
-                                                    <small id="id_cessation_reason_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 d-flex align-items-center">
-                                            <small id="id_is_primary">
-                                                <span>
-                                                <input type="checkbox" class="sty-inp" id="id_is_primary_val" />
-                                                </span>&nbsp;Make this Member as a Primary Member
-                                            </small>
-                                            <small id="id_is_primary_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-
-                                        <div class="hr-container">
-                                            <hr class="hr-text text-center" style="font-size: 27px; color: #2b96f1" data-content="Nominee Details"/>
-                                        </div>
-                    `
-
-                    // Append nominee details
-                    if (item.nominee_Details.length > 0) {
-                        item.nominee_Details.forEach(function (nominee) {
-                            htmlContent +=
-                            `
-                            <div id="newNominee">
-                            <div class="row ps-4 pe-4 abcd" id="cloneNominee_${item.member_id}">
-                            <h2 id="heading" class="mb-3 text-center">Nominee: ${nominee.nominee_name}</h2>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <input type="text" class="w-100 sty-inp" id="id_nominee_name${nomineeIdIncCount}" value="${nominee.nominee_name}" />
-                                                <label for="id_nominee_name${nomineeIdIncCount}" class="sty-label">Nominee Name</label>
-                                                <small id="id_nominee_name${nomineeIdIncCount}_Error" class="error-message"></small>
-                                                </div>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date${nomineeIdIncCount}" />
-                                            <label for="" class="sty-label">Date of Nomination</label>
-                                            <small id="id_nomination_date${nomineeIdIncCount}_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input class="w-100 sty-inp form-control" type="text" name="" id="id_nominee_relation" />
-                                            <label for="" class="sty-label">Relation with Nominator</label>
-                                            <small id="id_nominee_relation_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp form-control percentage-input"
-                                                id="id_naminee_sharein" />
-                                            <label for="" class="sty-label">Nominee Sharein %</label>
-                                            <small id="id_naminee_sharein_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
-                                            <label for="" class="sty-label">Nominee DOB</label>
-                                            <small id="id_nominee_dob_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
-                                            <label for="" class="sty-label">Nominee Aadhaar No</label>
-                                            <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
-                                            <label for="" class="sty-label">Nominee PAN No</label>
-                                            <small id="id_nominee_pan_no_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
-                                            <label for="id_nominee_email" class="sty-label">Nominee Email</label>
-                                            <small id="id_nominee_email_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address" cols="30"
-                                                rows="1"></textarea>
-                                            <label for="" class="sty-label">Nominee Permanent Address</label>
-                                            <small id="id_nominee_address_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                                <select class="w-100 sty-inp form-control" name=""
-                                                    id="id_nominee_state">
-                                                    <option value="#">Select your State</option>
-                                                    <option value="Andhra Pradesh">
-                                                        Andhra Pradesh
-                                                    </option>
-                                                    <option value="Arunachal Pradesh">
-                                                        Arunachal Pradesh
-                                                    </option>
-                                                    <option value="Assam">Assam</option>
-                                                    <option value="Bihar">Bihar</option>
-                                                    <option value="Chhattisgarh">
-                                                        Chhattisgarh
-                                                    </option>
-                                                    <option value="Goa">Goa</option>
-                                                    <option value="Gujarat">Gujarat</option>
-                                                    <option value="Haryana">Haryana</option>
-                                                    <option value="Himachal Pradesh">
-                                                        Himachal Pradesh
-                                                    </option>
-                                                    <option value="Jammu and Kashmir">
-                                                        Jammu and Kashmir
-                                                    </option>
-                                                    <option value="Jharkhand">Jharkhand</option>
-                                                    <option value="Karnataka">Karnataka</option>
-                                                    <option value="Kerala">Kerala</option>
-                                                    <option value="Madhya Pradesh">
-                                                        Madhya Pradesh
-                                                    </option>
-                                                    <option value="Maharashtra">Maharashtra</option>
-                                                    <option value="Manipur">Manipur</option>
-                                                    <option value="Meghalaya">Meghalaya</option>
-                                                    <option value="Mizoram">Mizoram</option>
-                                                    <option value="Nagaland">Nagaland</option>
-                                                    <option value="Odisha">Odisha</option>
-                                                    <option value="Punjab">Punjab</option>
-                                                    <option value="Rajasthan">Rajasthan</option>
-                                                    <option value="Sikkim">Sikkim</option>
-                                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                                    <option value="Telangana">Telangana</option>
-                                                    <option value="Tripura">Tripura</option>
-                                                    <option value="Uttar Pradesh">
-                                                        Uttar Pradesh
-                                                    </option>
-                                                    <option value="Uttarakhand">Uttarakhand</option>
-                                                    <option value="West Bengal">West Bengal</option>
-                                                    <option value="Andaman and Nicobar ">
-                                                        Andaman and Nicobar
-                                                    </option>
-                                                    <option value="Islands">Islands</option>
-                                                    <option value="Dadra and Nagar Haveli">
-                                                        Dadra and Nagar Haveli
-                                                    </option>
-                                                    <option value="Daman and Diu">
-                                                        Daman and Diu
-                                                    </option>
-                                                    <option value="Delhi">Delhi</option>
-                                                    <option value="Ladakh">Ladakh</option>
-                                                    <option value="Lakshadweep">Lakshadweep</option>
-                                                    <option value="Puducherry">Puducherry</option>
-                                                </select>
-                                                <label for="id_nominee_state" class="sty-label">State</label>
-                                                <small id="id_nominee_state_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
-                                            <label for="" class="sty-label">Pin Code</label>
-                                            <small id="id_nominee_pin_code_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number" />
-                                            <label for="" class="sty-label">Nominee Contact No.</label>
-                                            <small id="id_nominee_contact_number_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-3">
-                                            <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact" />
-                                            <label for="" class="sty-label">Emergency Contact No.</label>
-                                            <small id="id_nominee_emergency_contact_Error" class="error-message"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                                                              
-                            `
-                            nomineeIdIncCount = nomineeIdIncCount + 1;                            
-                        });
-                    }
-                    htmlContent +=
-                        `        
-                        <div class="row ps-4 pe-4 abcd" id="cloneNominee_${item.member_id}_cloned">
-
-                        </div>
-                        <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
-                            <button type="button" id="newNominee_${item.member_id}" class="btn btn-primary" onclick="addNomineeOnEditForm('cloneNominee_${item.member_id}')"> Add Nominee</button>
-                        </div>                 
-                        </form>
-                        </div>
-                        </div>
-                        </div>
-                        `
-                    memberIdIncCount = memberIdIncCount + 1;
-                    // TO BE CONTINUE WITH OWNERSHIP
-                    flat_and_ownership_ids.push({
-                        flat: "#id_wing_flat" + memberIdIncCount, 
-                        ownership: "#id_member_ownership" + memberIdIncCount, 
-                    });
-                    
-                    
-                });
-                console.log("flat_and_ownership_ids=============", flat_and_ownership_ids)
-                htmlContent += `
-                    <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
-                        <div class="two-btn">
-                            <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" onclick="save_and_edit_member()">Update</button>
-                        </div>
-                    </div>
-                `
-
-                sharedContent =
-                `
-                <form action="">
-                    <div class="row pt-3 ps-4 pe-4">
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <!-- <input type="number" class="w-100 sty-inp" /> -->
-                                <select name="" id="" class="w-100 sty-inp form-control">
-                                    <option value="#">Select your Wing & Flat No.</option>
-                                    <option value="#">A-Wing(101)</option>
-                                    <option value="#">B-Wing(301)</option>
-                                    <option value="#">C-Wing(301)</option>
-                                </select>
-                                <label for="" class="sty-label">Wing & Flat No.</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" value="${sharesData[0]?.folio_number || ''}" />
-                                <label for="" class="sty-label">Folio Number</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="date" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Share Issue Date</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Application Number</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Serial No. of Certificate</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Allotment Number</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Share No. from</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Share No. To</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="date" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Share Transfer Date</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Total Amount Received</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="date" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Total Amount Received On</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Transfer from Folio Number</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Transfer to Folio Number</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="email" class="w-100 sty-inp" id="id_member_email${memberIdIncCount}" name="member_email" value="${item.member_email}" />
+//     //                                                 <label for="id_member_email" class="sty-label">Member Email</label>
+//     //                                                 <small id="id_member_email${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="number" class="w-100 sty-inp form-control" id="id_member_contact${memberIdIncCount}" name="member_contact" value="${item.member_contact}"  />
+//     //                                                 <label for="id_member_contact" class="sty-label">Member Contact No.</label>
+//     //                                                 <small id="id_member_contact${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="number" class="w-100 sty-inp" id="id_member_emergency_contact${memberIdIncCount}" name="member_emergency_contact" value="${item.member_emergency_contact !== null ? item.member_emergency_contact : ''}" />
+//     //                                                 <label for="id_member_emergency_contact" class="sty-label">Emergency Contact No.</label>
+//     //                                                 <small id="id_member_emergency_contact${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="text" class="w-100 sty-inp" id="id_member_occupation${memberIdIncCount}" name="member_occupation" value="${item.member_occupation !== null ? item.member_occupation : ''}"  />
+//     //                                                 <label for="id_member_occupation" class="sty-label">Occupation</label>
+//     //                                                 <small id="id_member_occupation${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
 
 
-                    <div class="two-btn float-end pb-3 pe-4">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </form>
-                `;
-                homeLoanContent = 
-                `
-                <form action="">
-                    <div class="row pt-3 ps-4 pe-4">
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="text" class="w-100 sty-inp" value="${homeLoanData[0]?.bank_loan_name || '-'}" />
-                                <label for="" class="sty-label">Hypothication Bank Name</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="text" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Object of Loan</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="date" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Loan Issue Date</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Loan Value</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Account Number</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Installment</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <!-- <input type="text" class="w-100 sty-inp" /> -->
-                                <select name="" class="w-100 form-control sty-inp" id="selectStatus">
-                                    <option value="#">Select Status</option>
-                                    <option value="option1">Active</option>
-                                    <option value="option2">Closed</option>
-                                </select>
-                                <label for="" class="sty-label">Loan Status</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3" id="attachNOC" style="display: none;">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="file" class="w-100 sty-inp form-control" />
-                                <label for="" class="sty-label">Attach NOC</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="text" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Remarks</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                             <input type="date" class="w-100 sty-inp" id="id_date_of_admission${memberIdIncCount}" name="date_of_admission" value="${item.date_of_admission}" />
+//     //                                             <label for="age_at_date_of_admission" class="sty-label">Date of admission</label>
+//     //                                             <small id="age_at_date_of_admission${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                         </div>
+
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                             <input type="number" class="w-100 sty-inp" id="id_age_at_admission_time${memberIdIncCount}" name="age_at_date_of_admission" value="${item.age_at_date_of_admission}" />
+//     //                                             <label for="id_age_at_admission_time" class="sty-label">Age at date of admission</label>
+//     //                                             <small id="id_age_at_admission_timen${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                         </div>
 
 
-                    <div class="two-btn float-end pb-3 pe-4">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </form>
-                `;
+//     //                                         <div class="col-lg-6 mb-2 d-flex">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="file" class="w-100 sty-inp form-control" id="id_sales_agreement${memberIdIncCount}" name="sales_agreement" value="${item.sales_agreement !== null ? item.sales_agreement : ''}">
+//     //                                                 <label for="id_sales_agreement" class="sty-label">Update Sales Agreement</label>
+//     //                                                 <small id="id_sales_agreement${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                             <div class="prev">
+//     //                                                 <button type="button" class="sty-inp form-control"
+//     //                                                     onclick="PreviewImage('id_sales_agreement')">
+//     //                                                     <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+//     //                                                 </button>
+//     //                                             </div>
+//     //                                             <a href="${item.sales_agreement}" target="_blank">
+//     //                                                 ${item.sales_agreement ? item.sales_agreement.substring(item.sales_agreement.lastIndexOf('/') + 1) : ''}
+//     //                                             </a>
+//     //                                         </div>
 
-                gstContent = 
-                `
-                <form action="">
-                    <div class="row pt-3 ps-4 pe-4">
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="text" class="w-100 sty-inp" value="${gstData[0]?.gst_number || '-'}" />
-                                <label for="" class="sty-label">GST Number</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="text" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Billing State</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="text" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Billing Name</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <textarea class="w-100 sty-inp form-control" name="" id="" cols="30"
-                                    rows="1"></textarea>
-                                <label for="" class="sty-label">Billing Address</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mb-3">
-                            <div class="w-100 sty-input-wrapper">
-                                <input type="number" class="w-100 sty-inp" />
-                                <label for="" class="sty-label">Contact Number</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+//     //                                         <div class="col-lg-6 mb-2 d-flex">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="file" class="w-100 sty-inp form-control" id="id_other_attachment" name="other_attachment">
+//     //                                                 <label for="id_other_attachment" class="sty-label">Update Other Attachment</label>
+//     //                                                 <small id="id_other_attachment_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                             <div class="prev">
+//     //                                                 <button type="button" class="sty-inp form-control" onclick="PreviewImage('id_tenant_noc')">
+//     //                                                     <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+//     //                                                 </button>
+//     //                                             </div>
+//     //                                             <a href="${item.other_attachment}" target="_blank">
+//     //                                                 ${item.other_attachment ? item.other_attachment.substring(item.other_attachment.lastIndexOf('/') + 1) : ''}
+//     //                                             </a>
+//     //                                         </div>
 
-                    <div class="two-btn float-end pb-3 pe-4">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </form>
-                `;
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                             <select id="id_flat_status${memberIdIncCount}" class="w-100 sty-inp" name="flat_status">
+//     //                                                 ${['Occupied', 'Not Occupied', 'Rented', 'Japti', 'Builder Possession'].map(option =>
+//     //                         `<option value="${option}" ${option === item.flat_status ? 'selected' : ''}>${option}</option>`
+//     //                     ).join('')}
+//     //                                             </select>
+//     //                                             <label for="id_member_flat_status" class="sty-label">Flat Status</label>
+//     //                                             <small id="id_member_flat_status${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                         </div>
 
-                if (vehicleData && vehicleData.length > 0) {
-                    vehicleData.forEach(function (item) {
-                        vehicleContent += 
-                        `
-                        <form action="">
-                            <h1>===============VEHICLE=========</h1>
-                            <div id="newVehicle">                                    
-                                <div class="row mt-3" id="cloneVehicle">
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <input type="text" class="w-100 sty-inp" id="id_parking_lot0" value="${vehicleData[0]?.parking_lot || ''}" />
-                                    <label for="id_parking_lot0" class="sty-label">Parking Lot</label>
-                                    <small id="Error_id_parking_lot0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <input type="text" class="w-100 sty-inp" id="id_vehicle_type0" />
-                                    <label for="id_vehicle_type0" class="sty-label">Vehicle Type</label>
-                                    <small id="Error_id_vehicle_type0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <input type="text" class="w-100 sty-inp" id="id_vehicle_number0" />
-                                    <label for="id_vehicle_number0" class="sty-label">Vehicle Number</label>
-                                    <small id="Error_id_vehicle_number0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <input type="text" class="w-100 sty-inp" id="id_vehicle_brand0" />
-                                    <label for="id_vehicle_brand0" class="sty-label">Brand & Model</label>
-                                    <small id="Error_id_vehicle_brand0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <input type="file" class="w-100 sty-inp form-control" id="id_rc_copy0" />
-                                    <label for="id_rc_copy0" class="sty-label">RC Copy</label>
-                                    <small id="Error_id_rc_copy0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <input type="text" class="w-100 sty-inp form-control" id="id_sticker_number0" />
-                                    <label for="id_sticker_number0" class="sty-label">Sticker Number</label>
-                                    <small id="Error_id_sticker_number0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                    <select class="w-100 sty-inp form-control" name="" id="id_select_charge0"
-                                        onchange="selectChange(this.id, ('related_' + this.id), ('vehicle_' + this.id))">
-                                        <option value="#" selected>YES / NO</option>
-                                        <option id="optN0" value="no">NO</option>
-                                        <option id="optY0" value="yes">YES</option>
-                                    </select>
-                                    <!-- <input type="text" class="w-100 sty-inp"> -->
-                                    <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
-                                    <small id="Error_id_select_charge0" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3" id="addCharge0">
-                                    <div class="w-100 sty-input-wrapper" id="vehicle_id_select_charge0">
-                                </div>
-                                </div>
-                                <hr />
-                            </div>
-                            <div class="row" id="newVehicleContainer"></div>
-                            </div>
-                        </form> 
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                             <input type="date" class="w-100 sty-inp" id="id_date_of_entrance_fees${memberIdIncCount}" name="date_of_entrance_fees" value="${item.date_of_entrance_fees}" />
+//     //                                             <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance fees</label>
+//     //                                             <small id="id_date_of_entrance_fees${memberIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                         </div>
 
-                        `;
-                    });
-                    vehicleContent += 
-                    `
-                        <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
-                    `;
-                }else{
-                    vehicleContent += 
-                    `
-                        <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
-                    `;
-                }
-                
-                $('#memberEditForm').html(htmlContent);
-                $('#sharedmemberEditForm').html(sharedContent);
-                $('#homeloanEditForm').html(homeLoanContent);
-                $('#gstEditform').html(gstContent);
-                $('#vehicleEditForm').html(vehicleContent);
-            }
-        
-        },
-        error: function (xhr) {
-            alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-        }
-    });
-}
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="date" class="w-100 sty-inp" id="id_date_of_cessation" name="date_of_cessation"  />
+//     //                                                 <label for="id_date_of_cessation" class="sty-label">Date of cessation</label>
+//     //                                                 <small id="id_date_of_cessation_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+//     //                                         <div class="col-lg-4 mb-3">
+//     //                                             <div class="w-100 sty-input-wrapper">
+//     //                                                 <input type="text" class="w-100 sty-inp" id="id_cessation_reason" name="reason_for_cessation" />
+//     //                                                 <label for="id_cessation_reason" class="sty-label">Reason for cessation</label>
+//     //                                                 <small id="id_cessation_reason_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                         </div>
+
+//     //                                         <div class="col-lg-4 d-flex align-items-center">
+//     //                                         <small id="id_is_primary">
+//     //                                             <span>
+//     //                                             <input type="checkbox" name="member_is_primary" class="sty-inp" id="id_is_primary_val" ${item.member_is_primary ? 'checked' : ''} />
+//     //                                             </span>&nbsp;Make this Member as a Primary Member
+//     //                                         </small>
+//     //                                         <small id="id_is_primary_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                 </form>
+
+//     //                                     <div class="hr-container">
+//     //                                         <hr class="hr-text text-center" style="font-size: 27px; color: #2b96f1" data-content="Nominee Details"/>
+//     //                                     </div>
+//     //                 `
+
+//     //                 // Append nominee details
+//     //                 if (item.nominee_Details.length > 0) {
+//     //                     item.nominee_Details.forEach(function (nominee) {
+//     //                         htmlContent +=
+//     //                             `
+//     //                         <div id="newNominee">
+//     //                             <form id="nomineeForm${nomineeIdIncCount}member${item.member_id}">
+//     //                                 <input type="text" class="w-100 sty-inp" value="${nominee.nominee_id}" name="nominee_id" hidden />
+//     //                                 <div class="row ps-4 pe-4 abcd" id="cloneNominee_${item.member_id}">
+//     //                                     <h2 id="heading" class="mb-3 text-center">Nominee: ${nominee.nominee_name}</h2>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                             <input type="text" class="w-100 sty-inp" name="nominee_name" id="id_nominee_name${nomineeIdIncCount}" value="${nominee.nominee_name}" />
+//     //                                             <label for="id_nominee_name${nomineeIdIncCount}" class="sty-label">Nominee Name</label>
+//     //                                             <small id="id_nominee_name${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                             </div>
+//     //                                     </div>
+
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="date" class="w-100 sty-inp form-control" id="id_nomination_date${nomineeIdIncCount}" name="date_of_nomination" value="${nominee.date_of_nomination !== null ? nominee.date_of_nomination : ''}" />
+//     //                                         <label for="" class="sty-label">Date of Nomination</label>
+//     //                                         <small id="id_nomination_date${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input class="w-100 sty-inp form-control" type="text" id="id_nominee_relation${nomineeIdIncCount}" name="relation_with_nominee" value="${nominee.relation_with_nominee !== null ? nominee.relation_with_nominee : ''}" />
+//     //                                         <label for="" class="sty-label">Relation with Nominator</label>
+//     //                                         <small id="id_nominee_relation${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="text" class="w-100 sty-inp form-control percentage-input" name="nominee_sharein_percent${nomineeIdIncCount}" value="${nominee.nominee_sharein_percent !== null ? nominee.nominee_sharein_percent : ''}"
+//     //                                             id="id_naminee_sharein" />
+//     //                                         <label for="" class="sty-label">Nominee Sharein %</label>
+//     //                                         <small id="id_naminee_sharein${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="date" class="w-100 sty-inp" id="id_nominee_dob${nomineeIdIncCount}" name="nominee_dob" value="${nominee.nominee_dob !== null ? nominee.nominee_dob : ''}" />
+//     //                                         <label for="" class="sty-label">Nominee DOB</label>
+//     //                                         <small id="id_nominee_dob${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no${nomineeIdIncCount}" name="nominee_aadhar_no" value="${nominee.nominee_aadhar_no !== null ? nominee.nominee_aadhar_no : ''}" />
+//     //                                         <label for="" class="sty-label">Nominee Aadhaar No</label>
+//     //                                         <small id="id_nominee_aadhar_no${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no${nomineeIdIncCount}" name="nominee_pan_no" value="${nominee.nominee_pan_no !== null ? nominee.nominee_pan_no : ''}" />
+//     //                                         <label for="" class="sty-label">Nominee PAN No</label>
+//     //                                         <small id="id_nominee_pan_no${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="text" class="w-100 sty-inp" id="id_nominee_email${nomineeIdIncCount}" name="nominee_email" value="${nominee.nominee_email !== null ? nominee.nominee_email : ''}" />
+//     //                                         <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+//     //                                         <small id="id_nominee_email${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <textarea class="w-100 sty-inp form-control" id="id_nominee_address${nomineeIdIncCount}" cols="30" name="nominee_address"
+//     //                                             rows="1">${item.nominee_address}</textarea>
+//     //                                         <label for="" class="sty-label">Nominee Permanent Address</label>
+//     //                                         <small id="id_nominee_address${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                             <select class="w-100 sty-inp form-control" name="nominee_state"
+//     //                                                 id="id_nominee_state${nomineeIdIncCount}">
+//     //                                                 ${['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh'].map(option =>
+//     //                                 `<option value="${option}" ${option === item.nominee_state ? 'selected' : ''}>${option}</option>`
+//     //                             ).join('')}
+//     //                                             </select>
+//     //                                             <label for="id_nominee_state" class="sty-label">State</label>
+//     //                                             <small id="id_nominee_state${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code${nomineeIdIncCount}" name="nominee_pin_code" value="${item.nominee_pin_code !== null ? item.nominee_pin_code : ''}" />
+//     //                                         <label for="" class="sty-label">Pin Code</label>
+//     //                                         <small id="id_nominee_pin_code${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="number" class="w-100 sty-inp form-control" id="id_nominee_contact_number${nomineeIdIncCount}" name="nominee_contact" value="${item.nominee_contact !== null ? item.nominee_contact : ''}" />
+//     //                                         <label for="" class="sty-label">Nominee Contact No.</label>
+//     //                                         <small id="id_nominee_contact_number${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                     <div class="col-lg-4 mb-3">
+//     //                                         <div class="w-100 sty-input-wrapper">
+//     //                                         <input type="number" class="w-100 sty-inp" id="id_nominee_emergency_contact${nomineeIdIncCount}" name="nominee_emergency_contact" value="${item.nominee_emergency_contact !== null ? item.nominee_emergency_contact : ''}" />
+//     //                                         <label for="" class="sty-label">Emergency Contact No.</label>
+//     //                                         <small id="id_nominee_emergency_contact${nomineeIdIncCount}_Error" class="error-message"></small>
+//     //                                         </div>
+//     //                                     </div>
+//     //                                 </div>
+//     //                             </form>
+//     //                         </div> 
+
+//     //                         `
+//     //                         nomineeForm.push('nomineeForm' + nomineeIdIncCount + 'member' + item.member_id)
+//     //                         nomineeIdIncCount = nomineeIdIncCount + 1;
+//     //                     });
+//     //                     memberNomineeObj.push({ [item.member_id]: 'memberChildForm' + item.member_id, "nomineeForm": nomineeForm });
+//     //                     nomineeForm = [];
+//     //                 }
+
+//     //                 let targetKey = item.member_id; // Assuming this is how you get the target key
+//     //                 let keyExists = false;
+
+//     //                 // Check if the targetKey exists in memberNomineeObj
+//     //                 for (let i = 0; i < memberNomineeObj.length; i++) {
+//     //                     let obj = memberNomineeObj[i];
+//     //                     if (targetKey in obj) {
+//     //                         keyExists = true;
+//     //                         break;
+//     //                     }
+//     //                 }
+
+//     //                 // If the targetKey doesn't exist in memberNomineeObj, append the new object
+//     //                 if (!keyExists) {
+//     //                     memberNomineeObj.push({ [item.member_id]: 'memberChildForm' + item.member_id, "nomineeForm": [] });
+//     //                 }
+
+//     //                 // console.log("==+++++++++++++++++++++++", memberNomineeObj)
+//     //                 htmlContent +=
+//     //                     `
+//     //                     <div id="newNominee_${item.member_id}">
+//     //                     </div>
+//     //                     <div class="row ps-4 pe-4 abcd" id="cloneNominee_${item.member_id}_cloned">
+
+//     //                     </div>
+//     //                     <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
+//     //                         <button type="button" id="newNominee_${item.member_id}" class="btn btn-primary" onclick="addNomineeOnEditForm('cloneNominee_${item.member_id}', 'newNominee_${item.member_id}', ${item.member_id}, ${nomineeIdIncCount})"> Add Nominee</button>
+//     //                     </div>                 
+//     //                     </form>
+//     //                     </div>
+//     //                     </div>
+//     //                     </div>
+//     //                     `
+//     //                 // memberNomineeObj.push({'memberForm': nomineeForm})
+//     //                 // console.log("NOM==================", memberNomineeObj)
+//     //                 memberIdIncCount = memberIdIncCount + 1;
+//     //                 // memberNomineeObj.push({[item.member_id]: 'memberChildForm' + item.member_id});
+//     //                 // TO BE CONTINUE WITH OWNERSHIP
+//     //                 flat_and_ownership_ids.push({
+//     //                     flat: "#id_wing_flat" + memberIdIncCount,
+//     //                     ownership: "#id_member_ownership" + memberIdIncCount,
+//     //                 });
+//     //             });
+//     //             // console.log("flat_and_ownership_ids=============", flat_and_ownership_ids)
+//     //             htmlContent += `
+//     //                 <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
+//     //                     <div class="two-btn">
+//     //                         <button type="button" class="btn btn-secondary"
+//     //                             data-bs-dismiss="modal">Close</button>
+//     //                         <button type="submit" class="btn btn-primary" onclick="save_and_edit_member()">Update</button>
+//     //                     </div>
+//     //                 </div>
+//     //             `
+
+//     //             // sharedContent =
+//     //             // `
+//     //             // <form action="">
+//     //             //     <div class="row pt-3 ps-4 pe-4">
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <!-- <input type="number" class="w-100 sty-inp" /> -->
+//     //             //                 <select name="" id="" class="w-100 sty-inp form-control">
+//     //             //                     <option value="#">Select your Wing & Flat No.</option>
+//     //             //                     <option value="#">A-Wing(101)</option>
+//     //             //                     <option value="#">B-Wing(301)</option>
+//     //             //                     <option value="#">C-Wing(301)</option>
+//     //             //                 </select>
+//     //             //                 <label for="" class="sty-label">Wing & Flat No.</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" value="${sharesData[0]?.folio_number || ''}" />
+//     //             //                 <label for="" class="sty-label">Folio Number</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="date" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Share Issue Date</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Application Number</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Serial No. of Certificate</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Allotment Number</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Share No. from</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Share No. To</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="date" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Share Transfer Date</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Total Amount Received</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="date" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Total Amount Received On</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Transfer from Folio Number</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //         <div class="col-lg-4 mb-3">
+//     //             //             <div class="w-100 sty-input-wrapper">
+//     //             //                 <input type="number" class="w-100 sty-inp" />
+//     //             //                 <label for="" class="sty-label">Transfer to Folio Number</label>
+//     //             //             </div>
+//     //             //         </div>
+//     //             //     </div>
+//     //             //     <hr>
+
+
+//     //             //     <div class="two-btn float-end pb-3 pe-4">
+//     //             //         <button type="button" class="btn btn-secondary"
+//     //             //             data-bs-dismiss="modal">Close</button>
+//     //             //         <button type="submit" class="btn btn-primary">Update</button>
+//     //             //     </div>
+//     //             // </form>
+//     //             // `;
+//     //             homeLoanContent =
+//     //                 `
+//     //             <form action="">
+//     //                 <div class="row pt-3 ps-4 pe-4">
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="text" class="w-100 sty-inp" value="${homeLoanData[0]?.bank_loan_name || '-'}" />
+//     //                             <label for="" class="sty-label">Hypothication Bank Name</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="text" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Object of Loan</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="date" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Loan Issue Date</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="number" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Loan Value</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="number" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Account Number</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="number" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Installment</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <!-- <input type="text" class="w-100 sty-inp" /> -->
+//     //                             <select name="" class="w-100 form-control sty-inp" id="selectStatus">
+//     //                                 <option value="#">Select Status</option>
+//     //                                 <option value="option1">Active</option>
+//     //                                 <option value="option2">Closed</option>
+//     //                             </select>
+//     //                             <label for="" class="sty-label">Loan Status</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3" id="attachNOC" style="display: none;">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="file" class="w-100 sty-inp form-control" />
+//     //                             <label for="" class="sty-label">Attach NOC</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="text" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Remarks</label>
+//     //                         </div>
+//     //                     </div>
+//     //                 </div>
+//     //                 <hr>
+
+
+//     //                 <div class="two-btn float-end pb-3 pe-4">
+//     //                     <button type="button" class="btn btn-secondary"
+//     //                         data-bs-dismiss="modal">Close</button>
+//     //                     <button type="submit" class="btn btn-primary">Update</button>
+//     //                 </div>
+//     //             </form>
+//     //             `;
+
+//     //             gstContent =
+//     //                 `
+//     //             <form action="">
+//     //                 <div class="row pt-3 ps-4 pe-4">
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="text" class="w-100 sty-inp" value="${gstData[0]?.gst_number || '-'}" />
+//     //                             <label for="" class="sty-label">GST Number</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="text" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Billing State</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="text" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Billing Name</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <textarea class="w-100 sty-inp form-control" name="" id="" cols="30"
+//     //                                 rows="1"></textarea>
+//     //                             <label for="" class="sty-label">Billing Address</label>
+//     //                         </div>
+//     //                     </div>
+//     //                     <div class="col-lg-4 mb-3">
+//     //                         <div class="w-100 sty-input-wrapper">
+//     //                             <input type="number" class="w-100 sty-inp" />
+//     //                             <label for="" class="sty-label">Contact Number</label>
+//     //                         </div>
+//     //                     </div>
+//     //                 </div>
+//     //                 <hr>
+
+//     //                 <div class="two-btn float-end pb-3 pe-4">
+//     //                     <button type="button" class="btn btn-secondary"
+//     //                         data-bs-dismiss="modal">Close</button>
+//     //                     <button type="submit" class="btn btn-primary">Update</button>
+//     //                 </div>
+//     //             </form>
+//     //             `;
+
+//     //             if (vehicleData && vehicleData.length > 0) {
+//     //                 vehicleData.forEach(function (item) {
+//     //                     vehicleContent +=
+//     //                         `
+//     //                     <form action="">
+//     //                         <h1>===============VEHICLE=========</h1>
+//     //                         <div id="newVehicle">                                    
+//     //                             <div class="row mt-3" id="cloneVehicle">
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <input type="text" class="w-100 sty-inp" id="id_parking_lot0" value="${vehicleData[0]?.parking_lot || ''}" />
+//     //                                 <label for="id_parking_lot0" class="sty-label">Parking Lot</label>
+//     //                                 <small id="Error_id_parking_lot0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <input type="text" class="w-100 sty-inp" id="id_vehicle_type0" />
+//     //                                 <label for="id_vehicle_type0" class="sty-label">Vehicle Type</label>
+//     //                                 <small id="Error_id_vehicle_type0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <input type="text" class="w-100 sty-inp" id="id_vehicle_number0" />
+//     //                                 <label for="id_vehicle_number0" class="sty-label">Vehicle Number</label>
+//     //                                 <small id="Error_id_vehicle_number0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <input type="text" class="w-100 sty-inp" id="id_vehicle_brand0" />
+//     //                                 <label for="id_vehicle_brand0" class="sty-label">Brand & Model</label>
+//     //                                 <small id="Error_id_vehicle_brand0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <input type="file" class="w-100 sty-inp form-control" id="id_rc_copy0" />
+//     //                                 <label for="id_rc_copy0" class="sty-label">RC Copy</label>
+//     //                                 <small id="Error_id_rc_copy0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <input type="text" class="w-100 sty-inp form-control" id="id_sticker_number0" />
+//     //                                 <label for="id_sticker_number0" class="sty-label">Sticker Number</label>
+//     //                                 <small id="Error_id_sticker_number0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3">
+//     //                                 <div class="w-100 sty-input-wrapper">
+//     //                                 <select class="w-100 sty-inp form-control" name="" id="id_select_charge0"
+//     //                                     onchange="selectChange(this.id, ('related_' + this.id), ('vehicle_' + this.id))">
+//     //                                     <option value="#" selected>YES / NO</option>
+//     //                                     <option id="optN0" value="no">NO</option>
+//     //                                     <option id="optY0" value="yes">YES</option>
+//     //                                 </select>
+//     //                                 <!-- <input type="text" class="w-100 sty-inp"> -->
+//     //                                 <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
+//     //                                 <small id="Error_id_select_charge0" class="error-message"></small>
+//     //                                 </div>
+//     //                             </div>
+//     //                             <div class="col-lg-4 mb-3" id="addCharge0">
+//     //                                 <div class="w-100 sty-input-wrapper" id="vehicle_id_select_charge0">
+//     //                             </div>
+//     //                             </div>
+//     //                             <hr />
+//     //                         </div>
+//     //                         <div class="row" id="newVehicleContainer"></div>
+//     //                         </div>
+//     //                     </form> 
+
+//     //                     `;
+//     //                 });
+//     //                 vehicleContent +=
+//     //                     `
+//     //                     <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
+//     //                 `;
+//     //             } else {
+//     //                 vehicleContent +=
+//     //                     `
+//     //                     <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
+//     //                 `;
+//     //             }
+
+//     //             $('#memberEditForm').html(htmlContent);
+//     //             // $('#sharedmemberEditForm').html(sharedContent);
+//     //             $('#homeloanEditForm').html(homeLoanContent);
+//     //             $('#gstEditform').html(gstContent);
+//     //             $('#vehicleEditForm').html(vehicleContent);
+//     //         }
+
+//     //     },
+//     //     error: function (xhr) {
+//     //         alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+//     //     }
+//     // });
+//     alert('id');
+// }
 
 
 
 function save_and_edit_member() {
+
     clickedButton = this;
     let isValid = true;
     let ajax_ownsership = false;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // const max100NumberRegex = /^(?:[1-9]\d{2,}|1000+)$/;
     let numberregex = /^([1-9]\d{0,1}|100)$/;
-    
+
+    // MAKE SURE TO GIVE IDS IN BOTH THE ARRAY
     let required_fields = {
         // members ids
-        "id_wing_flat": "Pls select the flat number!",
-        "id_member_name": "Member name is required!",
-        "id_member_ownership": "Member ownership is required!",
+        // "id_wing_flat": "Pls select the flat number!",
+        // "id_member_name": "Member name is required!",
+        // "id_member_ownership": "Member ownership is required!",
         // "id_member_position": "Member position is required!",
         // "id_member_dob": "Date of birth is required!",
         // "id_member_pan_number": "Member pan number is required!",
@@ -4097,13 +4471,15 @@ function save_and_edit_member() {
         // "id_date_of_entrance_fees": "Date of entrance fees is required!",
         // "id_date_of_cessation": "Date of admission is required!",
         // "id_cessation_reason": "Cessation reason is reqired!",
+        // "id_member_current_status": "Member current status is required!",
+        // "id_flat_status": "Flat status is required!"
     };
 
     let memberIds = {
         // members ids
-        "id_wing_flat": "Pls select the flat number!",
-        "id_member_name": "Member name is required!",
-        "id_member_ownership": "Member ownership is required!",
+        // "id_wing_flat": "Pls select the flat number!",
+        // "id_member_name": "Member name is required!",
+        // "id_member_ownership": "Member ownership is required!",
         // "id_member_position": "Member position is required!",
         // "id_member_dob": "Date of birth is required!",
         // "id_member_pan_number": "Member pan number is required!",
@@ -4120,12 +4496,14 @@ function save_and_edit_member() {
         // "id_date_of_entrance_fees": "Date of entrance fees is required!",
         // "id_date_of_cessation": "Date of admission is required!",
         // "id_cessation_reason": "Cessation reason is reqired!",
+        // "id_member_current_status": "Member current status is required!",
+        // "id_flat_status": "Flat status is required!"
     };
 
 
     let get_nominee_detail = {
         // nominee ids
-        "id_nominee_name": "Nominee name is required!",
+        // "id_nominee_name": "Nominee name is required!",
         // "id_nomination_date": "Date of nomination is required!",
         // "id_nominee_relation": "Nominee relation is required!",
         // "id_naminee_sharein": "Nominee sharein is required!",
@@ -4140,7 +4518,7 @@ function save_and_edit_member() {
         // "id_nominee_emergency_contact": "Nominee emergency contact is required!",
     };
 
-    
+
 
     let email_fields = {
         // "id_member_email": "Invalid Email",
@@ -4170,10 +4548,11 @@ function save_and_edit_member() {
 
 
     function validateForm(step) {
+        console.log("VALIDATION============================.>>>>>>>>>>>>>>>>>>>>>>>>>")
         for (let key in required_fields) {
             let inputValue = $("#" + key).val();
             let value = (inputValue !== null && inputValue !== undefined) ? inputValue.trim() : "";
-            console.log("val============", value)
+            // console.log("val============", value)
 
             if ((value === "") || (
                 (key.startsWith("id_nominee_state")) && (value == "#") ||
@@ -4193,9 +4572,9 @@ function save_and_edit_member() {
                 $("#" + key).css("border-color", "red");
                 $("#" + key + "_Error").text("Percentage shoule be below 100");
             } else {
-                if(key.startsWith("id_member_ownership") || key.startsWith("id_wing_flat")){
+                if (key.startsWith("id_member_ownership") || key.startsWith("id_wing_flat")) {
                     data = $("#" + key).val();
-                    console.log("data======================", data)
+                    // console.log("data======================", data)
                 }
                 $("#" + key).css("border-color", ""); // Reset to default
                 $("#" + key + "_Error").text(""); // Clear the error message
@@ -4209,51 +4588,45 @@ function save_and_edit_member() {
                 $("#" + key).css("border-color", "red");
                 $("#" + key + "_Error").text("Invalid Email");
             } else {
-                $("#" + key).css("border-color", ""); // Reset to default
-                $("#" + key + "_Error").text(""); // Clear the error message
+                $("#" + key).css("border-color", "");
+                $("#" + key + "_Error").text("");
             }
         }
 
-        // OWNERSHIP VALIDATION
-        // let formData = new FormData();
-        // formData.append('get_ownership_ajax', true);
-        // formData.append('ajax_get_primary', false);
-        // formData.append('member_ownership', $('#id_member_ownership').val());
-        // formData.append('wing_flat_number', $('#id_wing_flat').val());
+        // GET OWNERSHIP % EXACLY 100 %
+        let sum = 0;
+        let elements = document.getElementsByName("ownership_percent");
 
-        // let headers = {
-        //     "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-        // };
+        for (let i = 0; i < elements.length; i++) {
+            let value = parseFloat(elements[i].value);
+            sum += value;
+        }
 
-        // $.ajax({
-        //     url: '/member-master/',
-        //     method: 'POST',
-        //     data: formData,
-        //     headers: headers,
-        //     processData: false,
-        //     contentType: false,
-        //     async: false,
-        //     success: function (response) {
-        //         console.log("Success=======Success");
-        //         if (response.ownership) {
-        //             $("#id_member_ownership").css("border-color", "red");
-        //             $("#id_member_ownership_Error").text(response.ownership);
-        //             ajax_ownsership = true;
-        //             isValid = false;
-        //             console.log("in if=====================in if")
-        //         } else {
-        //             $("#id_member_ownership").css("border-color", "");
-        //             $("#id_member_ownership_Error").text("");
-        //             console.log("in else=====================in else")
+        if (sum > 100) {
+            isValid = false;
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.borderColor = "red";
+                elements[i].insertAdjacentHTML('afterend', '<small style="color: red;">Total flat ownership exceeding 100 %</small>');
+            }
+        }
+        // GET OWNERSHIP % EXACLY 100 %
 
-        //             // tryna fix it might create problem later
-        //             // stopNext = false
-        //         }
-        //     },
-        //     error: function (xhr) {
-        //         console.log("Something went wrong! " + xhr.status + " " + xhr.statusText);
-        //     }
-        // });
+        // GET PRIMARY CHECKBOX
+        let checkboxes = document.querySelectorAll('input[name="member_is_primary"]:checked');
+        if (checkboxes.length === 0) {
+            isValid = false;
+            checkboxes = Array.from(checkboxes); // Convert NodeList to array
+            checkboxes.forEach(function (checkbox) {
+                checkbox.insertAdjacentHTML('afterend', '<small style="color: red;">Total flat ownership exceeding 100 %</small>');
+            });
+        } else if (checkboxes.length > 1) {
+            isValid = false;
+            checkboxes = Array.from(checkboxes); // Convert NodeList to array
+            checkboxes.forEach(function (checkbox) {
+                checkbox.insertAdjacentHTML('afterend', '<small style="color: red;">Total flat ownership exceeding 100 %</small>');
+            });
+        }
+        // GET PRIMARY CHECKBOX
 
         return isValid;
     }
@@ -4261,86 +4634,55 @@ function save_and_edit_member() {
 
     // if (ajax_ownsership){}
     if (!validateForm(1)) {
-        console.log("INVALID========================");
-        console.log("ajax_ownsership=========", ajax_ownsership)
         toastr.error("Please correct all error to proceed!!");
         stopNext = false
     } else {
-        console.log("VALID========================")
-        stopNext = true;
-        const nominee_form_count = Array.from(document.querySelectorAll('[id^="id_nominee_name"]'))
-            .filter(element => !element.id.endsWith('_Error')).length;
+        let memberNomineeTogether = [];
 
-        for (var i = 0; i < nominee_form_count + 1; i++) {
-            let count = i
-            if (count === 0) {
-                count = "";
+        memberNomineeObj.forEach(item => {
+            let member = {};
+            let nominee = {};
+            let nomineeArray = [];
+
+            // Accessing the member form ID
+            let memberFormId = item[Object.keys(item)[0]];
+            let memberForm = document.getElementById(memberFormId);
+            let formDataMember = new FormData(memberForm);
+            for (let pair of formDataMember.entries()) {
+                member[pair[0]] = pair[1];
             }
-            console.log("number is===========", count)
-            nomineeData.push({
-                ["nominee_name"]: $('#id_nominee_name' + count).val(),
-                ["date_of_nomination"]: $('#id_nomination_date' + count).val() === "" ? null : $('#id_nomination_date' + count).val(),
-                ["relation_with_nominee"]: $('#id_nominee_relation' + count).val(),
-                ["nominee_sharein_percent"]: $('#id_naminee_sharein' + count).val() === "" ? 0 : $('#id_naminee_sharein' + count).val(),
-                ["nominee_dob"]: $('#id_nominee_dob' + count).val() === "" ? null : $('#id_nominee_dob' + count).val(),
-                ["nominee_aadhar_no"]: $('#id_nominee_aadhar_no' + count).val(),
-                ["nominee_pan_no"]: $('#id_nominee_pan_no' + count).val(),
-                ["nominee_email"]: $('#id_nominee_email' + count).val(),
-                ["nominee_address"]: $('#id_nominee_address' + count).val(),
-                ["nominee_state"]: $('#id_nominee_state' + count).val(),
-                ["nominee_pin_code"]: $('#id_nominee_pin_code' + count).val(),
-                ["nominee_contact"]: $('#id_nominee_contact_number' + count).val(),
-                ["nominee_emergency_contact"]: $('#id_nominee_emergency_contact' + count).val(),
-            });
-        }
-        memberData.push({
-            ["member_name"]: $('#id_member_name').val(),
-            ["ownership_percent"]: $('#id_member_ownership').val(),
-            ["member_position"]: $('#id_member_position').val(),
-            ["member_dob"]: $('#id_member_dob').val() === "" ? null : $('#id_member_dob').val(),
-            ["member_pan_no"]: $('#id_member_pan_number').val(),
-            ["member_aadhar_no"]: $('#id_member_aadhar_no').val(),
-            ["member_address"]: $('#id_member_address').val(),
-            ["member_state"]: $('#id_member_state').val(),
-            ["member_pin_code"]: $('#id_member_pin_code').val(),
-            ["member_email"]: $('#id_member_email').val(),
-            ["member_contact"]: $('#id_member_contact').val(),
-            ["member_emergency_contact"]: $('#id_member_emergency_contact').val(),
-            ["member_occupation"]: $('#id_member_occupation').val(),
-            ["member_is_primary"]: $('#id_is_primary_val').prop('checked')
 
+            // Checking if the current item has a nomineeForm array
+            if (Array.isArray(item.nomineeForm)) {
+                item.nomineeForm.forEach(nomineeId => {
+                    let nomineeForm = document.getElementById(nomineeId);
+                    let formDataNominee = new FormData(nomineeForm);
+                    let nominee = {};
+                    for (let pair of formDataNominee.entries()) {
+                        nominee[pair[0]] = pair[1];
+                    }
+                    nomineeArray.push({ 'nominee_data': nominee });
+                });
+            }
+            // After processing, push the member and nominee objects into memberNomineeTogether array
+            memberNomineeTogether.push({ 'member_obj': member, 'nominee_obj': nomineeArray });
         });
-
-        let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-        let headers = {
-            "X-CSRFToken": csrfToken
-        };
-        let formData = new FormData();
-        let memberDataJson = JSON.stringify(memberData);
-        let nomineeDataJson = JSON.stringify(nomineeData);
-        formData.append('form_name', 'member_form_creation');
-        formData.append('memberData', memberDataJson);
-        formData.append('nomineeData', nomineeDataJson);
-        formData.append('member_ownership', $('#id_member_ownership').val());
-        formData.append('wing_flat_number', $('#id_wing_flat').val());
-
-
+        let memberNomineeObjString = JSON.stringify(memberNomineeTogether);
         $.ajax({
-            url: '/member-master-creation/',
+            url: '/member-edit-view/',
             method: 'POST',
-            data: formData,
-            headers: headers,
+            data: memberNomineeObjString,
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             processData: false,
             contentType: false,
             success: function (response) {
                 console.log("Success");
                 toastr.success(response.message, "Member Details Added!");
-                // $("#msform")[0].reset();
-                if ($(clickedButton).is('#save_and_add_member')) {
-                    setTimeout(function () {
-                        location.reload();
-                    }, 500);
-                }
+                // setTimeout(function () {
+                //     location.reload();
+                // }, 500);
 
             },
             error: function (xhr) {
@@ -4352,7 +4694,7 @@ function save_and_edit_member() {
 
 
 // Add member details
-function addMemberDetails(id){
+function addMemberDetails(id) {
     let formData = new FormData();
     formData.append('member_id', id);
     formData.append('form_name', 'add_member_from_modal');
@@ -4377,12 +4719,12 @@ function addMemberDetails(id){
 
 
 
-function flatHistoryDetails(id){
+function flatHistoryDetails(id) {
     let formData = new FormData();
     formData.append('flat_id', id);
 
     $.ajax({
-        url: '/member-edit-view/',
+        url: '/member-history-view/',
         method: 'POST',
         data: formData,
         headers: {
@@ -4392,711 +4734,966 @@ function flatHistoryDetails(id){
         contentType: false,
         success: function (response) {
             console.log("Success");
-            // if (response.all_member_json) {
-            //     let memberData = JSON.parse(response.all_member_json)
-            //     let sharesData = JSON.parse(response.shares_details)
-            //     let homeLoanData = JSON.parse(response.home_loan_obj)
-            //     let gstData = JSON.parse(response.gst_obj)
-            //     let vehicleData = JSON.parse(response.vehicle_obj)
-            //     let htmlContent = '';
-            //     let sharedContent = '';
-            //     let homeLoanContent = '';
-            //     let gstContent = '';
-            //     let vehicleContent = '';
-            //     memberData.forEach(function (item) {
-            //         // Append member details
-            //         htmlContent +=
-            //             `
-            //             <div class="accordion-item">
-            //                 <h2 class="accordion-header">
-            //                     <button id="heading" class="accordion-button" type="button"
-            //                         data-bs-toggle="collapse" data-bs-target="#collapse_edit${item.member_id}" aria-expanded="true" aria-controls="collapse_edit${item.member_id}"
-            //                         aria-controls="collapseOne">
-            //                         ${item.member_name}
-            //                     </button>
-            //                 </h2>
-            //                 <div id="collapseOne" class="accordion-collapse collapse show"
-            //                     data-bs-parent="#member-edit-accordian">
-            //                     <div class="accordion-body">
-            //                         <form action="">
-            //                             <div class="row mt-3 ps-4 pe-4" style="text-align: left">
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <select name="" id="" class="w-100 form-control sty-inp">
-            //                                             <option value="#">
-            //                                                 Select your Wing & Flat No.
-            //                                             </option>
-            //                                             <option value="#">A-Wing(101)</option>
-            //                                             <option value="#">B-Wing(201)</option>
-            //                                             <option value="#">C-Wing(301)</option>
-            //                                         </select>
-            //                                         <label for="" class="sty-label">Wing & Flat No.</label>
-            //                                     </div>
-            //                                 </div>
+            if (response.final_data) {
+                let final_data = JSON.parse(response.final_data);
+                console.log("final data=============", final_data)
+                let htmlContent = '';
+                final_data.forEach(function (element) {
+                    htmlContent +=
+                        `
+                        <div class="tab-content w-100" id="myTabContent">
+                            <div class="tab-pane fade show active" id="member-history-tab-pane" role="tabpanel"
+                                aria-labelledby="member-tab" tabindex="0">
+                                <div id="member-history-accordian"> 
+                                    <div class="accordion">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseMemberOne" aria-expanded="true" id="heading"
+                                                    aria-controls="collapseOne">
+                                                    ${element.member_name}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseMemberOne" class="accordion-collapse collapse show"
+                                                data-bs-parent="#member-history-accordian">
+                                                <div class="accordion-body">
 
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="text" class="w-100 sty-inp" value=${item.member_name} />
-            //                                         <label for="" class="sty-label">Member's Name</label>
-            //                                     </div>
-            //                                 </div>
+                                                    <div class="row mt-3">
+                                                        <div class="col-lg-3">
+                                                            <p class="ms-3 view-label">Member's Name</p>
+                                                        </div>
+                                                        <div class="col-lg-9">
+                                                            <p class=" view-inps">Sameer Nasir Shaikh</p>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Flat Number</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">A-1001</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Ownership %</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">100%</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="text" class="w-100 sty-inp percentage-input" />
-            //                                         <label for="" class="sty-label">Ownership %</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <select name="" class="w-100 sty-inp form-control" id="">
-            //                                             <option value="#">Select Position</option>
-            //                                             <option value="associate-member">
-            //                                                 Associate Member
-            //                                             </option>
-            //                                             <option value="chairman">Chairman</option>
-            //                                             <option value="secretary">Secretary</option>
-            //                                             <option value="treasurer">Treasurer</option>
-            //                                         </select>
-            //                                         <label for="" class="sty-label">Position</label>
-            //                                     </div>
-            //                                 </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Position</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">Secretary</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Date of Birth</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">17-10-2000</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="date" class="w-100 sty-inp form-control" />
-            //                                         <label for="" class="sty-label">Member DOB</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="text" class="w-100 sty-inp" />
-            //                                         <label for="" class="sty-label">Member PAN No</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="number" class="w-100 sty-inp" />
-            //                                         <label for="" class="sty-label">Member Aadhaar No</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <textarea class="w-100 sty-inp form-control" name="" id=""
-            //                                             cols="30" rows="1"></textarea>
-            //                                         <label for="" class="sty-label">Member Permanent
-            //                                             Address</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <select class="w-100 sty-inp form-control" name="" id="">
-            //                                             <option value="#">Select your State</option>
-            //                                             <option value="Andhra Pradesh">
-            //                                                 Andhra Pradesh
-            //                                             </option>
-            //                                             <option value="Arunachal Pradesh">
-            //                                                 Arunachal Pradesh
-            //                                             </option>
-            //                                             <option value="Assam">Assam</option>
-            //                                             <option value="Bihar">Bihar</option>
-            //                                             <option value="Chhattisgarh">Chhattisgarh</option>
-            //                                             <option value="Goa">Goa</option>
-            //                                             <option value="Gujarat">Gujarat</option>
-            //                                             <option value="Haryana">Haryana</option>
-            //                                             <option value="Himachal Pradesh">
-            //                                                 Himachal Pradesh
-            //                                             </option>
-            //                                             <option value="Jammu and Kashmir">
-            //                                                 Jammu and Kashmir
-            //                                             </option>
-            //                                             <option value="Jharkhand">Jharkhand</option>
-            //                                             <option value="Karnataka">Karnataka</option>
-            //                                             <option value="Kerala">Kerala</option>
-            //                                             <option value="Madhya Pradesh">
-            //                                                 Madhya Pradesh
-            //                                             </option>
-            //                                             <option value="Maharashtra">Maharashtra</option>
-            //                                             <option value="Manipur">Manipur</option>
-            //                                             <option value="Meghalaya">Meghalaya</option>
-            //                                             <option value="Mizoram">Mizoram</option>
-            //                                             <option value="Nagaland">Nagaland</option>
-            //                                             <option value="Odisha">Odisha</option>
-            //                                             <option value="Punjab">Punjab</option>
-            //                                             <option value="Rajasthan">Rajasthan</option>
-            //                                             <option value="Sikkim">Sikkim</option>
-            //                                             <option value="Tamil Nadu">Tamil Nadu</option>
-            //                                             <option value="Telangana">Telangana</option>
-            //                                             <option value="Tripura">Tripura</option>
-            //                                             <option value="Uttar Pradesh">
-            //                                                 Uttar Pradesh
-            //                                             </option>
-            //                                             <option value="Uttarakhand">Uttarakhand</option>
-            //                                             <option value="West Bengal">West Bengal</option>
-            //                                             <option value="Andaman and Nicobar ">
-            //                                                 Andaman and Nicobar
-            //                                             </option>
-            //                                             <option value="Islands">Islands</option>
-            //                                             <option value="Dadra and Nagar Haveli">
-            //                                                 Dadra and Nagar Haveli
-            //                                             </option>
-            //                                             <option value="Daman and Diu">
-            //                                                 Daman and Diu
-            //                                             </option>
-            //                                             <option value="Delhi">Delhi</option>
-            //                                             <option value="Ladakh">Ladakh</option>
-            //                                             <option value="Lakshadweep">Lakshadweep</option>
-            //                                             <option value="Puducherry">Puducherry</option>
-            //                                         </select>
-            //                                         <label for="" class="sty-label">State</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="number" class="w-100 sty-inp" />
-            //                                         <label for="" class="sty-label">Pin Code</label>
-            //                                     </div>
-            //                                 </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Aadhaar Number</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">2653 8564 4663</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">PAN Number</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">ABCDE1234F</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="email" class="w-100 sty-inp" />
-            //                                         <label for="" class="sty-label">Member Email</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="number" class="w-100 sty-inp form-control" />
-            //                                         <label for="" class="sty-label">Member Contact No.</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="number" class="w-100 sty-inp" />
-            //                                         <label for="" class="sty-label">Emergency Contact
-            //                                             No.</label>
-            //                                     </div>
-            //                                 </div>
-            //                                 <div class="col-lg-4 mb-3">
-            //                                     <div class="w-100 sty-input-wrapper">
-            //                                         <input type="text" class="w-100 sty-inp" />
-            //                                         <label for="" class="sty-label">Occupation</label>
-            //                                     </div>
-            //                                 </div>
-            //                             </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Permanent Address</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">3, DLH Park, S. V. Road,
+                                                                        Goregaon (West),
+                                                                        Mumbai – 400062.
+                                                                        Maharashtra, India.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row m-0 p-0">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">State</p>
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    <p class="view-inps">Maharashtra</p>
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    <p class="ms-3 view-label">Pincode</p>
+                                                                </div>
+                                                                <div class="col-lg-2">
+                                                                    <p class="view-inps">400062</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //                             <hr>
-            //         `
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Email Id</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">sameer.sk.8066@gmail.com</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Occupation</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">Salaried</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //         // Append nominee details
-            //         if (item.nominee_Details.length > 0) {
-            //             item.nominee_Details.forEach(function (nominee) {
-            //                 htmlContent +=
-            //                 `
-            //                 <div id="newNominee">
-            //                     <div class="row ps-4 pe-4 abcd" id="cloneNominee">
-            //                     <h2 id="heading" class="mb-3 text-center">Nominee: ${nominee.nominee_name}</h2>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="text" class="w-100 sty-inp" id="nomName0" value=${nominee.nominee_name} />
-            //                                     <label for="" class="sty-label">Nominee Name</label>
-            //                                 </div>
-            //                             </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Contact Number</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">8850397205</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Emergency Contact Number</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">9082214755</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="date" class="w-100 sty-inp form-control"
-            //                                         id="nomDate0" />
-            //                                     <label for="" class="sty-label">Date of
-            //                                         Nomination</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input class="w-100 sty-inp form-control" type="text"
-            //                                         name="" id="nomRelation0" />
-            //                                     <label for="" class="sty-label">Relation with
-            //                                         Nominator</label>
-            //                                 </div>
-            //                             </div>
+                                                    <hr class="m-0 p-0">
+                        `
+                    element.nominee_Details.forEach(function (nominee) {
+                        htmlContent +=
+                            `
+                        <div class="row mt-3">
+                                                        <div class="col-lg-3">
+                                                            <p class="ms-3 view-label">Nominee's Name</p>
+                                                        </div>
+                                                        <div class="col-lg-9">
+                                                            <p class=" view-inps">${nominee.nominee_name}</p>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Date of Nomination</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">25-12-2023</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Date of Birth</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">15-08-2002</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="text"
-            //                                         class="w-100 sty-inp form-control percentage-input"
-            //                                         id="nomShares0" />
-            //                                     <label for="" class="sty-label">Nominee Sharein
-            //                                         %</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="date" class="w-100 sty-inp" id="nomDOB0" />
-            //                                     <label for="" class="sty-label">Nominee DOB</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="number" class="w-100 sty-inp"
-            //                                         id="nomAadhaar0" />
-            //                                     <label for="" class="sty-label">Nominee Aadhaar
-            //                                         No</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="text" class="w-100 sty-inp" id="nomPan0" />
-            //                                     <label for="" class="sty-label">Nominee PAN No</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="email" class="w-100 sty-inp"
-            //                                         id="nomeEmail0" />
-            //                                     <label for="" class="sty-label">Nominee Email</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <textarea class="w-100 sty-inp form-control" name=""
-            //                                         id="nomAddress0" cols="30" rows="1"></textarea>
-            //                                     <label for="" class="sty-label">Nominee Permanent
-            //                                         Address</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <select class="w-100 sty-inp form-control" name=""
-            //                                         id="nomState0">
-            //                                         <option value="#">Select your State</option>
-            //                                         <option value="Andhra Pradesh">
-            //                                             Andhra Pradesh
-            //                                         </option>
-            //                                         <option value="Arunachal Pradesh">
-            //                                             Arunachal Pradesh
-            //                                         </option>
-            //                                         <option value="Assam">Assam</option>
-            //                                         <option value="Bihar">Bihar</option>
-            //                                         <option value="Chhattisgarh">
-            //                                             Chhattisgarh
-            //                                         </option>
-            //                                         <option value="Goa">Goa</option>
-            //                                         <option value="Gujarat">Gujarat</option>
-            //                                         <option value="Haryana">Haryana</option>
-            //                                         <option value="Himachal Pradesh">
-            //                                             Himachal Pradesh
-            //                                         </option>
-            //                                         <option value="Jammu and Kashmir">
-            //                                             Jammu and Kashmir
-            //                                         </option>
-            //                                         <option value="Jharkhand">Jharkhand</option>
-            //                                         <option value="Karnataka">Karnataka</option>
-            //                                         <option value="Kerala">Kerala</option>
-            //                                         <option value="Madhya Pradesh">
-            //                                             Madhya Pradesh
-            //                                         </option>
-            //                                         <option value="Maharashtra">Maharashtra</option>
-            //                                         <option value="Manipur">Manipur</option>
-            //                                         <option value="Meghalaya">Meghalaya</option>
-            //                                         <option value="Mizoram">Mizoram</option>
-            //                                         <option value="Nagaland">Nagaland</option>
-            //                                         <option value="Odisha">Odisha</option>
-            //                                         <option value="Punjab">Punjab</option>
-            //                                         <option value="Rajasthan">Rajasthan</option>
-            //                                         <option value="Sikkim">Sikkim</option>
-            //                                         <option value="Tamil Nadu">Tamil Nadu</option>
-            //                                         <option value="Telangana">Telangana</option>
-            //                                         <option value="Tripura">Tripura</option>
-            //                                         <option value="Uttar Pradesh">
-            //                                             Uttar Pradesh
-            //                                         </option>
-            //                                         <option value="Uttarakhand">Uttarakhand</option>
-            //                                         <option value="West Bengal">West Bengal</option>
-            //                                         <option value="Andaman and Nicobar ">
-            //                                             Andaman and Nicobar
-            //                                         </option>
-            //                                         <option value="Islands">Islands</option>
-            //                                         <option value="Dadra and Nagar Haveli">
-            //                                             Dadra and Nagar Haveli
-            //                                         </option>
-            //                                         <option value="Daman and Diu">
-            //                                             Daman and Diu
-            //                                         </option>
-            //                                         <option value="Delhi">Delhi</option>
-            //                                         <option value="Ladakh">Ladakh</option>
-            //                                         <option value="Lakshadweep">Lakshadweep</option>
-            //                                         <option value="Puducherry">Puducherry</option>
-            //                                     </select>
-            //                                     <label for="" class="sty-label">State</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="number" class="w-100 sty-inp"
-            //                                         id="nomPin0" />
-            //                                     <label for="" class="sty-label">Pin Code</label>
-            //                                 </div>
-            //                             </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Relation with Nominator</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">Brother</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Nominee Sharein %</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">50%</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="number" class="w-100 sty-inp form-control"
-            //                                         id="nomContact0" />
-            //                                     <label for="" class="sty-label">Nominee Contact
-            //                                         No.</label>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="col-lg-4 mb-3">
-            //                                 <div class="w-100 sty-input-wrapper">
-            //                                     <input type="number" class="w-100 sty-inp"
-            //                                         id="nomEmerContact0" />
-            //                                     <label for="" class="sty-label">Emergency Contact
-            //                                         No.</label>
-            //                                 </div>
-            //                             </div>
-            //                             <hr />
-            //                         </div>
-            //                     </div>                                                
-            //                 `
-            //             });
-            //             htmlContent +=
-            //             `
-            //             <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
-            //                 <button type="button" name="" class="btn btn-primary" onclick="addNominee()"> Add Nominee</button>
-            //                 <div class="two-btn">
-            //                     <button type="button" class="btn btn-secondary"
-            //                         data-bs-dismiss="modal">Close</button>
-            //                     <button type="submit" class="btn btn-primary">Update</button>
-            //                 </div>
-            //             </div>
-            //             `;
-            //         }
-            //         htmlContent +=
-            //             `
-            //                 </form>
-            //                 </div>
-            //                 </div>
-            //                 </div>
-            //             `
-            //     });
-            //     sharedContent =
-            //     `
-            //     <form action="">
-            //         <div class="row pt-3 ps-4 pe-4">
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <!-- <input type="number" class="w-100 sty-inp" /> -->
-            //                     <select name="" id="" class="w-100 sty-inp form-control">
-            //                         <option value="#">Select your Wing & Flat No.</option>
-            //                         <option value="#">A-Wing(101)</option>
-            //                         <option value="#">B-Wing(301)</option>
-            //                         <option value="#">C-Wing(301)</option>
-            //                     </select>
-            //                     <label for="" class="sty-label">Wing & Flat No.</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" value="${sharesData[0]?.folio_number || ''}" />
-            //                     <label for="" class="sty-label">Folio Number</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="date" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Share Issue Date</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Application Number</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Serial No. of Certificate</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Allotment Number</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Share No. from</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Share No. To</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="date" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Share Transfer Date</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Total Amount Received</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="date" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Total Amount Received On</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Transfer from Folio Number</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Transfer to Folio Number</label>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //         <hr>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Nominee Aadhaar Number</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">2653 8564 4663</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Nominee PAN Number</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">ABCDE1234F</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Nominee Permanent Address</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">3, DLH Park, S. V. Road,
+                                                                        Goregaon (West),
+                                                                        Mumbai – 400062.
+                                                                        Maharashtra, India.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">State</p>
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    <p class="view-inps">Maharashtra</p>
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    <p class="ms-3 view-label">Pincode</p>
+                                                                </div>
+                                                                <div class="col-lg-2">
+                                                                    <p class="view-inps">400062</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Nominee Contact Number</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">8850397205</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <p class="ms-3 view-label">Emergency Contact Number</p>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <p class="view-inps">9082214755</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <p class="ms-3 view-label">Nominee Email Id</p>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <p class="view-inps">sameer.sk.8066@gmail.com</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                        `
+                    });
+                    element.sub_members.forEach(function (sub_member) {
+                        htmlContent +=
+                            `
+                        <h1>============================</h1>
+                        <div class="accordion accordion-flush"
+                                                        id="member-accordionFlushExample">
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header">
+                                                                <button class="accordion-button bg-light collapsed"
+                                                                    type="button" data-bs-toggle="collapse"
+                                                                    data-bs-target="#flush-collapseOne1" id="sub-heading"
+                                                                    aria-expanded="false" aria-controls="flush-collapseOne">
+                                                                    ${sub_member.member_name}
+                                                                </button>
+                                                            </h2>
+                                                            <div id="flush-collapseOne1" class="accordion-collapse collapse"
+                                                                data-bs-parent="#member-accordionFlushExample">
+                                                                <div class="accordion-body">
+
+                                                                    <div class="row mt-3">
+                                                                        <div class="col-lg-3">
+                                                                            <p class="ms-3 view-label">Member's Name</p>
+                                                                        </div>
+                                                                        <div class="col-lg-9">
+                                                                            <p class=" view-inps">Mohammad Baig</p>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Flat Number
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">A-1001</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Ownership %
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">100%</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Position</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">Secretary</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Date of Birth
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">17-10-2000</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Aadhaar
+                                                                                        Number
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">2653 8564 4663</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">PAN Number
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">ABCDE1234F</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Permanent
+                                                                                        Address
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">3, DLH Park, S. V.
+                                                                                        Road,
+                                                                                        Goregaon (West),
+                                                                                        Mumbai – 400062.
+                                                                                        Maharashtra, India.</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row m-0 p-0">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">State</p>
+                                                                                </div>
+                                                                                <div class="col-lg-3">
+                                                                                    <p class="view-inps">Maharashtra</p>
+                                                                                </div>
+                                                                                <div class="col-lg-3">
+                                                                                    <p class="ms-3 view-label">Pincode</p>
+                                                                                </div>
+                                                                                <div class="col-lg-2">
+                                                                                    <p class="view-inps">400062</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Email Id</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">
+                                                                                        sameer.sk.8066@gmail.com</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Occupation
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">Salaried</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Contact
+                                                                                        Number
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">8850397205</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Emergency
+                                                                                        Contact
+                                                                                        Number</p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">9082214755</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <hr class="m-0 p-0">
+                                                                    
+                                                                    
+                        `
+                        sub_member.nominee_Details.forEach(function (sub_nominee) {
+                            htmlContent +=
+                                `
+                            <div class="row mt-3">
+                                                                        <div class="col-lg-3">
+                                                                            <p class="ms-3 view-label">Nominee's Name</p>
+                                                                        </div>
+                                                                        <div class="col-lg-9">
+                                                                            <p class=" view-inps">${sub_nominee.nominee_name}</p>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Date of
+                                                                                        Nomination</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">25-12-2023</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Date of Birth
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">15-08-2002</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Relation with
+                                                                                        Nominator</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">Brother</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Nominee
+                                                                                        Sharein %
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">50%</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Nominee
+                                                                                        Aadhaar
+                                                                                        Number</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">2653 8564 4663</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Nominee PAN
+                                                                                        Number</p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">ABCDE1234F</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Nominee
+                                                                                        Permanent
+                                                                                        Address</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">3, DLH Park, S. V.
+                                                                                        Road,
+                                                                                        Goregaon (West),
+                                                                                        Mumbai – 400062.
+                                                                                        Maharashtra, India.</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">State</p>
+                                                                                </div>
+                                                                                <div class="col-lg-3">
+                                                                                    <p class="view-inps">Maharashtra</p>
+                                                                                </div>
+                                                                                <div class="col-lg-3">
+                                                                                    <p class="ms-3 view-label">Pincode</p>
+                                                                                </div>
+                                                                                <div class="col-lg-2">
+                                                                                    <p class="view-inps">400062</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
 
 
-            //         <div class="two-btn float-end pb-3 pe-4">
-            //             <button type="button" class="btn btn-secondary"
-            //                 data-bs-dismiss="modal">Close</button>
-            //             <button type="submit" class="btn btn-primary">Update</button>
-            //         </div>
-            //     </form>
-            //     `;
-            //     homeLoanContent = 
-            //     `
-            //     <form action="">
-            //         <div class="row pt-3 ps-4 pe-4">
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="text" class="w-100 sty-inp" value="${homeLoanData[0]?.bank_loan_name || '-'}" />
-            //                     <label for="" class="sty-label">Hypothication Bank Name</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="text" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Object of Loan</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="date" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Loan Issue Date</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Loan Value</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Account Number</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Installment</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <!-- <input type="text" class="w-100 sty-inp" /> -->
-            //                     <select name="" class="w-100 form-control sty-inp" id="selectStatus">
-            //                         <option value="#">Select Status</option>
-            //                         <option value="option1">Active</option>
-            //                         <option value="option2">Closed</option>
-            //                     </select>
-            //                     <label for="" class="sty-label">Loan Status</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3" id="attachNOC" style="display: none;">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="file" class="w-100 sty-inp form-control" />
-            //                     <label for="" class="sty-label">Attach NOC</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="text" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Remarks</label>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //         <hr>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Nominee
+                                                                                        Contact
+                                                                                        Number</p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">8850397205</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4">
+                                                                                    <p class="ms-3 view-label">Emergency
+                                                                                        Contact
+                                                                                        Number</p>
+                                                                                </div>
+                                                                                <div class="col-lg-8">
+                                                                                    <p class="view-inps">9082214755</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
 
+                                                                        <div class="col-lg-6">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="ms-3 view-label">Nominee Email
+                                                                                        Id
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <p class="view-inps">
+                                                                                        sameer.sk.8066@gmail.com</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    <hr class="m-0 p-0 CHECK">
+                            `
+                        });
+                    });
+                    htmlContent +=
+                        `
+                                                                
+                                                            </div>
 
-            //         <div class="two-btn float-end pb-3 pe-4">
-            //             <button type="button" class="btn btn-secondary"
-            //                 data-bs-dismiss="modal">Close</button>
-            //             <button type="submit" class="btn btn-primary">Update</button>
-            //         </div>
-            //     </form>
-            //     `;
+                                                        </div>
 
-            //     gstContent = 
-            //     `
-            //     <form action="">
-            //         <div class="row pt-3 ps-4 pe-4">
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="text" class="w-100 sty-inp" value="${gstData[0]?.gst_number || '-'}" />
-            //                     <label for="" class="sty-label">GST Number</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="text" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Billing State</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="text" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Billing Name</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <textarea class="w-100 sty-inp form-control" name="" id="" cols="30"
-            //                         rows="1"></textarea>
-            //                     <label for="" class="sty-label">Billing Address</label>
-            //                 </div>
-            //             </div>
-            //             <div class="col-lg-4 mb-3">
-            //                 <div class="w-100 sty-input-wrapper">
-            //                     <input type="number" class="w-100 sty-inp" />
-            //                     <label for="" class="sty-label">Contact Number</label>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //         <hr>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    `
+                });
+                $('#flat_member_history').html(htmlContent);
 
-            //         <div class="two-btn float-end pb-3 pe-4">
-            //             <button type="button" class="btn btn-secondary"
-            //                 data-bs-dismiss="modal">Close</button>
-            //             <button type="submit" class="btn btn-primary">Update</button>
-            //         </div>
-            //     </form>
-            //     `;
+            }
 
-            //     if (vehicleData && vehicleData.length > 0) {
-            //         vehicleData.forEach(function (item) {
-            //             vehicleContent += 
-            //             `
-            //             <form action="">
-            //                 <h1>===============VEHICLE=========</h1>
-            //                 <div id="newVehicle">                                    
-            //                     <div class="row mt-3" id="cloneVehicle">
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <input type="text" class="w-100 sty-inp" id="id_parking_lot0" value="${vehicleData[0]?.parking_lot || ''}" />
-            //                         <label for="id_parking_lot0" class="sty-label">Parking Lot</label>
-            //                         <small id="Error_id_parking_lot0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <input type="text" class="w-100 sty-inp" id="id_vehicle_type0" />
-            //                         <label for="id_vehicle_type0" class="sty-label">Vehicle Type</label>
-            //                         <small id="Error_id_vehicle_type0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <input type="text" class="w-100 sty-inp" id="id_vehicle_number0" />
-            //                         <label for="id_vehicle_number0" class="sty-label">Vehicle Number</label>
-            //                         <small id="Error_id_vehicle_number0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <input type="text" class="w-100 sty-inp" id="id_vehicle_brand0" />
-            //                         <label for="id_vehicle_brand0" class="sty-label">Brand & Model</label>
-            //                         <small id="Error_id_vehicle_brand0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <input type="file" class="w-100 sty-inp form-control" id="id_rc_copy0" />
-            //                         <label for="id_rc_copy0" class="sty-label">RC Copy</label>
-            //                         <small id="Error_id_rc_copy0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <input type="text" class="w-100 sty-inp form-control" id="id_sticker_number0" />
-            //                         <label for="id_sticker_number0" class="sty-label">Sticker Number</label>
-            //                         <small id="Error_id_sticker_number0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3">
-            //                         <div class="w-100 sty-input-wrapper">
-            //                         <select class="w-100 sty-inp form-control" name="" id="id_select_charge0"
-            //                             onchange="selectChange(this.id, ('related_' + this.id), ('vehicle_' + this.id))">
-            //                             <option value="#" selected>YES / NO</option>
-            //                             <option id="optN0" value="no">NO</option>
-            //                             <option id="optY0" value="yes">YES</option>
-            //                         </select>
-            //                         <!-- <input type="text" class="w-100 sty-inp"> -->
-            //                         <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
-            //                         <small id="Error_id_select_charge0" class="error-message"></small>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-lg-4 mb-3" id="addCharge0">
-            //                         <div class="w-100 sty-input-wrapper" id="vehicle_id_select_charge0">
-            //                     </div>
-            //                     </div>
-            //                     <hr />
-            //                 </div>
-            //                 <div class="row" id="newVehicleContainer"></div>
-            //                 </div>
-            //             </form> 
-
-            //             `;
-            //         });
-            //         vehicleContent += 
-            //         `
-            //             <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
-            //         `;
-            //     }else{
-            //         vehicleContent += 
-            //         `
-            //             <input type="button" name="" class="add-mem-btn float-start" id="addVehicles" value="Add Vehicle" onclick="addVehicle()" />
-            //         `;
-            //     }
-                
-            //     $('#memberEditForm').html(htmlContent);
-            //     $('#sharedmemberEditForm').html(sharedContent);
-            //     $('#homeloanEditForm').html(homeLoanContent);
-            //     $('#gstEditform').html(gstContent);
-            //     $('#vehicleEditForm').html(vehicleContent);
-            // }
-        
         },
         error: function (xhr) {
             alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
         }
     });
 }
+
+
+
+// VEU CODE START
+// SHARES CONTENT
+// new Vue({
+//     el: '#sharesEditContent',
+//     data: {
+//     // SET EVERYTHING AS BLANK, FOR FILE SET IT TO NULL
+//       formData: {
+//         folio_number: '',
+//         shares_date: '',
+//         shares_transfer_date: '',
+//         total_amount_date: '',
+//         total_amount_received: '',
+//         application_number: '',
+//       },
+//       submitted: false,
+//       error: null,
+//       errors: {},
+//     },
+//     methods: {
+//       submitForm() {
+//         this.errors = {};
+//         const formData = new FormData();
+//         // formData.append('wing_flat', this.formData.wing_flat);
+//         // formData.append('folio_number', this.formData.folio_number);
+//         // formData.append('shares_date', this.formData.shares_date);
+//         // formData.append('application_number', this.formData.application_number);
+//         // formData.append('shares_certificate', this.formData.shares_certificate);
+//         // formData.append('allotment_number', this.formData.allotment_number);
+//         // formData.append('shares_from', this.formData.shares_from);
+//         // formData.append('shares_to', this.formData.shares_to);
+//         // formData.append('shares_transfer_date', this.formData.shares_transfer_date);
+//         // formData.append('total_amount_received', this.formData.total_amount_received);
+//         // formData.append('total_amount_date', this.formData.total_amount_date);
+//         // formData.append('transfer_from_folio_no', this.formData.transfer_from_folio_no);
+//         // formData.append('transfer_to_folio_no', this.formData.transfer_to_folio_no);
+//         for (const key in this.formData) {
+//             if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+//                 console.log(key);
+//                 formData.append(key, this.formData[key]);
+//             }
+//         }
+//         axios.defaults.xsrfCookieName = 'csrftoken';
+//         axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+//         axios.post('http://127.0.0.1:8000/api/shares/', formData)
+//           .then(response => {
+//             console.log('Form submitted successfully:', response.data);
+//             this.submitted = true;
+//           })
+//           .catch(error => {
+//               this.errors = error.response.data
+//               console.log("Error: ->", error.response.data.folio_number[0]);
+//           });
+//       },
+//       // ADD HERE IF THERE ARE ANY FILES
+//       handleFileChange() {
+//         console.log("Handling File")
+//       },
+//     },
+//   });
+
+
+
+new Vue({
+    el: '#sharesEditContent',
+    data: {
+        // SET EVERYTHING AS BLANK, FOR FILE SET IT TO NULL
+        formData: {
+            wing_flat: '',
+            folio_number: '',
+            shares_date: '',
+            application_number: '',
+            shares_certificate: '',
+            allotment_number: '',
+            shares_from: '',
+            shares_to: '',
+            shares_transfer_date: '',
+            total_amount_received: '',
+            total_amount_date: '',
+            transfer_from_folio_no: '',
+            transfer_to_folio_no: '',
+        },
+        submitted: false,
+        error: null,
+        errors: {},
+    },
+    mounted() {
+        // Fetch data when the component is mounted
+        this.fetchData(); // No need to pass id here since it's not provided
+    },
+    methods: {
+        fetchData() {
+            const id = 10; // Set default id if not provided by the caller
+            console.log("ID============", id); // Use id instead of this.id
+            axios.get(`http://127.0.0.1:8000/api/shares/${id}/`) // Use id to construct URL
+                .then(response => {
+                    console.log(response.data);
+                    // Assuming response.data contains the value you want to set
+                    this.formData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        submitForm() {
+            this.errors = {};
+            const formData = new FormData();
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    console.log(key);
+                    formData.append(key, this.formData[key]);
+                }
+            }
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.patch('http://127.0.0.1:8000/api/shares/10/', formData)
+                .then(response => {
+                    console.log('Form submitted successfully:', response.data);
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                    console.log("Error: ->", error.response.data.folio_number[0]);
+                });
+        },
+        handleFileChange() {
+            console.log("Handling File");
+        }
+    },
+});
+
+
+function editMemberDetails(id) {
+    return fetchData(id)
+}
+
+
+
+
+// HOUSE HELP
+new Vue({
+    el: '#househelpcreation',
+    data: {
+        formData: {
+            house_help_name: '',
+            house_help_pan_number: '',
+            house_help_contact: '',
+            house_help_aadhar_number: '',
+            house_help_address: '',
+            house_help_city: '',
+            house_help_state: '',
+            house_help_pin: '',
+            other_doc: null,
+            other_document_specifications: '',
+        },
+        submitted: false,
+        error: null,
+        errors: {},
+    },
+    methods: {
+        submitHouseHelp() {
+            const formData = new FormData();
+            this.errors = {};
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    if (this.formData[key] !== null) {
+                        formData.append(key, this.formData[key]);
+                    }
+                }
+            }
+            if (this.$refs.house_help_pan_doc.files[0]) {
+                this.formData.house_help_pan_doc = this.$refs.house_help_pan_doc.files[0]
+            }
+            if (this.$refs.house_help_aadhar_doc.files[0]) {
+                this.formData.house_help_aadhar_doc = this.$refs.house_help_aadhar_doc.files[0]
+            }
+            if (this.$refs.other_doc.files[0]) {
+                this.formData.other_doc = this.$refs.other_doc.files[0];
+            }
+            console.log("formdata", this.formData);
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('http://127.0.0.1:8000/api/househelp/', this.formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                });
+        },
+        // handleFileChange(event) {
+        //     console.log("Handling File");
+        //     if (this.$refs.house_help_pan_doc.files[0]) {
+        //         this.formData.house_help_pan_doc = this.$refs.house_help_pan_doc.files[0]
+        //     }
+        //     if (this.$refs.house_help_aadhar_doc.files[0]) {
+        //         this.formData.house_help_aadhar_doc = this.$refs.house_help_aadhar_doc.files[0]
+        //     }
+        //     if (this.$refs.other_doc.files[0]) {
+        //         this.formData.other_doc = this.$refs.other_doc.files[0];
+        //     }
+        // },
+    },
+});
+
+
+// HOUSE HELP TABLE AND EDIT
+var app = new Vue({
+    el: '#houseHelpTableDiv',
+    data: {
+        formData: {
+        },
+        houseHelp: [],
+        errors: {},
+    },
+    methods: {
+        editRequestedData(id) {
+            console.log('Clicked!', id);
+            $('#houseHelpUpdation').modal('show');
+            var self = this;
+            axios.get(`http://127.0.0.1:8000/api/househelp/${id}/`)
+                .then(response => {
+                    this.formData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        submitForm(id) {
+            this.errors = {};
+            const formData = new FormData();
+            formData.append('transfer_to_folio_no', this.formData.transfer_to_folio_no);
+            formData.append('house_help_name', this.formData.house_help_name)
+            formData.append('house_help_pan_number', this.formData.house_help_pan_number)
+            formData.append('house_help_contact', this.formData.house_help_contact)
+            formData.append('house_help_aadhar_number', this.formData.house_help_aadhar_number)
+            formData.append('house_help_address', this.formData.house_help_address)
+            formData.append('house_help_city', this.formData.house_help_city)
+            formData.append('house_help_state', this.formData.house_help_state)
+            formData.append('house_help_pin', this.formData.house_help_pin)
+            formData.append('other_document_specifications', this.formData.other_document_specifications)
+
+            // Append files if they are present
+            if (this.$refs.house_help_pan_doc.files[0]) {
+                formData.append('house_help_pan_doc', this.$refs.house_help_pan_doc.files[0]);
+            } 
+            if (this.$refs.house_help_aadhar_doc.files[0]) {
+                formData.append('house_help_aadhar_doc', this.$refs.house_help_aadhar_doc.files[0]);
+            }
+            if (this.$refs.other_doc.files[0]) {
+                formData.append('other_doc', this.$refs.other_doc.files[0]);
+            }
+            console.log("FORMDATA==========", this.formData)
+
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.patch(`http://127.0.0.1:8000/api/househelp/${id}/`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                });
+        },
+    },
+    mounted() {
+        axios.get('http://127.0.0.1:8000/api/househelp/')
+            .then(response => {
+                this.houseHelp = response.data;
+                $(document).ready(function () {
+                    $('#example').DataTable();
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
+
 
 

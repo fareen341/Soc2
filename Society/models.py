@@ -83,10 +83,24 @@ class MemberMasterCreation(models.Model):
     member_occupation = models.CharField(max_length=200, null=True, blank=True, verbose_name="Occupation")
     member_is_primary = models.BooleanField(default = False, null=True, blank=True, verbose_name="Primary")
     date_of_admission = models.DateField(null=True, blank=True)
+    age_at_date_of_admission = models.IntegerField(null=True, blank=True)
+    sales_agreement = models.FileField(upload_to='files/', null=True, blank=True)
+    other_attachment = models.FileField(upload_to='files/', null=True, blank=True)
     date_of_entrance_fees = models.DateField(null=True, blank=True)
-    date_of_cessation = models.CharField(max_length=200, null=True, blank=True)
+    date_of_cessation = models.DateField(null=True, blank=True)
     reason_for_cessation = models.CharField(max_length=200, null=True, blank=True)
-    status = models.BooleanField(null=True, blank=True)
+    flat_status = models.CharField(max_length=200, null=True, blank=True)
+    same_flat_member_identification = models.CharField(max_length=100, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and self.member_is_primary == True:
+            # Only update the field if the instance is being saved for the first time
+            super(MemberMasterCreation, self).save(*args, **kwargs)  # Save the instance to generate the primary key
+            self.same_flat_member_identification = f"{self.wing_flat.unit_flat_unique}MEM{self.pk}"
+            self.save(update_fields=['same_flat_member_identification'])  # Save again to update the field
+        else:
+            super(MemberMasterCreation, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.member_name
@@ -110,9 +124,9 @@ class MemberNomineeCreation(models.Model):
 
 class FlatSharesDetails(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
-    folio_number = models.CharField(max_length=300, null=True, blank=True)
+    folio_number = models.CharField(max_length=300)
     shares_date = models.DateField(null=True, blank=True)
-    application_number = models.CharField(max_length=300, null=True, blank=True)
+    application_number = models.CharField(max_length=300)
     shares_certificate = models.CharField(max_length=300, null=True, blank=True)
     allotment_number = models.CharField(max_length=300, null=True, blank=True)
     shares_from = models.CharField(max_length=300, null=True, blank=True)
@@ -122,6 +136,22 @@ class FlatSharesDetails(models.Model):
     total_amount_date = models.DateField(null=True, blank=True)
     transfer_from_folio_no = models.CharField(max_length=300, null=True, blank=True)
     transfer_to_folio_no = models.CharField(max_length=300, null=True, blank=True)
+
+
+# class FlatSharesDetails(models.Model):
+#     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+#     folio_number = models.CharField(max_length=300, null=True, blank=True)
+#     shares_date = models.DateField(null=True, blank=True)
+#     application_number = models.CharField(max_length=300, null=True, blank=True)
+#     shares_certificate = models.CharField(max_length=300, null=True, blank=True)
+#     allotment_number = models.CharField(max_length=300, null=True, blank=True)
+#     shares_from = models.CharField(max_length=300, null=True, blank=True)
+#     shares_to = models.CharField(max_length=300, null=True, blank=True)
+#     shares_transfer_date = models.DateField(null=True, blank=True)
+#     total_amount_received = models.IntegerField(null=True, blank=True)
+#     total_amount_date = models.DateField(null=True, blank=True)
+#     transfer_from_folio_no = models.CharField(max_length=300, null=True, blank=True)
+#     transfer_to_folio_no = models.CharField(max_length=300, null=True, blank=True)
 
 
 

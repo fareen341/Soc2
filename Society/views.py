@@ -118,7 +118,7 @@ def member_master(request):
     city_names = constants.city_names
     flat_numbers_queryset = SocietyUnitFlatCreation.objects.values_list("unit", "flat")
     wing_flat_no = {
-        "#": "Select Flat No",
+        "": "Select Flat No",
         **{f"{wing}-{flat}": f"{wing}-{flat}" for wing, flat in flat_numbers_queryset}
     }
     member_position = constants.member_position
@@ -131,25 +131,26 @@ def member_master(request):
             ajax_get_primary = request.POST.get("ajax_get_primary")
             get_ownership_ajax = request.POST.get("get_ownership_ajax")
             
-            print("ajax_get_primary========================", ajax_get_primary)
+            # print("ajax_get_primary========================", ajax_get_primary)
             if json.loads(ajax_get_primary):
                 get_flat = SocietyUnitFlatCreation.objects.get(unit_flat_unique=flat_selected_value)
-                is_primary = MemberMasterCreation.objects.filter(wing_flat=get_flat, member_is_primary=True).exists()
+                is_primary = MemberMasterCreation.objects.filter(Q(wing_flat=get_flat), Q(member_is_primary=True), ~Q(flat_status="vacant")).exists()
                 if flat_selected_value and is_primary:
+                    print("ISPRIMARY=======================================~~~~~~~~~~~~~~~~~~~~~~~~")
                     return JsonResponse({'is_primary': is_primary})
             
             if json.loads(get_ownership_ajax):
                 total_ownership = 0
                 wing_flat_number = request.POST.get('wing_flat_number')
                 member_ownership = json.loads(request.POST.get('member_ownership'))
-                print("OWNSERSHI+=======================", member_ownership)
+                # print("OWNSERSHI+=======================", member_ownership)
                 ownership_flat_no = SocietyUnitFlatCreation.objects.get(unit_flat_unique=wing_flat_number)
-                total_flat_ownership = MemberMasterCreation.objects.filter(wing_flat=ownership_flat_no).aggregate(sum_ownership=Sum('ownership_percent'))
+                total_flat_ownership = MemberMasterCreation.objects.filter(wing_flat=ownership_flat_no, date_of_cessation__isnull=True).aggregate(sum_ownership=Sum('ownership_percent'))
                 print("total_flat_ownership===", total_flat_ownership)
                 if total_flat_ownership['sum_ownership'] is not None:
                     total_ownership = total_flat_ownership['sum_ownership'] + member_ownership
                 if member_ownership and total_ownership > 100:
-                    print("TOTAL===================", total_flat_ownership['sum_ownership'])
+                    # print("TOTAL===================", total_flat_ownership['sum_ownership'])
                     return JsonResponse({'ownership': f"This flat left with {100 - total_flat_ownership['sum_ownership']} % ownership!"})
         except SocietyUnitFlatCreation.DoesNotExist:
             print("Object does not exists!")
@@ -173,15 +174,24 @@ def member_master_creation(request):
         wing_flat = SocietyUnitFlatCreation.objects.get(unit_flat_unique=wing_flat_number)
         memberData = json.loads(request.POST.get("memberData"))
         nomineeData = json.loads(request.POST.get("nomineeData"))
-        print(f"MEMBER DATA: {memberData} \n, NOMINEE: {nomineeData}")
-        MemberMasterCreation.objects.create(
-            wing_flat = wing_flat,
-            **memberData[0]
-        )
+        print("=================================================")
+        print(f"MEMBER DATA: {memberData[0]['member_is_primary']} \n, NOMINEE: {nomineeData}")
+        get_identification_number = MemberMasterCreation.objects.filter(wing_flat=wing_flat, member_is_primary=True).values_list('same_flat_member_identification', flat=True)
+        if get_identification_number:
+            member_creation_obj = MemberMasterCreation.objects.create(
+                wing_flat=wing_flat,
+                same_flat_member_identification=get_identification_number[0],
+                **memberData[0]
+            )
+        else:
+            member_creation_obj = MemberMasterCreation.objects.create(
+                wing_flat=wing_flat,
+                **memberData[0]
+            )
 
         for nominee in nomineeData:
             MemberNomineeCreation.objects.create(
-                wing_flat = wing_flat,
+                member_name = member_creation_obj,
                 **nominee
         )
 
@@ -302,26 +312,30 @@ def member_details_view(request):
         "wing_flat__id", "wing_flat__unit_flat_unique", "member_name", "ownership_percent", "member_position", "member_dob", 
         "member_pan_no", "member_aadhar_no", "member_address", "member_state", "member_pin_code", 
         "member_email", "member_contact", "member_emergency_contact", "member_occupation", 
-        "member_is_primary", "date_of_admission", "date_of_entrance_fees", "date_of_cessation", "reason_for_cessation", "status"
+        "member_is_primary", "date_of_admission", "date_of_entrance_fees", "date_of_cessation", "reason_for_cessation",
+        "flat_status"
     ]
     data = [field.name for field in model_fields if field.name not in ['wing_flat']]
-    member_details = MemberMasterCreation.objects.filter(member_is_primary=True).values(
+    member_details = MemberMasterCreation.objects.filter(Q(member_is_primary=True), Q(date_of_cessation__isnull=True)).values(
         "wing_flat__id", "wing_flat__unit_flat_unique", "member_name", "ownership_percent", "member_position", "member_dob", 
         "member_pan_no", "member_aadhar_no", "member_address", "member_state", "member_pin_code", 
         "member_email", "member_contact", "member_emergency_contact", "member_occupation", 
-        "member_is_primary", "date_of_admission", "date_of_entrance_fees", "date_of_cessation", "reason_for_cessation", "status"
+        "member_is_primary", "date_of_admission", "date_of_entrance_fees", "date_of_cessation", "reason_for_cessation", 
+        "flat_status"
+
     )
     flat_id = None
     if request.method == "POST":
         flat_id = request.POST.get("member_id")
         wing_flat_number = SocietyUnitFlatCreation.objects.get(pk=flat_id).unit_flat_unique
         # Member detials
-        parents = MemberMasterCreation.objects.filter(wing_flat=flat_id)
+        parents = MemberMasterCreation.objects.filter(wing_flat=flat_id, date_of_cessation__isnull=True)
         children = MemberNomineeCreation.objects.all()
         combined_data = []
         for parent in parents:
             parent_data = {
                 'member_id': parent.pk,
+                'member_wing': parent.wing_flat.unit_flat_unique,
                 'member_name': parent.member_name,
                 'ownership_percent': parent.ownership_percent,
                 'member_position': parent.member_position,
@@ -335,8 +349,17 @@ def member_details_view(request):
                 'member_contact': parent.member_contact,
                 'member_emergency_contact': parent.member_emergency_contact,
                 'member_occupation': parent.member_occupation,
-                'member_is_primary': parent.member_is_primary,
+                'member_is_primary': parent.member_is_primary,               
+                'date_of_admission': parent.date_of_admission,
+                'age_at_date_of_admission': parent.age_at_date_of_admission,
+                'sales_agreement': parent.sales_agreement.url if parent.sales_agreement else None,
+                'other_attachment': parent.other_attachment if parent.other_attachment else None,
+                'date_of_entrance_fees': parent.date_of_entrance_fees,
+                'date_of_cessation': parent.date_of_cessation,
+                'reason_for_cessation': parent.reason_for_cessation,
+                'flat_status': parent.flat_status,
                 
+
                 'nominee_Details': [
                     {
                         'nominee_id': child.pk,
@@ -392,28 +415,90 @@ def member_details_view(request):
 
 def member_edit_view(request):
     if request.method == "POST":
-        '''
-        NOTE:
-        Create history in same models, the moment i change the member to inactive capture date and a unique memberid as in MEM001, MEM002:
+        data = json.loads(request.body)
+        print("DATA========================================", data)
 
-        {70: {'flat_details': {'unit_flat_unique': 'C-WING-9'}, 
-        members_details = 'members001': [
-                    {
-                        'member_id': 91, 'member_name': 'Fareen Ansari', 'member_unique_id': 'MEM001', is_primary': True,
-                        'nominee_Details': [{'nominee_name': 'fareen 1'}, {'nominee_name': 'fareen 2'}]}, 
-                        {'member_id': 96, 'member_name': 'New Member', 'nominee_Details': []}
-                    },
-                    {
-                        'member_id': 99, 'member_name': 'Ariba Ansari', 'member_unique_id': 'MEM002', is_primary': True,
-                        'nominee_Details': [{'nominee_name': 'fareen 1'}, {'nominee_name': 'fareen 2'}]}, 
-                        {'member_id': 96, 'member_name': 'New Member', 'nominee_Details': []}
-                    },
-        ]
+        # GET CESSATION DATE
+        cessation_data = None
+        for item in data:
+            member_obj = item['member_obj']
+            cessation_data = member_obj.get('date_of_cessation')
 
-        IN FRONT END:
-        '''
-        # flat_id = request.POST.get("flat_id")
-        # Fetch the queryset with prefetch_related
+        for entry in data:
+            member_obj_data = entry['member_obj']
+            nominee_obj_data = entry['nominee_obj']
+            member_id = member_obj_data.pop('member_id')
+            member_checkbox = False
+            member_is_primary_val = member_obj_data.get('member_is_primary', None)
+
+            if member_is_primary_val == "on":
+                member_checkbox = True
+
+            member_instance = MemberMasterCreation.objects.filter(id=int(member_id)).values('member_name')
+            member_instance = MemberMasterCreation.objects.filter(id=int(member_id)).update(
+                ownership_percent = int(member_obj_data['ownership_percent']) if ['ownership_percent'] else None,
+                member_name = member_obj_data['member_name'] if member_obj_data['member_name'] else None,
+                member_position = member_obj_data['member_position'] if member_obj_data['member_position'] else None,
+                member_dob = member_obj_data['member_dob'] if member_obj_data['member_dob'] else None,
+                member_pan_no = member_obj_data['member_pan_no'] if member_obj_data['member_pan_no'] else None,
+                member_aadhar_no = member_obj_data['member_aadhar_no'] if member_obj_data['member_aadhar_no'] else None,
+                member_address = member_obj_data['member_address'] if member_obj_data['member_address'] else None,
+                member_state = member_obj_data['member_state'] if member_obj_data['member_state'] else None,
+                member_pin_code = member_obj_data['member_pin_code'] if member_obj_data['member_pin_code'] else None,
+                member_email = member_obj_data['member_email'] if member_obj_data['member_email'] else None,
+                member_contact = member_obj_data['member_contact'] if member_obj_data['member_contact'] else None,
+                member_emergency_contact = member_obj_data['member_emergency_contact'] if member_obj_data['member_emergency_contact'] else None,
+                member_occupation = member_obj_data['member_occupation'] if member_obj_data['member_occupation'] else None,
+                member_is_primary = member_checkbox,
+                date_of_admission = member_obj_data['date_of_admission'] if member_obj_data['date_of_admission'] else None,
+                sales_agreement = member_obj_data['sales_agreement'] if member_obj_data['sales_agreement'] else None,
+                other_attachment = member_obj_data['other_attachment'] if member_obj_data['other_attachment'] else None,
+                date_of_entrance_fees = member_obj_data['date_of_entrance_fees'] if member_obj_data['date_of_entrance_fees'] else None,
+                date_of_cessation = cessation_data if cessation_data else None,
+                reason_for_cessation = member_obj_data['reason_for_cessation'] if member_obj_data['reason_for_cessation'] else None,
+                flat_status = member_obj_data['flat_status'] if member_obj_data['flat_status'] else None
+            )
+
+
+            member_ins = MemberMasterCreation.objects.get(id=int(member_id))
+            for nominee_data in nominee_obj_data:
+                nominee_id = nominee_data['nominee_data'].pop('nominee_id', None)
+                if not nominee_id:
+                    nominee_instance = MemberNomineeCreation.objects.create(
+                        member_name = member_ins,
+                        nominee_name = nominee_data['nominee_data'].get('nominee_name'),
+                        date_of_nomination = nominee_data['nominee_data'].get('date_of_nomination'),
+                        relation_with_nominee = nominee_data['nominee_data'].get('relation_with_nominee'),
+                        nominee_sharein_percent = nominee_data['nominee_data'].get('nominee_sharein_percent'),
+                        nominee_dob = nominee_data['nominee_data'].get('nominee_dob'),
+                        nominee_aadhar_no = nominee_data['nominee_data'].get('nominee_aadhar_no'),
+                        nominee_pan_no = nominee_data['nominee_data'].get('nominee_pan_no'),
+                        nominee_email = nominee_data['nominee_data'].get('nominee_email'),
+                        nominee_address = nominee_data['nominee_data'].get('nominee_address'),
+                        nominee_state = nominee_data['nominee_data'].get('nominee_state'),
+                        nominee_pin_code = nominee_data['nominee_data'].get('nominee_pin_code'),
+                        nominee_contact = nominee_data['nominee_data'].get('nominee_contact'),
+                        nominee_emergency_contact = nominee_data['nominee_data'].get('nominee_emergency_contact')
+                    )
+                else:
+                    nominee_instance = MemberNomineeCreation.objects.filter(id=int(nominee_id)).update(
+                        nominee_name = nominee_data['nominee_data'].get('nominee_name'),
+                        date_of_nomination = nominee_data['nominee_data'].get('date_of_nomination'),
+                        relation_with_nominee = nominee_data['nominee_data'].get('relation_with_nominee'),
+                        nominee_sharein_percent = nominee_data['nominee_data'].get('nominee_sharein_percent'),
+                        nominee_dob = nominee_data['nominee_data'].get('nominee_dob'),
+                        nominee_aadhar_no = nominee_data['nominee_data'].get('nominee_aadhar_no'),
+                        nominee_pan_no = nominee_data['nominee_data'].get('nominee_pan_no'),
+                        nominee_email = nominee_data['nominee_data'].get('nominee_email'),
+                        nominee_address = nominee_data['nominee_data'].get('nominee_address'),
+                        nominee_state = nominee_data['nominee_data'].get('nominee_state'),
+                        nominee_pin_code = nominee_data['nominee_data'].get('nominee_pin_code'),
+                        nominee_contact = nominee_data['nominee_data'].get('nominee_contact'),
+                        nominee_emergency_contact = nominee_data['nominee_data'].get('nominee_emergency_contact')
+
+                    )
+
+
         flat_with_members = SocietyUnitFlatCreation.objects.filter(id=70).prefetch_related('membermastercreation_set')
 
         data_dict = {}
@@ -445,7 +530,7 @@ def member_edit_view(request):
                 },
                 'members': member_data_list,
             }
-        print("DATA=========", data_dict)
+        # print("DATA=========", data_dict)
 
         # print("edit view==================")
         # # FLAT DETAILS START
@@ -639,7 +724,60 @@ def tenant_allocation_edit(request):
     return render(request,'tenent_allocation.html')
 
 
+def member_history_view(request):
+    if request.method == "POST":
+        flat_id = request.POST.get("flat_id")
+        print("flat_number===================", flat_id)
+        history_obj_primary = MemberMasterCreation.objects.filter(wing_flat=flat_id, date_of_cessation__isnull=False)
+        history_obj_secondary = MemberMasterCreation.objects.filter(wing_flat=flat_id, member_is_primary=False)
+        #
+        children = MemberNomineeCreation.objects.all()
+        combined_data = []
 
+        fetched_same_flat_member_identification = ''
+        for parent in history_obj_primary:
+            if parent.member_is_primary == True:
+                parent_data = {
+                    'member_id': parent.pk,
+                    'member_name': parent.member_name,
+                    'nominee_Details': [
+                        {
+                            'nominee_id': child.pk,
+                            'nominee_name': child.nominee_name,
+                        } for child in children.filter(member_name=parent.id)
+                    ]
+                }
+                fetched_same_flat_member_identification = parent.same_flat_member_identification
+                combined_data.append(parent_data)
+            
+            sub_members_data = []
+            for sub_parent in history_obj_secondary.filter(same_flat_member_identification=fetched_same_flat_member_identification):
+                sub_member_data = {
+                    'member_id': sub_parent.pk,
+                    'member_name': sub_parent.member_name,
+                    'nominee_Details': [
+                        {
+                            'nominee_id': child.pk,
+                            'nominee_name': child.nominee_name,
+                        } for child in children.filter(member_name=sub_parent.id)
+                    ]
+                }
+                sub_members_data.append(sub_member_data)
+
+            combined_data.append({'sub_members': sub_members_data})
+
+        # Ensure the final format is correct as per your requirement
+        final_data = [combined_data[0]]
+        for item in combined_data[1:]:
+            if 'sub_members' in item:
+                final_data[-1]['sub_members'] = item['sub_members']
+            else:
+                final_data.append(item)
+
+        print("COMBINED DATA+=====================", final_data)
+        return JsonResponse({'final_data': json.dumps(final_data, default=date_handler)})
+        #
+    return render(request,'member_master_table.html')
 
 
 

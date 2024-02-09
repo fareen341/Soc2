@@ -4,7 +4,25 @@ from django.conf import settings
 from django.conf.urls.static import static
 from Society import views
 
+from django.urls import path, include
+from SocietyManagementApi import views as apiviews
+from rest_framework.routers import DefaultRouter
+
+
+#creatting router object
+router=DefaultRouter()
+router.register('meetingsapi',apiviews.MeetingsViewSet,basename='meetings')
+router.register('vehicle', apiviews.MemberVehicleView, basename='vehicle')
+router.register('shares', apiviews.FlatSharesView, basename='shares')
+router.register('househelp', apiviews.HouseHelpView, basename='househelp')
+
+
+
+
+
 urlpatterns = [
+    path('api/',include(router.urls)),
+
     path('admin/', admin.site.urls),
     path('login/', views.login, name="login"),
     path('society-creation/', views.society_creation, name="society_creation"),
@@ -26,6 +44,11 @@ urlpatterns = [
     path('house-help-master/', views.house_help_master, name="house_help_master"),
     path('house-help-allocation/', views.house_help_allocation, name="house_help_allocation"),
     path('house-help-allocation-edit/', views.house_help_allocation_edit, name="house_help_allocation_edit"),
+    path('member-history-view/', views.member_history_view, name="member_history_view"),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+
+
+    
 
     
 

@@ -16,3 +16,25 @@ id_document_specifications
 
 1. for house help and tenant allocation:
 when period to date is given then change the status to false(inactive)
+
+
+
+
+            // if (error.response && error.response.status === 400 && error.response.data) {
+            //   // Check if there are errors for specific fields
+            //   if (error.response.data.date_of_meeting) {
+            //     this.errors.date_of_meeting = error.response.data.date_of_meeting[0];
+            //   }
+  
+            //   if (error.response.data.financials) {
+            //     this.errors.financials = error.response.data.financials[0];
+            //   }
+  
+            //   // You can add similar logic for other fields as needed
+  
+            //   this.error = 'Please fix the errors in the form.';
+            // } else if (error.response && error.response.status) {
+            //   this.error = `Error: ${error.response.status}`;
+            // } else {
+            //   this.error = 'An error occurred while submitting the form.';
+            // }
