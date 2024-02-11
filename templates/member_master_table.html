@@ -264,22 +264,9 @@
                                     {% verbatim %}
                                     <div id="sharesEditContent">
                                             <form @submit.prevent="submitForm" enctype="multipart/form-data">
-                                                <!-- <div>
-                                                    <label for="date_of_meeting">Date of Meeting:</label>
-                                                    <input type="date" id="date_of_meeting" v-model="formData.date_of_meeting">
-                                                    <span v-if="errors.date_of_meeting" class="error">{{ errors.date_of_meeting }}</span>
-                                                </div> -->
-
-                                                <!-- <div>
-                                                    <label for="financials">Financials:</label>
-                                                    <input type="file" id="financials" ref="financialsInput" @change="handleFileChange">
-                                                    <span v-if="errors.financials" class="error">{{ errors.financials }}</span>
-                                                </div> -->
-
                                                     <div class="row pt-3 ps-4 pe-4">
                                                         <div class="col-lg-4 mb-3">
                                                             <div class="w-100 sty-input-wrapper">
-                                                                <!-- <input type="number" class="w-100 sty-inp" /> -->
                                                                 <select v-model="formData.wing_flat" class="w-100 sty-inp form-control">
                                                                     <option value="#">Select your Wing & Flat No.</option>
                                                                     <option value="70">A-Wing(101)</option>
@@ -383,6 +370,12 @@
                         <div class="tab-pane fade" id="loan-edit-tab-pane" role="tabpanel"
                             aria-labelledby="loan-edit-tab" tabindex="0">
                             <div class="container-fluid" id="homeloanEditForm">
+                                {% comment %} {% verbatim %}
+                                    <div id="editHomeLoanDiv">
+                                        <form @submit.prevent="editHomeLoanForm" enctype="multipart/form-data">
+                                        </form>
+                                    </div>
+                                {% endverbatim %} {% endcomment %}
 
                             </div>
 
@@ -772,8 +765,8 @@
                         <div class="tab-content w-100" id="myTabContent">
                             <div class="tab-pane fade show active" id="member-history-tab-pane" role="tabpanel"
                                 aria-labelledby="member-tab" tabindex="0">
-                                <div id="flat_member_history"> 
-                                    
+                                <div id="flat_member_history">
+
                                 </div>
                             </div>
 

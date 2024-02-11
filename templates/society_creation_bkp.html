@@ -1,0 +1,524 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}  <title>Society Management | Society-Creation</title> {% endblock title %}
+
+{% block body %}
+    <!-- page content -->
+    <div class="container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-11 col-sm-10 col-md-11 col-lg-11 col-xl-10 text-center p-0 mb-2">
+                    <div class="card px-0 pt-4 pb-0 mt-1 mb-3">
+                        <h2 id="heading">Society Creation</h2>
+                        <p>Fill all form field to go to next step</p>
+                        <div id="msform">
+                            <!-- progressbar -->
+                            <ul id="progressbar" class="col-8 ms-auto me-auto" style="padding: 0 !important;">
+                                <li class="active" id="account"><strong>Create Society</strong></li>
+                                <li id="personal"><strong>Bank Details</strong></li>
+                                <li id="payment"><strong>Documents</strong></li>
+                                <li id="confirm"><strong>Create Wing / Unit</strong></li>
+                            </ul>
+                            <input type="text" id="unique_reg_number" value="" hidden/>
+                            <!-- <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div> <br> fieldsets -->
+                            <fieldset>
+                                <div class="">
+                                    <form id="Societyform" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="row p-2">
+                                            <div class="col-lg-4">
+                                                <div class="mb-3 w-100 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="text" id="id_society_name"
+                                                        placeholder="">
+                                                        <!-- {{ form.society_name }} -->
+                                                    <label for="id_society_name" class="sty-label">Society Name</label>
+                                                    <small id="id_society_name_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3 w-100 sty-input-wrapper">
+
+                                                    <input class="w-100 sty-inp" type="email" id="id_admin_email"
+                                                        placeholder="">
+                                                    <!-- {{ form.admin_email }} -->
+                                                    <label for="id_admin_email" class="sty-label"> Administrator Email
+                                                    </label>
+                                                    <small id="id_admin_email_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3 w-100 sty-input-wrapper">
+                                                     <input class="w-100 sty-inp" type="email" id="id_alternate_email"
+                                                        placeholder="">
+                                                    <!-- {{ form.alternate_email }} -->
+                                                    <label for="id_alternate_email" class="sty-label">Alternate Email</label>
+                                                    <small id="id_alternate_email_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="mb-2">
+
+                                                    <div class="input-group">
+                                                        <div class="firstinp w-50 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp" type="text" id="id_registration_number"
+                                                                placeholder="">
+                                                                {% comment %} {{ form.registration_number }} {% endcomment %}
+                                                            <label for="id_registration_number" class="sty-label">Registration Number</label>
+                                                            <small id="id_registration_number_Error" class="error-message"></small>
+                                                        </div>
+                                                        <div class="secinp w-50 d-flex">
+                                                                <div class="fileinp">
+                                                                    <input id="id_registration_doc" type="file" class="sty-inp form-control" style="color: #2b96f1 !important;"
+                                                                        name="file" />
+                                                                        {% comment %} {{ form.registration_doc }} {% endcomment %}
+                                                                        <small class="float-right" id="id_registration_doc_Error" class="error-message"></small>
+                                                                </div>
+                                                                <div class="prev">
+                                                                    <button type="button" class="sty-inp form-control"
+                                                                        onclick="PreviewImage('id_registration_doc')">
+                                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                                    </button>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3 sty-input-wrapper w-100">
+
+                                                    <input class="w-100 sty-inp" type="number" id="id_admin_mobile_number"
+                                                        placeholder="">
+                                                        <!-- {{ form.admin_mobile_number }} -->
+                                                    <label for="id_admin_mobile_number" class="sty-label">Administrator Mobile Number
+                                                    </label>
+                                                    <small id="id_admin_mobile_number_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-8">
+                                                <div class="mb-2">
+                                                    <div class="input-group">
+                                                        <div class="firstinp w-50 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp" type="text" id="id_pan_number"
+                                                                placeholder="">
+                                                                {% comment %} {{ form.pan }} {% endcomment %}
+                                                            <label for="id_pan_number" class="sty-label">PAN Number</label>
+                                                            <small id="id_pan_number_Error" class="error-message"></small>
+                                                        </div>
+                                                        <div class="secinp w-50 d-flex">
+                                                                <div class="fileinp">
+                                                                    <input id="id_pan_number_doc" type="file" class="sty-inp form-control" style="color: #2b96f1 !important;"
+                                                                        name="file" />
+                                                                        {% comment %} {{ form.pan_doc }} {% endcomment %}
+                                                                        <small class="float-right" id="id_pan_number_doc_Error" class="error-message"></small>
+                                                                </div>
+                                                                <div class="prev">
+                                                                    <button type="button" class="sty-inp form-control"
+                                                                        onclick="PreviewImage('id_pan_number_doc')">
+                                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                                    </button>
+                                                                </div>
+
+                                                                <!-- <input class="form-control" type="number" id="registraionNumber"
+                                                            placeholder="Enter Society's Registration Number" required="">
+                                                            <label for="file-input" style="border: 1px solid grey; padding: 7px; background-color: #808080; color: #fff; cursor: pointer;">
+                                                                <i class="fa-solid fa-paperclip fa-xl"></i>
+                                                            </label> -->
+
+
+                                                                <!-- <i class="fa-solid fa-eye"></i>
+                                                                    <input type="button" class="form-control"  onclick="PreviewImage();" /> -->
+                                                        </div>
+
+                                                        <!-- <i class="fa-solid fa-paperclip fa-xl"></i>-->
+                                                        </label>
+                                                        <!-- <input id="file-input" type="file" style="display: none;"> -->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3 w-100 sty-input-wrapper">
+
+                                                    <input class="sty-inp w-100" type="number" id="id_alternate_mobile_number"
+                                                        placeholder="">
+                                                        <!-- {{ form.alternate_mobile_number }} -->
+                                                    <label for="id_alternate_mobile_number" class="sty-label">Alternate Mobile Number</label>
+                                                    <small id="id_alternate_mobile_number_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="mb-2">
+                                                    <div class="input-group">
+                                                        <div class="firstinp w-50 sty-input-wrapper">
+                                                            <input class="form-control sty-inp" type="text" id="id_gst_number"
+                                                                placeholder="">
+                                                                <!-- {{ form.gst_number }} -->
+                                                            <label for="id_gst_number" class="form-label sty-label">GST Number</label>
+                                                            <small id="id_gst_number_Error" class="error-message"></small>
+                                                        </div>
+                                                        <div class="secinp w-50 d-flex">
+                                                                <div class="fileinp">
+                                                                    <input id="id_gst_number_doc" type="file" class="form-control sty-inp" style="color: #2b96f1 !important;"
+                                                                        name="file" />
+                                                                    <small id="id_gst_number_doc_Error" class="error-message"></small>
+                                                                        {% comment %} {{ form.gst_doc }} {% endcomment %}
+                                                                </div>
+                                                                <div class="prev">
+                                                                    <button type="button" class="form-control sty-inp"
+                                                                        onclick="PreviewImage('id_gst_number_doc')">
+                                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <!-- <input class="form-control" type="number" id="registraionNumber"
+                                                            placeholder="Enter Society's Registration Number" required="">
+                                                            <label for="file-input" style="border: 1px solid grey; padding: 7px; background-color: #808080; color: #fff; cursor: pointer;">
+                                                                <i class="fa-solid fa-paperclip fa-xl"></i>
+                                                            </label> -->
+
+
+                                                                <!-- <i class="fa-solid fa-eye"></i>
+                                                                    <input type="button" class="form-control"  onclick="PreviewImage();" /> -->
+                                                        </div>
+                                                        <!-- <i class="fa-solid fa-paperclip fa-xl"></i>-->
+                                                        </label>
+                                                        <!-- <input id="file-input" type="file" style="display: none;"> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-lg-4">
+                                                <div class="mb-3 w-100 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="number" id="id_interest"
+                                                        placeholder="">
+                                                        <!-- {{ form.interest }} -->
+                                                    <label for="id_interest" class="sty-label">Interest</label>
+                                                    <small id="id_interest_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 mb-3">
+                                                <div class="row">
+                                                    <div class="col-lg-6  sty-input-wrapper">
+
+                                                        <textarea name="address" id="id_society_reg_address" class="w-100 sty-inp" cols="30" rows="1"></textarea>
+                                                        <!-- {{ form.society_reg_address }} -->
+                                                        <label for="id_society_reg_address" class="sty-label">Society's Registered Address</label>
+                                                        <small id="id_society_reg_address_Error" class="error-message"></small>
+                                                    </div>
+                                                    <div class="col-lg-2 sty-input-wrapper">
+
+                                                        <select name="state" id="id_socity_state" class="w-100 sty-inp">
+                                                            {% for key, value in state_names.items %}
+                                                                <option value="{{ key }}">{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+
+                                                        <label for="id_socity_state" class="sty-label">State</label>
+                                                        <small id="id_socity_state_Error" class="error-message"></small>
+                                                    </div>
+                                                    <div class="col-lg-2 sty-input-wrapper">
+
+                                                        <select name="state" id="id_society_city" class="w-100 sty-inp">
+                                                            {% for key, value in city_names.items %}
+                                                                <option value="{{ key }}">{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <label for="id_society_city" class="sty-label">City</label>
+                                                        <small id="id_society_city_Error" class="error-message"></small>
+                                                    </div>
+                                                    <div class="col-lg-2 sty-input-wrapper">
+
+                                                        <input type="number" class="w-100 sty-inp" id="id_pin_code">
+                                                        <!-- {{ form.pin_code }} -->
+                                                        <label for="id_pin_code" class="sty-label">Pin Code</label>
+                                                        <small id="id_pin_code_Error" class="error-message"></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 mb-2">
+                                                <div class="row">
+                                                    <div class="col-lg-6 sty-input-wrapper">
+
+                                                        <textarea name="address" id="id_society_corr_reg_address" class="w-100 sty-inp" cols="30"
+                                                            rows="1"></textarea>
+                                                            <!-- {{ form.society_corr_reg_address }} -->
+                                                        <label for="id_society_corr_reg_address" class="sty-label">Society's Correspondence Address
+                                                        </label>
+                                                        <small id="id_society_corr_reg_address_Error" class="error-message"></small>
+                                                    </div>
+                                                    <div class="col-lg-2 sty-input-wrapper">
+                                                        <select name="state" id="id_socity_corr_state" class="w-100 sty-inp">
+                                                            {% for key, value in state_names.items %}
+                                                                <option value="{{ key }}">{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!-- {{ form.socity_corr_state }} -->
+                                                        <label for="id_socity_corr_state" class="sty-label">State</label>
+                                                        <small id="id_socity_corr_state_Error" class="error-message"></small>
+                                                    </div>
+                                                    <div class="col-lg-2 sty-input-wrapper">
+                                                        <select name="state" id="id_society_corr_city" class="w-100 sty-inp">
+                                                            {% for key, value in state_names.items %}
+                                                                <option value="{{ key }}">{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <label for="id_society_corr_city" class="sty-label">City</label>
+                                                        <small id="id_society_corr_city_Error" class="error-message"></small>
+                                                    </div>
+                                                    <div class="col-lg-2 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" id="id_pin_corr_code"
+                                                            placeholder="">
+                                                            <!-- {{ form.pin_corr_code }} -->
+                                                        <label for="id_pin_corr_code" class="sty-label">Pin Code</label>
+                                                        <small id="id_pin_corr_code_Error" class="error-message"></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% comment %} <input type="button" id="SocSubmit" /> {% endcomment %}
+                                    </form>
+                                </div>
+                                <input type="button" id="SocSubmit" name="next" class="next action-button" value="Save & Next" />
+                                <hr>
+                            </fieldset>
+                            <fieldset>
+                                <div class="">
+                                    <form id="bankForm", class="form">
+                                        {% csrf_token %}
+                                        <div id="bankclonedFieldsContainer">
+                                        <div class="row p-2 mt-2">
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="mb-2 w-100 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_name1"
+                                                        placeholder="">
+                                                    <label for="id_beneficiary_name" class="sty-label">Beneficiary Name</label>
+                                                    <small id="id_beneficiary_name1_Error" class="error-message"></small>
+                                                </div>
+                                                <small id="beneficiaryName1_Error" class="error-message"></small>
+                                            </div>
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="mb-2 w-100 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_code1"
+                                                        placeholder="">
+                                                    <label for="id_beneficiary_code" class="sty-label">Beneficiary IFSC Code</label>
+                                                    <small id="id_beneficiary_code1_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="mb-2 w-100 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="number" id="id_beneficiary_acc_number1" placeholder="">
+                                                    <label for="id_beneficiary_acc_number" class="sty-label">Beneficiary Account
+                                                        Number</label>
+                                                        <small id="id_beneficiary_acc_number1_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="mb-2 w-100 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_bank1"
+                                                        placeholder="">
+                                                    <label for="id_beneficiary_bank" class="sty-label">Beneficiary Bank Name & Branch</label>
+                                                    <small id="id_beneficiary_bank1_Error"  class="error-message"></small>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="col-lg-4 mb-4">
+                                                <div class="mb-2 w-100 sty-input-wrapper">
+                                                <input type="checkbox" id="id_isPrimary1" name="" value="yes" class="sty-inp">
+                                                <label for="">Make primary?</label>
+                                                <small id="id_isPrimary1_Error"  class="error-message"></small>
+                                            </div> -->
+                                            <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                                <input type="checkbox" class="sty-inp" id="id_isPrimary1">
+                                                <label>Make this Primary</label>
+                                                <small class="mb-3 error-message" id="id_isPrimary1_Error"></small>
+                                            </div>
+                                    </div>
+                                    </div>
+                                    <hr>
+
+                                    <div class="" id="bankCloneContainer"></div>
+
+                                </form>
+                                </div>
+                                <input type="button" onclick="addOtherBankDetail()" name="addNewDocs" class="add-mem-btn float-start" id="" value="Add Another Bank" />
+                                 <input type="button" id="bankSubmit" name="" class="next action-button" value="Save & Next" />
+                                  <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                            </fieldset>
+                            <fieldset>
+
+                                <form action="" method="" id="socDocumentForm" class="form">
+                                    {% csrf_token %}
+                                <div class="row p-2 mt-2">
+                                    <div class="col-lg-4 mb-3 d-flex">
+
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_completion_cert">
+                                            <label for="" class="sty-label">Completion Certificate</label>
+                                            <small id="id_completion_cert_Error" class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('compDoc')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3 d-flex">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_occupancy_cert">
+                                            <label for="" class="sty-label">Occupancy Certificate</label>
+                                            <small id="id_occupancy_cert_Error" class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('id_occupancy_cert')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3 d-flex">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_deed_of_conveyance">
+                                            <label for="" class="sty-label">Deed of Conveyance</label>
+                                            <small id="id_deed_of_conveyance_Error" class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('id_deed_of_conveyance')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3 d-flex">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_society_by_law">
+                                            <label for="" class="sty-label">Society Bye Laws</label>
+                                            <small id="id_society_by_law_Error" class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('id_society_by_law')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 mb-3 d-flex">
+
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_soc_other_document">
+                                            <label for="" class="sty-label">Other Documents</label>
+                                            <small id="id_soc_other_document_Error" class="error-message"></small>
+                                        </div>
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" name="" class="w-100 sty-inp" placeholder="" id="id_soc_other_document_spec">
+                                            <label for="" class="sty-label">Specify your Document</label>
+                                            <small id="id_soc_other_document_spec_Error" class="error-message"></small>
+                                        </div>
+                                        <div class="prev">
+                                            <button type="button" class="sty-inp form-control"
+                                                onclick="PreviewImage('otherDoc')">
+                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7 mb-2 mt-2">
+                                        <div id="CloneContainer"></div>
+                                    </div>
+                                </div>
+                            </form>
+                            <hr>
+                                <input type="button" onclick="addOtherDoc()" name="addNewDocs" class="add-mem-btn float-start" id="" value="Add Another Documents" />
+                                <input type="button" id="SocietyDocumentForm" name="next" class="next action-button" value="Save & Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="wing-info" style="text-align: left;">
+                                        <p style="color: #616161;">As a first Step to set up your Complex, create blocks of your Apartment Complex below
+                                            .PLease Note: <br></p>
+                                        <ul style="list-style:none;" id="blockList">
+                                            <li>
+                                                Blocks are also referred as Towers / Buildings in some apartment Complexes.
+                                            </li>
+                                            <li>
+                                                Even incase your complex does not have blocks, you need to create atleast one block
+                                                (you can call the block "Flat").
+                                            </li>
+                                            <li class="more-content">
+                                                Do note that each block name must be different and should be less than 30 characters
+                                                in length.
+                                            </li>
+                                            <li class="more-content">
+                                                If you have multiple wings in each tower - create one block per tower-wing
+                                                combination. <br> For example: Tower 1 - A wing, Tower 1 - B wing, etc...
+                                            </li>
+                                            <li class="more-content">
+                                                You can always add more blocks here.
+                                            </li>
+                                            <span class="more" onclick="showMore()">Show More</span>
+                                            <span class="less" onclick="showLess()">Show Less</span>
+                                        </ul>
+                                    </div>
+                                    <script>
+                                        // $(".more").toggle(function(){
+                                        //     $(this).text("less..").siblings(".complete").show();
+                                        // }, function(){
+                                        //     $(this).text("more..").siblings(".complete").hide();
+                                        // });
+
+                                        function showMore() {
+                                            $('.more-content').slideDown('slow');
+                                            $('.more').hide();
+                                            $('.less').show();
+                                        }
+
+                                        function showLess() {
+                                            $('.more-content').slideUp('slow');
+                                            $('.less').hide();
+                                            $('.more').show();
+                                        }
+                                    </script>
+
+                                    <div id="wingContainer">
+                                        <form id="wingFlatForm" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="row mb-3" id="wingContent1">
+                                                <div class="col-lg-3 sty-input-wrapper">
+                                                    <input class="w-100 sty-inp" type="text" name="wingName" id="wingName0" placeholder="">
+                                                    <label for="" class="sty-label">Enter your Wing Name</label>
+                                                    <small id="wingName0_Error" class="error-message"></small>
+                                                </div>
+                                                <div class="col-lg-5 sty-input-wrapper">
+                                                    <textarea class="w-100 sty-inp" name="unitName" id="unitName0" cols="30" rows="1" placeholder=""></textarea>
+                                                    <label for="" class="sty-label">Enter your Flat Numbers</label>
+                                                    <small id="unitName0_Error" class="error-message"></small>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div id="newWingContainer"></div>
+                                </div>
+                                <hr>
+                                <div class="twoBtn float-start">
+                                    <button type="button" class="add-mem-btn" onclick="addWing()">
+                                        Add Another Wing
+                                    </button>
+                                    <!-- <button type="submit" class="sbmt-button  ms-2" >Submit</button> -->
+                                </div>
+                                <!-- <input type="button" id="wingSubmit" name="" class="action-button" value="SAVE====" /> -->
+                                <input type="button" id="wingSubmit" name="next" class="next action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ajax-url" data-url="{% url 'society_creation' %}"></div>
+        {% comment %} <div id="model_field_names">{{ model_field_names }}</div> {% endcomment %}
+    </div>
+{% endblock body %}

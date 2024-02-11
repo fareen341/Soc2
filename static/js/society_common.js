@@ -6,11 +6,94 @@ $(document).ready(function () {
     var current = 1;
     var steps = $("fieldset").length;
 
-
-
     setProgressBar(current);
 
-    let stopNext = true
+
+    // VUE CODE START
+    let stopNext = false;
+    new Vue({
+        el: '#addSociety',
+        data: {
+            formData: {
+                society_name: '',
+                admin_email: '',
+                alternate_email: '',
+                admin_mobile_number: '',
+                alternate_mobile_number: '',
+                registration_number: '',
+                pan_number: '',
+                gst_number: '',
+                interest: '',
+                society_reg_address: '',
+                society_city: '',
+                socity_state: '',
+                pin_code: '',
+                society_corr_reg_address: '',
+                society_corr_city: '',
+                socity_corr_state: '',
+                pin_corr_code: '',
+            },
+            submitted: false,
+            error: null,
+            errors: {},
+        },
+        methods: {
+            addSocietyForm() {
+                const formData = new FormData();
+                this.errors = {};
+                for (const key in this.formData) {
+                    if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                        if (this.formData[key] !== null) {
+                            formData.append(key, this.formData[key]);
+                        }
+                    }
+                }
+                if (this.$refs.registration_doc.files[0]) {
+                    this.formData.registration_doc = this.$refs.registration_doc.files[0]
+                }
+                if (this.$refs.pan_number_doc.files[0]) {
+                    this.formData.pan_number_doc = this.$refs.pan_number_doc.files[0]
+                }
+                if (this.$refs.gst_number_doc.files[0]) {
+                    this.formData.gst_number_doc = this.$refs.gst_number_doc.files[0];
+                }
+                console.log("formdata", this.formData);
+                axios.defaults.xsrfCookieName = 'csrftoken';
+                axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+                axios.post('http://127.0.0.1:8000/api/society-creation/', this.formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        this.submitted = true;
+                        // stopNext = true;
+                        this.nextAction();
+                    })
+                    .catch(error => {
+                        this.errors = error.response.data;
+                    });
+            },
+            nextAction() {
+                // Your logic for the next action after form submission
+                console.log('Form data submitted successfully. Proceeding to the next action.');
+
+                // Trigger the click event for ".next" button
+                $("#nextBtn").trigger("click");
+            },
+            clearErrors() {
+                this.errors = {};
+            },
+        },
+    });
+
+    // BANK FORM
+
+
+
+
+
+    // let stopNext = true
     let memberData = []
     let nomineeData = []
     // MEMBER ON-CHANGE START
@@ -1227,7 +1310,7 @@ $(document).ready(function () {
         //         $(newKeyElement).css("border-color", "red");
         //         $(newKeyElement + "_Error").text("invalid flat number");
         //     } else if ((newKey !== "" && newValue !== "") && (newKey !== "" && !validateFlatNumber.test(newKey))) {
-        //         let x = newKey !== "" && newValue !== "" 
+        //         let x = newKey !== "" && newValue !== ""
         //         let y = newKey !== "" && !validateFlatNumber.test(newKey)
         //         console.log("abc===================", x)
         //         console.log("abc===================", y)
@@ -1340,11 +1423,10 @@ $(document).ready(function () {
         }
     });
 
-    $(".next").click(function (e) {
-        if (stopNext == false) {
-            e.preventDefault();
-            return;
-        }
+    $("#nextBtn, #nextBtn2").click(function (e) {
+        e.preventDefault(); // Prevent default form submission behavior
+        e.stopPropagation();
+
         current_fs = $(this).parent();
         next_fs = $(this).parent().next();
 
@@ -1370,8 +1452,8 @@ $(document).ready(function () {
         setProgressBar(++current);
     });
 
-    $(".previous").click(function () {
-
+    $(document).on("click", ".next", function (e) {
+        e.preventDefault();
         current_fs = $(this).parent();
         previous_fs = $(this).parent().prev();
 
@@ -1473,7 +1555,7 @@ $(document).ready(function () {
                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
             }
         });
-        // }         
+        // }
     });
 
     // POST METHOD FOR TENANT ALLOCATION
@@ -1707,7 +1789,7 @@ $(document).ready(function () {
                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
             }
         });
-        // }         
+        // }
     });
 
 });
@@ -1749,9 +1831,9 @@ function editAllocatedTenant(id) {
                     $('#id_tenant_period_to_Edit').val(item.tenant_to_date);
                     // htmlContent =+ `
                     // <h1>EDIT============</h1>
-                    // `;            
+                    // `;
                     // $('#allocateTenantForm').html(htmlContent);
-                    // SET THE VALUE OF DOC HERE 
+                    // SET THE VALUE OF DOC HERE
                 });
             }
         },
@@ -2098,7 +2180,7 @@ function addWing() {
 //         // incNominee++;
 //         // clonedNominee.id = "";
 //         let htmlContent = '';
-//         htmlContent += 
+//         htmlContent +=
 //         `
 //                     <div class="row abcd" id="cloneNominee">
 //                       <!-- <center>h3</center> -->
@@ -2211,7 +2293,7 @@ function addWing() {
 //     }else{
 //         console.log("ELSE==========================")
 //         let htmlContent = '';
-//         htmlContent += 
+//         htmlContent +=
 //         `
 //                     <div class="row abcd" id="cloneNominee">
 //                       <!-- <center>h3</center> -->
@@ -2573,8 +2655,8 @@ function selectChange(idVal, idValInput, chargableAmount) {
         if (!document.getElementById('new_' + chargableAmount)) {
             var inputElement = $(`
         <input type="text" class="w-100 sty-inp" id="new_${chargableAmount}" />
-        <label for="" class="sty-label">Charge Amount</label>       
-        <small id="Error_new_${chargableAmount}" class="error-message"></small>             
+        <label for="" class="sty-label">Charge Amount</label>
+        <small id="Error_new_${chargableAmount}" class="error-message"></small>
         `);
 
             // Append the input element to the container
@@ -2602,7 +2684,7 @@ function selectChange(idVal, idValInput, chargableAmount) {
 //         $("#hidden_charge_amount").show();
 //         var inputElement = $(`
 //         <input type="text" class="w-100 sty-inp" id="parkingLot0" />
-//         <label for="" class="sty-label">Parking Lot</label>                    
+//         <label for="" class="sty-label">Parking Lot</label>
 //         `);
 
 //         // Append the input element to the container
@@ -2850,7 +2932,7 @@ function updateMemberDetails(id) {
                             </h2>
                             <div id="collapse${item.member_id}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    
+
                                     <div class="row mt-3">
                                         <div class="col-lg-3">
                                             <p class="ms-3 view-label">Member's Name</p>
@@ -3000,7 +3082,7 @@ function updateMemberDetails(id) {
                                             </div>
                                         </div>
                                     </div>
-                                
+
                                     <hr class="m-0 p-0">
                     `
 
@@ -3446,7 +3528,7 @@ function updateMemberDetails(id) {
                 if (vehicleData && vehicleData.length > 0) {
                     vehicleData.forEach(function (item) {
                         vehicleContent +=
-                            ` 
+                            `
                         <h4>=============== Vehicle Detail=====================</h4>
                             <div class="col-lg-6">
                                 <div class="row">
@@ -3551,7 +3633,7 @@ function updateMemberDetails(id) {
                     });
                 } else {
                     vehicleContent +=
-                        ` 
+                        `
                             <div class="col-lg-6">
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -3794,7 +3876,7 @@ let memberNomineeObj = [];
 //     //                                                 <select class="w-100 sty-inp form-control" id="id_member_state${memberIdIncCount}" name="member_state">
 //     //                                                     ${['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh'].map(option =>
 //     //                         `<option value="${option}" ${option === item.member_state ? 'selected' : ''}>${option}</option>`
-//     //                     ).join('')}                                                        
+//     //                     ).join('')}
 //     //                                                 </select>
 //     //                                                 <label for="id_member_state" class="sty-label">State</label>
 //     //                                                 <small id="id_member_state${memberIdIncCount}_Error" class="error-message"></small>
@@ -4054,7 +4136,7 @@ let memberNomineeObj = [];
 //     //                                     </div>
 //     //                                 </div>
 //     //                             </form>
-//     //                         </div> 
+//     //                         </div>
 
 //     //                         `
 //     //                         nomineeForm.push('nomineeForm' + nomineeIdIncCount + 'member' + item.member_id)
@@ -4091,7 +4173,7 @@ let memberNomineeObj = [];
 //     //                     </div>
 //     //                     <div class="btn-grp d-flex justify-content pb-3 ps-4 pe-4" style="justify-content: space-between;">
 //     //                         <button type="button" id="newNominee_${item.member_id}" class="btn btn-primary" onclick="addNomineeOnEditForm('cloneNominee_${item.member_id}', 'newNominee_${item.member_id}', ${item.member_id}, ${nomineeIdIncCount})"> Add Nominee</button>
-//     //                     </div>                 
+//     //                     </div>
 //     //                     </form>
 //     //                     </div>
 //     //                     </div>
@@ -4344,7 +4426,7 @@ let memberNomineeObj = [];
 //     //                         `
 //     //                     <form action="">
 //     //                         <h1>===============VEHICLE=========</h1>
-//     //                         <div id="newVehicle">                                    
+//     //                         <div id="newVehicle">
 //     //                             <div class="row mt-3" id="cloneVehicle">
 //     //                             <div class="col-lg-4 mb-3">
 //     //                                 <div class="w-100 sty-input-wrapper">
@@ -4409,7 +4491,7 @@ let memberNomineeObj = [];
 //     //                         </div>
 //     //                         <div class="row" id="newVehicleContainer"></div>
 //     //                         </div>
-//     //                     </form> 
+//     //                     </form>
 
 //     //                     `;
 //     //                 });
@@ -4744,7 +4826,7 @@ function flatHistoryDetails(id) {
                         <div class="tab-content w-100" id="myTabContent">
                             <div class="tab-pane fade show active" id="member-history-tab-pane" role="tabpanel"
                                 aria-labelledby="member-tab" tabindex="0">
-                                <div id="member-history-accordian"> 
+                                <div id="member-history-accordian">
                                     <div class="accordion">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
@@ -5218,8 +5300,8 @@ function flatHistoryDetails(id) {
                                                                     </div>
 
                                                                     <hr class="m-0 p-0">
-                                                                    
-                                                                    
+
+
                         `
                         sub_member.nominee_Details.forEach(function (sub_nominee) {
                             htmlContent +=
@@ -5382,7 +5464,7 @@ function flatHistoryDetails(id) {
                     });
                     htmlContent +=
                         `
-                                                                
+
                                                             </div>
 
                                                         </div>
@@ -5549,7 +5631,7 @@ function editMemberDetails(id) {
 
 // HOUSE HELP
 new Vue({
-    el: '#househelpcreation',
+    el: '#househelpcreationForm',
     data: {
         formData: {
             house_help_name: '',
@@ -5592,9 +5674,9 @@ new Vue({
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
             axios.post('http://127.0.0.1:8000/api/househelp/', this.formData, {
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data'
                 }
-              })
+            })
                 .then(response => {
                     this.submitted = true;
                 })
@@ -5602,19 +5684,15 @@ new Vue({
                     this.errors = error.response.data
                 });
         },
-        // handleFileChange(event) {
-        //     console.log("Handling File");
-        //     if (this.$refs.house_help_pan_doc.files[0]) {
-        //         this.formData.house_help_pan_doc = this.$refs.house_help_pan_doc.files[0]
-        //     }
-        //     if (this.$refs.house_help_aadhar_doc.files[0]) {
-        //         this.formData.house_help_aadhar_doc = this.$refs.house_help_aadhar_doc.files[0]
-        //     }
-        //     if (this.$refs.other_doc.files[0]) {
-        //         this.formData.other_doc = this.$refs.other_doc.files[0];
-        //     }
-        // },
+        clearErrors() {
+            this.errors = {};
+        },
     },
+    mounted() {
+        $('#houseHelpCreation').on('hidden.bs.modal', () => {
+            this.clearErrors();
+        });
+    }
 });
 
 
@@ -5626,6 +5704,7 @@ var app = new Vue({
         },
         houseHelp: [],
         errors: {},
+        houseHelpData: {},
     },
     methods: {
         editRequestedData(id) {
@@ -5635,6 +5714,19 @@ var app = new Vue({
             axios.get(`http://127.0.0.1:8000/api/househelp/${id}/`)
                 .then(response => {
                     this.formData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        viewRequestedData(id) {
+            console.log('Clicked!', id);
+            $('#houseHelpView').modal('show');
+            axios.get(`http://127.0.0.1:8000/api/househelp/${id}/`)
+                .then(response => {
+                    // this.formData = response.data;
+                    this.houseHelpData = response.data;
+                    console.log("DATA===", response.data);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
@@ -5657,28 +5749,64 @@ var app = new Vue({
             // Append files if they are present
             if (this.$refs.house_help_pan_doc.files[0]) {
                 formData.append('house_help_pan_doc', this.$refs.house_help_pan_doc.files[0]);
-            } 
+            }
             if (this.$refs.house_help_aadhar_doc.files[0]) {
                 formData.append('house_help_aadhar_doc', this.$refs.house_help_aadhar_doc.files[0]);
             }
             if (this.$refs.other_doc.files[0]) {
                 formData.append('other_doc', this.$refs.other_doc.files[0]);
             }
-            console.log("FORMDATA==========", this.formData)
-
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
             axios.patch(`http://127.0.0.1:8000/api/househelp/${id}/`, formData, {
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data'
                 }
-              })
+            })
                 .then(response => {
                     this.submitted = true;
                 })
                 .catch(error => {
                     this.errors = error.response.data
                 });
+        },
+        submitHouseHelp() {
+            $('#houseHelpCreation').modal('show');
+            const formData = new FormData();
+            this.errors = {};
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    if (this.formData[key] !== null) {
+                        formData.append(key, this.formData[key]);
+                    }
+                }
+            }
+            if (this.$refs.house_help_pan_doc.files[0]) {
+                this.formData.house_help_pan_doc = this.$refs.house_help_pan_doc.files[0]
+            }
+            if (this.$refs.house_help_aadhar_doc.files[0]) {
+                this.formData.house_help_aadhar_doc = this.$refs.house_help_aadhar_doc.files[0]
+            }
+            if (this.$refs.other_doc.files[0]) {
+                this.formData.other_doc = this.$refs.other_doc.files[0];
+            }
+            console.log("formdata", this.formData);
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('http://127.0.0.1:8000/api/househelp/', this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                });
+        },
+        clearErrors() {
+            this.errors = {};
         },
     },
     mounted() {
@@ -5692,8 +5820,698 @@ var app = new Vue({
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
+
+        $('#houseHelpUpdation').on('hidden.bs.modal', () => {
+            this.clearErrors();
+        });
     },
 });
 
 
 
+
+// ADD HOUSE HELP ALLOCATION
+new Vue({
+    el: '#houseHelpAllocationCreation',
+    data: {
+        formData: {
+            wing_flat: '',
+            member_name: '',
+            aadhar: '',
+            pan: '',
+            name: '',
+            role: '',
+            house_help_period_from: '',
+            house_help_period_to: '',
+            // pk: '',
+        },
+        submitted: false,
+        error: null,
+        errors: {},
+        units: [],
+    },
+    methods: {
+        addHouseHelpAllocation() {
+            this.errors = {};
+            const formData = new FormData();
+            // for (const key in this.formData) {
+            //     if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+            //         if (this.formData[key] !== null) {
+            //             formData.append(key, this.formData[key]);
+            //         }
+            //     }
+            // }
+
+            // formData.append('wing_flat', this.formData.wing_flat);
+            formData.append('wing_flat', this.formData.wing_flat);
+            formData.append('member_name', this.formData.pk);
+            formData.append('aadhar', this.formData.aadhar);
+            formData.append('pan', this.formData.pan);
+            formData.append('name', this.formData.aadharPanPk);
+            formData.append('role', this.formData.role);
+            formData.append('house_help_period_from', this.formData.house_help_period_from);
+            formData.append('house_help_period_to', this.formData.house_help_period_to);
+
+            console.log("ggggggggggggggggg", this.formData.member_name);
+            // console.log("formdata", this.formData);
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('http://127.0.0.1:8000/api/househelpallocation/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                });
+        },
+        getAadharPan(event) {
+            // console.log('Input value:', event.target.value);
+            let searchValue = event.target.value.trim();
+            if (searchValue) {
+                axios.get(`http://127.0.0.1:8000/api/househelp/?search=${searchValue}`)
+                    .then(response => {
+                        if (response.data.length > 0 && response.data[0].house_help_name) {
+                            this.formData.name = response.data[0].house_help_name;
+                            this.formData.aadharPanPk = response.data[0].id;
+                        } else {
+                            this.formData.name = "Not Found";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        this.formData.name = "";
+                    });
+            } else {
+                // Set formData.name to empty or handle differently based on your requirements
+                this.formData.name = "";
+            }
+        },
+        getOwnerName(event) {
+            console.log('event====', event.target.value);
+            let selectedVal = event.target.value;
+            if (selectedVal) {
+                axios.get(`http://127.0.0.1:8000/api/members/?wing_flat__id=${selectedVal}`)
+                    .then(response => {
+                        console.log(response);
+                        if (response.data.length > 0 && response.data[0].member_name) {
+                            this.formData.member_name = response.data[0].member_name;
+                            this.formData.pk = response.data[0].id
+                            // console.log("pk=========", response.data[0].id);
+                        } else {
+                            this.formData.member_name = "Not Found";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+        },
+        clearErrors() {
+            this.errors = {};
+        },
+    },
+    mounted() {
+        // $('#houseHelpAllocationCreation').on('hidden.bs.modal', () => {
+        //     this.clearErrors();
+        // });
+
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+});
+
+
+
+
+
+// HOUSE HELP (ALLOCATION) TABLE AND EDIT
+new Vue({
+    el: '#houseHelpAllocationTableDiv',
+    data: {
+        formData: {
+        },
+        houseHelpAllocation: [],
+        errors: {},
+        houseHelpAllocationData: {},
+    },
+    methods: {
+        editRequestedData(id) {
+            console.log('Clicked!', id);
+            $('#houseHelpAllocationUpdation').modal('show');
+            var self = this;
+            axios.get(`http://127.0.0.1:8000/api/househelpallocation/${id}/`)
+                .then(response => {
+                    this.formData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        viewRequestedData(id) {
+            console.log('Clicked!', id);
+            $('#houseHelpAllocationView').modal('show');
+            axios.get(`http://127.0.0.1:8000/api/househelpallocation/${id}/`)
+                .then(response => {
+                    this.houseHelpAllocationData = response.data;
+                    console.log("view========", response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        submitHoseHelpAllocationForm(id) {
+            this.errors = {};
+            const formData = new FormData();
+            formData.append('transfer_to_folio_no', this.formData.transfer_to_folio_no);
+            formData.append('house_help_name', this.formData.house_help_name)
+            formData.append('house_help_pan_number', this.formData.house_help_pan_number)
+            formData.append('house_help_contact', this.formData.house_help_contact)
+            formData.append('house_help_aadhar_number', this.formData.house_help_aadhar_number)
+            formData.append('house_help_address', this.formData.house_help_address)
+            formData.append('house_help_city', this.formData.house_help_city)
+            formData.append('house_help_state', this.formData.house_help_state)
+            formData.append('house_help_pin', this.formData.house_help_pin)
+            formData.append('other_document_specifications', this.formData.other_document_specifications)
+
+            // Append files if they are present
+            if (this.$refs.house_help_pan_doc.files[0]) {
+                formData.append('house_help_pan_doc', this.$refs.house_help_pan_doc.files[0]);
+            }
+            if (this.$refs.house_help_aadhar_doc.files[0]) {
+                formData.append('house_help_aadhar_doc', this.$refs.house_help_aadhar_doc.files[0]);
+            }
+            if (this.$refs.other_doc.files[0]) {
+                formData.append('other_doc', this.$refs.other_doc.files[0]);
+            }
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.patch(`http://127.0.0.1:8000/api/househelpallocation/${id}/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                });
+        },
+        submitHouseHelp() {
+            $('#houseHelpCreation').modal('show');
+            const formData = new FormData();
+            this.errors = {};
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    if (this.formData[key] !== null) {
+                        formData.append(key, this.formData[key]);
+                    }
+                }
+            }
+            if (this.$refs.house_help_pan_doc.files[0]) {
+                this.formData.house_help_pan_doc = this.$refs.house_help_pan_doc.files[0]
+            }
+            if (this.$refs.house_help_aadhar_doc.files[0]) {
+                this.formData.house_help_aadhar_doc = this.$refs.house_help_aadhar_doc.files[0]
+            }
+            if (this.$refs.other_doc.files[0]) {
+                this.formData.other_doc = this.$refs.other_doc.files[0];
+            }
+            console.log("formdata", this.formData);
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('http://127.0.0.1:8000/api/househelpallocation/', this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.errors = error.response.data
+                });
+        },
+        clearErrors() {
+            this.errors = {};
+        },
+    },
+    mounted() {
+        axios.get('http://127.0.0.1:8000/api/househelpallocation/')
+            .then(response => {
+                this.houseHelpAllocation = response.data;
+                console.log("view all", this.houseHelpAllocation)
+                $(document).ready(function () {
+                    $('#example').DataTable();
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+        $('#houseHelpAllocationUpdation').on('hidden.bs.modal', () => {
+            this.clearErrors();
+        });
+    },
+});
+
+
+
+
+// Bank
+new Vue({
+    el: '#bankContainer',
+    data: {
+        forms: [
+            {
+                beneficiary_code: '',
+                beneficiary_name: '',
+                beneficiary_acc_number: '',
+                beneficiary_bank: '',
+                is_primary: ''
+            }
+        ],
+        errors: [],
+    },
+    methods: {
+        addForm() {
+            // axios.get('http://127.0.0.1:8000/api/getjson/', this.forms, {})
+            //     .then(response => {
+            //         console.log('Form:', response.data);
+            //     })
+            //     .catch(errors => {
+            //         console.error('Error submitting form data:', errors);
+            //         // this.errors = errors.response.data.errors;
+            //     });
+            this.forms.push({
+                // society_creation: 49,
+                beneficiary_code: '',
+                beneficiary_name: '',
+                beneficiary_acc_number: '',
+                beneficiary_bank: '',
+                is_primary: ''
+            });
+            const newIndex = this.forms.length - 1;
+            this.errors = this.errors.filter(error => error.index !== newIndex);
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitBank() {
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            axios.post('http://127.0.0.1:8000/api/bank-creation/', this.forms, {})
+                .then(response => {
+                    console.log('Form data submitted successfully:', response.data);
+                    this.nextAction();
+                })
+                .catch(errors => {
+                    console.error('Error submitting form data:', errors);
+                    this.errors = errors.response.data.errors;
+                });
+        },
+        nextAction() {
+            console.log('Form data submitted successfully. Proceeding to the next action.');
+            $("#nextBtn2").trigger("click");
+        },
+        getFormNumber: index => index + 1
+    }
+});
+
+
+
+
+new Vue({
+    el: '#wingCreation',
+    data: {
+        forms: [
+            {
+                wing: '',
+                flat: ''
+            }
+        ],
+        errors: [],
+    },
+    methods: {
+        addForm() {
+            this.forms.push({
+                wing: '',
+                flat: ''
+            });
+            const newIndex = this.forms.length - 1;
+            this.errors = this.errors.filter(error => error.index !== newIndex);
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitWingFlat() {
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            axios.post('http://127.0.0.1:8000/api/flat-wing/', this.forms, {})
+                .then(response => {
+                    console.log('Form data submitted successfully:', response.data);
+                })
+                .catch(errors => {
+                    console.error('Error submitting form data:', errors);
+                    this.errors = errors.response.data.errors;
+                });
+        },
+        getFormNumber: index => index + 1
+    }
+});
+
+
+
+
+
+new Vue({
+    el: '#societyDocumentsContainer',
+    data: {
+        formData: {
+        },
+        forms: [
+            {
+                // other_document: '',
+                other_document_specification: ''
+            }
+        ],
+        errors: [],
+        required_docs_errors: {},
+    },
+    methods: {
+        addForm() {
+            this.forms.push({
+                // other_document: '',
+                other_document_specification: ''
+            });
+            const newIndex = this.forms.length - 1;
+            this.errors = this.errors.filter(error => error.index !== newIndex);
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitBothDocs() {
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            // SAVE REQUIRED DOC
+
+            // this.required_docs_errors = {};
+            // const formData = new FormData();
+
+            // if (this.$refs.completion_cert.files[0]) {
+            //     formData.append('completion_cert', this.$refs.completion_cert.files[0]);
+            // }
+            // if (this.$refs.occupancy_cert.files[0]) {
+            //     formData.append('occupancy_cert', this.$refs.occupancy_cert.files[0]);
+            // }
+            // if (this.$refs.deed_of_conveyance.files[0]) {
+            //     formData.append('deed_of_conveyance', this.$refs.deed_of_conveyance.files[0]);
+            // }
+            // if (this.$refs.society_by_law.files[0]) {
+            //     formData.append('society_by_law', this.$refs.society_by_law.files[0]);
+            // }
+            // if (this.$refs.soc_other_document.files[0]) {
+            //     formData.append('soc_other_document', this.$refs.soc_other_document.files[0]);
+            // }
+            // formData.append('soc_other_document_spec', this.formData.soc_other_document_spec)
+
+            // axios.post('http://127.0.0.1:8000/api/society-required-docs/', formData, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            //     .then(response => {
+            //         this.submitted = true;
+            //     })
+            //     .catch(error => {
+            //         this.required_docs_errors = error.response.data
+            //     });
+
+            // SAVE OTHER DOCS
+
+            // CALL AJAX HERE .........................................
+
+            // console.log("FORMS======", this.forms);
+            // const formData = new FormData();
+
+            // Append each form data to FormData object
+            // this.forms.forEach((form, index) => {
+            //     console.log("dddddddddddddd==", form['other_document']);
+            //     formData.append('other_document', form['other_document']);
+            //     formData.append('other_document_specification', form['other_document_specification']);
+            // });
+
+            // console.log("FORMS======", formData);
+
+
+            // axios.post('http://127.0.0.1:8000/api/society-other-docs/', this.forms, {})
+            //     .then(response => {
+            //         console.log('Form data submitted successfully:', response.data);
+            //     })
+            //     .catch(errors => {
+            //         console.error('Error submitting form data:', errors);
+            //         this.errors = errors.response.data.errors;
+            //     });
+        },
+        handleFileUpload(event, index) {
+            console.log("file===========");
+            const selectedFile = event.target.files[0];
+            console.log('Selected File:', selectedFile);
+
+            if (selectedFile) {
+                this.forms[index]['other_document'] = selectedFile;
+            }
+            console.log("again", this.forms[index]);
+        },
+        getFormNumber: index => index + 1
+    }
+});
+
+
+
+
+// // Home Loan
+// new Vue({
+//     el: '#editHomeLoanDiv',
+//     data: {
+//         // SET EVERYTHING AS BLANK, FOR FILE SET IT TO NULL
+//         formData: {
+//             wing_flat: '',
+//             folio_number: '',
+//             shares_date: '',
+//             application_number: '',
+//             shares_certificate: '',
+//             allotment_number: '',
+//             shares_from: '',
+//             shares_to: '',
+//             shares_transfer_date: '',
+//             total_amount_received: '',
+//             total_amount_date: '',
+//             transfer_from_folio_no: '',
+//             transfer_to_folio_no: '',
+//         },
+//         submitted: false,
+//         error: null,
+//         errors: {},
+//     },
+//     mounted() {
+//         // Fetch data when the component is mounted
+//         this.fetchData(); // No need to pass id here since it's not provided
+//     },
+//     methods: {
+//         fetchData() {
+//             const id = 10; // Set default id if not provided by the caller
+//             axios.get(`http://127.0.0.1:8000/api/shares/${id}/`) // Use id to construct URL
+//                 .then(response => {
+//                     console.log(response.data);
+//                     this.formData = response.data;
+//                 })
+//                 .catch(error => {
+//                     console.error('Error fetching data:', error);
+//                 });
+//         },
+//         submitForm() {
+//             this.errors = {};
+//             const formData = new FormData();
+//             for (const key in this.formData) {
+//                 if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+//                     console.log(key);
+//                     formData.append(key, this.formData[key]);
+//                 }
+//             }
+//             axios.defaults.xsrfCookieName = 'csrftoken';
+//             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+//             axios.patch('http://127.0.0.1:8000/api/shares/10/', formData)
+//                 .then(response => {
+//                     console.log('Form submitted successfully:', response.data);
+//                     this.submitted = true;
+//                 })
+//                 .catch(error => {
+//                     this.errors = error.response.data
+//                     console.log("Error: ->", error.response.data.folio_number[0]);
+//                 });
+//         },
+//         handleFileChange() {
+//             console.log("Handling File");
+//         }
+//     },
+// });
+
+
+
+
+// ADD MEMBER
+// new Vue({
+//     el: '#memberCreationDiv',
+//     data: {
+//         formData: {
+//         },
+//         forms: [
+//             {
+//                 // other_document: '',
+//                 other_document_specification: ''
+//             }
+//         ],
+//         errors: [],
+//         required_docs_errors: {},
+//     },
+//     methods: {
+//         addForm() {
+//             this.forms.push({
+//                 // other_document: '',
+//                 other_document_specification: ''
+//             });
+//             const newIndex = this.forms.length - 1;
+//             this.errors = this.errors.filter(error => error.index !== newIndex);
+//         },
+//         removeForm(index) {
+//             this.forms.splice(index, 1);
+//         },
+//         hasError(index, field) {
+//             return this.errors.some(error => error.index === index && error[field]);
+//         },
+//         getError(index, field) {
+//             const error = this.errors.find(error => error.index === index);
+//             return error ? error[field][0] : '';
+//         },
+//         submitBothDocs() {
+//             axios.defaults.xsrfCookieName = 'csrftoken';
+//             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+//             // SAVE REQUIRED DOC
+
+//             // this.required_docs_errors = {};
+//             // const formData = new FormData();
+
+//             // if (this.$refs.completion_cert.files[0]) {
+//             //     formData.append('completion_cert', this.$refs.completion_cert.files[0]);
+//             // }
+//             // if (this.$refs.occupancy_cert.files[0]) {
+//             //     formData.append('occupancy_cert', this.$refs.occupancy_cert.files[0]);
+//             // }
+//             // if (this.$refs.deed_of_conveyance.files[0]) {
+//             //     formData.append('deed_of_conveyance', this.$refs.deed_of_conveyance.files[0]);
+//             // }
+//             // if (this.$refs.society_by_law.files[0]) {
+//             //     formData.append('society_by_law', this.$refs.society_by_law.files[0]);
+//             // }
+//             // if (this.$refs.soc_other_document.files[0]) {
+//             //     formData.append('soc_other_document', this.$refs.soc_other_document.files[0]);
+//             // }
+//             // formData.append('soc_other_document_spec', this.formData.soc_other_document_spec)
+
+//             // axios.post('http://127.0.0.1:8000/api/society-required-docs/', formData, {
+//             //         headers: {
+//             //             'Content-Type': 'multipart/form-data'
+//             //         }
+//             //     })
+//             //     .then(response => {
+//             //         this.submitted = true;
+//             //     })
+//             //     .catch(error => {
+//             //         this.required_docs_errors = error.response.data
+//             //     });
+
+//             // SAVE OTHER DOCS
+
+//             // CALL AJAX HERE .........................................
+
+//             // console.log("FORMS======", this.forms);
+//             // const formData = new FormData();
+
+//             // Append each form data to FormData object
+//             // this.forms.forEach((form, index) => {
+//             //     console.log("dddddddddddddd==", form['other_document']);
+//             //     formData.append('other_document', form['other_document']);
+//             //     formData.append('other_document_specification', form['other_document_specification']);
+//             // });
+
+//             // console.log("FORMS======", formData);
+
+
+//             // axios.post('http://127.0.0.1:8000/api/society-other-docs/', this.forms, {})
+//             //     .then(response => {
+//             //         console.log('Form data submitted successfully:', response.data);
+//             //     })
+//             //     .catch(errors => {
+//             //         console.error('Error submitting form data:', errors);
+//             //         this.errors = errors.response.data.errors;
+//             //     });
+//         },
+//         handleFileUpload(event, index) {
+//             console.log("file===========");
+//             const selectedFile = event.target.files[0];
+//             console.log('Selected File:', selectedFile);
+
+//             if (selectedFile) {
+//                 this.forms[index]['other_document'] = selectedFile;
+//             }
+//             console.log("again", this.forms[index]);
+//         },
+//         getFormNumber: index => index + 1
+//     }
+// });
+
+
+
+
+function showLoader() {
+    document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader() {
+    document.getElementById("loader").classList.add("hidden");
+}

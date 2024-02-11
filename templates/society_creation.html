@@ -25,56 +25,49 @@
                                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                             </div> <br> fieldsets -->
                             <fieldset>
-                                <div class="">
-                                    <form id="Societyform" enctype="multipart/form-data">
-                                        {% csrf_token %}
+                                <div id="addSociety">
+                                    {% verbatim %}
+                                    <form enctype="multipart/form-data">
                                         <div class="row p-2">
                                             <div class="col-lg-4">
                                                 <div class="mb-3 w-100 sty-input-wrapper">
-                                                    <input class="w-100 sty-inp" type="text" id="id_society_name"
-                                                        placeholder="">
-                                                        <!-- {{ form.society_name }} -->
-                                                    <label for="id_society_name" class="sty-label">Society Name</label>
-                                                    <small id="id_society_name_Error" class="error-message"></small>
+                                                    <input class="w-100 sty-inp" type="text" v-model="formData.society_name" :style="{ borderColor: errors.society_name ? 'red' : '' }">
+                                                    <label class="sty-label">Society Name</label>
+                                                    <span v-if="errors.society_name" class="error">{{ errors.society_name[0] }}</span>
+                                                    <span v-else></span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
                                                 <div class="mb-3 w-100 sty-input-wrapper">
-
-                                                    <input class="w-100 sty-inp" type="email" id="id_admin_email"
-                                                        placeholder="">
-                                                    <!-- {{ form.admin_email }} -->
-                                                    <label for="id_admin_email" class="sty-label"> Administrator Email
+                                                    <input class="w-100 sty-inp" type="text" v-model="formData.admin_email" :style="{ borderColor: errors.admin_email ? 'red' : '' }">
+                                                    <label class="sty-label"> Administrator Email
                                                     </label>
-                                                    <small id="id_admin_email_Error" class="error-message"></small>
+                                                    <span v-if="errors.admin_email" class="error">{{ errors.admin_email[0] }}</span>
+                                                    <span v-else></span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
                                                 <div class="mb-3 w-100 sty-input-wrapper">
-                                                     <input class="w-100 sty-inp" type="email" id="id_alternate_email"
-                                                        placeholder="">
-                                                    <!-- {{ form.alternate_email }} -->
-                                                    <label for="id_alternate_email" class="sty-label">Alternate Email</label>
-                                                    <small id="id_alternate_email_Error" class="error-message"></small>
+                                                     <input class="w-100 sty-inp" type="text" v-model="formData.alternate_email" :style="{ borderColor: errors.alternate_email ? 'red' : '' }">
+                                                    <label class="sty-label">Alternate Email</label>
+                                                    <span v-if="errors.alternate_email" class="error">{{ errors.alternate_email[0] }}</span>
+                                                    <span v-else></span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="mb-2">
-
                                                     <div class="input-group">
                                                         <div class="firstinp w-50 sty-input-wrapper">
-                                                            <input class="w-100 sty-inp" type="text" id="id_registration_number"
-                                                                placeholder="">
-                                                                {% comment %} {{ form.registration_number }} {% endcomment %}
+                                                            <input class="w-100 sty-inp" type="number" id="id_registration_number" v-model="formData.registration_number" :style="{ borderColor: errors.registration_number ? 'red' : '' }">
                                                             <label for="id_registration_number" class="sty-label">Registration Number</label>
-                                                            <small id="id_registration_number_Error" class="error-message"></small>
+                                                            <span v-if="errors.registration_number" class="error">{{ errors.registration_number[0] }}</span>
+                                                            <span v-else></span>
                                                         </div>
                                                         <div class="secinp w-50 d-flex">
                                                                 <div class="fileinp">
-                                                                    <input id="id_registration_doc" type="file" class="sty-inp form-control" style="color: #2b96f1 !important;"
-                                                                        name="file" />
-                                                                        {% comment %} {{ form.registration_doc }} {% endcomment %}
-                                                                        <small class="float-right" id="id_registration_doc_Error" class="error-message"></small>
+                                                                    <input type="file" class="sty-inp form-control" style="color: #2b96f1 !important;" ref="registration_doc" :style="{ borderColor: errors.registration_doc ? 'red' : '' }" />
+                                                                    <span v-if="errors.registration_doc" class="error">{{ errors.registration_doc[0] }}</span>
+                                                                    <span v-else></span>
                                                                 </div>
                                                                 <div class="prev">
                                                                     <button type="button" class="sty-inp form-control"
@@ -89,12 +82,10 @@
                                             <div class="col-lg-4">
                                                 <div class="mb-3 sty-input-wrapper w-100">
 
-                                                    <input class="w-100 sty-inp" type="number" id="id_admin_mobile_number"
-                                                        placeholder="">
-                                                        <!-- {{ form.admin_mobile_number }} -->
-                                                    <label for="id_admin_mobile_number" class="sty-label">Administrator Mobile Number
-                                                    </label>
-                                                    <small id="id_admin_mobile_number_Error" class="error-message"></small>
+                                                    <input class="w-100 sty-inp" type="number" v-model="formData.admin_mobile_number" :style="{ borderColor: errors.admin_mobile_number ? 'red' : '' }">
+                                                    <label class="sty-label">Administrator Mobile Number</label>
+                                                    <span v-if="errors.admin_mobile_number" class="error">{{ errors.admin_mobile_number[0] }}</span>
+                                                    <span v-else></span>
                                                 </div>
                                             </div>
 
@@ -102,18 +93,16 @@
                                                 <div class="mb-2">
                                                     <div class="input-group">
                                                         <div class="firstinp w-50 sty-input-wrapper">
-                                                            <input class="w-100 sty-inp" type="text" id="id_pan_number"
-                                                                placeholder="">
-                                                                {% comment %} {{ form.pan }} {% endcomment %}
-                                                            <label for="id_pan_number" class="sty-label">PAN Number</label>
-                                                            <small id="id_pan_number_Error" class="error-message"></small>
+                                                            <input class="w-100 sty-inp" type="number" v-model="formData.pan_number" :style="{ borderColor: errors.pan_number ? 'red' : '' }">
+                                                            <label class="sty-label">PAN Number</label>
+                                                            <span v-if="errors.pan_number" class="error">{{ errors.pan_number[0] }}</span>
+                                                            <span v-else></span>
                                                         </div>
                                                         <div class="secinp w-50 d-flex">
                                                                 <div class="fileinp">
-                                                                    <input id="id_pan_number_doc" type="file" class="sty-inp form-control" style="color: #2b96f1 !important;"
-                                                                        name="file" />
-                                                                        {% comment %} {{ form.pan_doc }} {% endcomment %}
-                                                                        <small class="float-right" id="id_pan_number_doc_Error" class="error-message"></small>
+                                                                    <input type="file" class="sty-inp form-control" style="color: #2b96f1 !important;" ref="pan_number_doc" :style="{ borderColor: errors.pan_number_doc ? 'red' : '' }" />
+                                                                    <span v-if="errors.pan_number_doc" class="error">{{ errors.pan_number_doc[0] }}</span>
+                                                                    <span v-else></span>
                                                                 </div>
                                                                 <div class="prev">
                                                                     <button type="button" class="sty-inp form-control"
@@ -121,51 +110,32 @@
                                                                         <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
                                                                     </button>
                                                                 </div>
-
-                                                                <!-- <input class="form-control" type="number" id="registraionNumber"
-                                                            placeholder="Enter Society's Registration Number" required="">
-                                                            <label for="file-input" style="border: 1px solid grey; padding: 7px; background-color: #808080; color: #fff; cursor: pointer;">
-                                                                <i class="fa-solid fa-paperclip fa-xl"></i>
-                                                            </label> -->
-
-
-                                                                <!-- <i class="fa-solid fa-eye"></i>
-                                                                    <input type="button" class="form-control"  onclick="PreviewImage();" /> -->
                                                         </div>
-
-                                                        <!-- <i class="fa-solid fa-paperclip fa-xl"></i>-->
-                                                        </label>
-                                                        <!-- <input id="file-input" type="file" style="display: none;"> -->
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
                                                 <div class="mb-3 w-100 sty-input-wrapper">
-
-                                                    <input class="sty-inp w-100" type="number" id="id_alternate_mobile_number"
-                                                        placeholder="">
-                                                        <!-- {{ form.alternate_mobile_number }} -->
-                                                    <label for="id_alternate_mobile_number" class="sty-label">Alternate Mobile Number</label>
-                                                    <small id="id_alternate_mobile_number_Error" class="error-message"></small>
+                                                    <input class="sty-inp w-100" type="number" v-model="formData.alternate_mobile_number" :style="{ borderColor: errors.alternate_mobile_number ? 'red' : '' }">
+                                                    <label class="sty-label">Alternate Mobile Number</label>
+                                                    <span v-if="errors.alternate_mobile_number" class="error">{{ errors.alternate_mobile_number[0] }}</span>
+                                                    <span v-else></span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="mb-2">
                                                     <div class="input-group">
                                                         <div class="firstinp w-50 sty-input-wrapper">
-                                                            <input class="form-control sty-inp" type="text" id="id_gst_number"
-                                                                placeholder="">
-                                                                <!-- {{ form.gst_number }} -->
-                                                            <label for="id_gst_number" class="form-label sty-label">GST Number</label>
-                                                            <small id="id_gst_number_Error" class="error-message"></small>
+                                                            <input class="form-control sty-inp" type="number" v-model="formData.gst_number" :style="{ borderColor: errors.gst_number ? 'red' : '' }" />
+                                                            <label class="form-label sty-label">GST Number</label>
+                                                            <span v-if="errors.gst_number" class="error">{{ errors.gst_number[0] }}</span>
+                                                            <span v-else></span>
                                                         </div>
                                                         <div class="secinp w-50 d-flex">
                                                                 <div class="fileinp">
-                                                                    <input id="id_gst_number_doc" type="file" class="form-control sty-inp" style="color: #2b96f1 !important;"
-                                                                        name="file" />
-                                                                    <small id="id_gst_number_doc_Error" class="error-message"></small>
-                                                                        {% comment %} {{ form.gst_doc }} {% endcomment %}
+                                                                    <input type="file" class="form-control sty-inp" style="color: #2b96f1 !important;" ref="gst_number_doc" :style="{ borderColor: errors.gst_number_doc ? 'red' : '' }" />
+                                                                    <span v-if="errors.gst_number_doc" class="error">{{ errors.gst_number_doc[0] }}</span>
+                                                                    <span v-else></span>
                                                                 </div>
                                                                 <div class="prev">
                                                                     <button type="button" class="form-control sty-inp"
@@ -173,19 +143,7 @@
                                                                         <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
                                                                     </button>
                                                                 </div>
-                                                                <!-- <input class="form-control" type="number" id="registraionNumber"
-                                                            placeholder="Enter Society's Registration Number" required="">
-                                                            <label for="file-input" style="border: 1px solid grey; padding: 7px; background-color: #808080; color: #fff; cursor: pointer;">
-                                                                <i class="fa-solid fa-paperclip fa-xl"></i>
-                                                            </label> -->
-
-
-                                                                <!-- <i class="fa-solid fa-eye"></i>
-                                                                    <input type="button" class="form-control"  onclick="PreviewImage();" /> -->
                                                         </div>
-                                                        <!-- <i class="fa-solid fa-paperclip fa-xl"></i>-->
-                                                        </label>
-                                                        <!-- <input id="file-input" type="file" style="display: none;"> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,247 +151,410 @@
 
                                             <div class="col-lg-4">
                                                 <div class="mb-3 w-100 sty-input-wrapper">
-                                                    <input class="w-100 sty-inp" type="number" id="id_interest"
-                                                        placeholder="">
-                                                        <!-- {{ form.interest }} -->
-                                                    <label for="id_interest" class="sty-label">Interest</label>
-                                                    <small id="id_interest_Error" class="error-message"></small>
+                                                    <input class="w-100 sty-inp" type="number" v-model="formData.interest" :style="{ borderColor: errors.interest ? 'red' : '' }" />
+                                                    <label class="sty-label">Interest</label>
+                                                    <span v-if="errors.interest" class="error">{{ errors.interest[0] }}</span>
+                                                    <span v-else></span>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-12 mb-3">
                                                 <div class="row">
                                                     <div class="col-lg-6  sty-input-wrapper">
-
-                                                        <textarea name="address" id="id_society_reg_address" class="w-100 sty-inp" cols="30" rows="1"></textarea>
-                                                        <!-- {{ form.society_reg_address }} -->
-                                                        <label for="id_society_reg_address" class="sty-label">Society's Registered Address</label>
-                                                        <small id="id_society_reg_address_Error" class="error-message"></small>
+                                                        <textarea v-model="formData.society_reg_address" class="w-100 sty-inp" cols="30" rows="1" :style="{ borderColor: errors.society_reg_address ? 'red' : '' }"></textarea>
+                                                        <label class="sty-label">Society's Registered Address</label>
+                                                        <span v-if="errors.society_reg_address" class="error">{{ errors.society_reg_address[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="col-lg-2 sty-input-wrapper">
-
-                                                        <select name="state" id="id_socity_state" class="w-100 sty-inp">
-                                                            {% for key, value in state_names.items %}
-                                                                <option value="{{ key }}">{{ value }}</option>
-                                                            {% endfor %}
+                                                        <select class="w-100 sty-inp form-control" v-model="formData.society_city" :style="{ borderColor: errors.society_city ? 'red' : '' }">
+                                                            <option value="#">Select State</option>
+                                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                            <option value="Andaman and Nicobar ">Andaman and Nicobar </option>
+                                                            <option value="Islands">Islands</option>
+                                                            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                                            <option value="Daman and Diu">Daman and Diu</option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Ladakh">Ladakh</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
                                                         </select>
-
-                                                        <label for="id_socity_state" class="sty-label">State</label>
-                                                        <small id="id_socity_state_Error" class="error-message"></small>
+                                                        <label class="sty-label">State</label>
+                                                        <span v-if="errors.society_city" class="error">{{ errors.society_city[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="col-lg-2 sty-input-wrapper">
-
-                                                        <select name="state" id="id_society_city" class="w-100 sty-inp">
-                                                            {% for key, value in city_names.items %}
-                                                                <option value="{{ key }}">{{ value }}</option>
-                                                            {% endfor %}
+                                                        <select class="w-100 sty-inp form-control" v-model="formData.socity_state" :style="{ borderColor: errors.socity_state ? 'red' : '' }">
+                                                            <option value="#">Select State</option>
+                                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                            <option value="Andaman and Nicobar ">Andaman and Nicobar </option>
+                                                            <option value="Islands">Islands</option>
+                                                            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                                            <option value="Daman and Diu">Daman and Diu</option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Ladakh">Ladakh</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
                                                         </select>
-                                                        <label for="id_society_city" class="sty-label">City</label>
-                                                        <small id="id_society_city_Error" class="error-message"></small>
+                                                        <label class="sty-label">City</label>
+                                                        <span v-if="errors.socity_state" class="error">{{ errors.socity_state[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="col-lg-2 sty-input-wrapper">
-
-                                                        <input type="number" class="w-100 sty-inp" id="id_pin_code">
-                                                        <!-- {{ form.pin_code }} -->
-                                                        <label for="id_pin_code" class="sty-label">Pin Code</label>
-                                                        <small id="id_pin_code_Error" class="error-message"></small>
+                                                        <input type="number" class="w-100 sty-inp" v-model="formData.pin_code" :style="{ borderColor: errors.pin_code ? 'red' : '' }">
+                                                        <label class="sty-label">Pin Code</label>
+                                                        <span v-if="errors.pin_code" class="error">{{ errors.pin_code[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-12 mb-2">
                                                 <div class="row">
                                                     <div class="col-lg-6 sty-input-wrapper">
-
-                                                        <textarea name="address" id="id_society_corr_reg_address" class="w-100 sty-inp" cols="30"
-                                                            rows="1"></textarea>
-                                                            <!-- {{ form.society_corr_reg_address }} -->
-                                                        <label for="id_society_corr_reg_address" class="sty-label">Society's Correspondence Address
-                                                        </label>
-                                                        <small id="id_society_corr_reg_address_Error" class="error-message"></small>
+                                                        <textarea v-model="formData.society_corr_reg_address" class="w-100 sty-inp" cols="30" rows="1"></textarea>
+                                                        <label class="sty-label">Society's Correspondence Address</label>
+                                                        <span v-if="errors.society_corr_reg_address" class="error">{{ errors.society_corr_reg_address[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="col-lg-2 sty-input-wrapper">
-                                                        <select name="state" id="id_socity_corr_state" class="w-100 sty-inp">
-                                                            {% for key, value in state_names.items %}
-                                                                <option value="{{ key }}">{{ value }}</option>
-                                                            {% endfor %}
+                                                        <select class="w-100 sty-inp form-control" v-model="formData.society_corr_city" :style="{ borderColor: errors.society_corr_city ? 'red' : '' }">
+                                                            <option value="#">Select State</option>
+                                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                            <option value="Andaman and Nicobar ">Andaman and Nicobar </option>
+                                                            <option value="Islands">Islands</option>
+                                                            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                                            <option value="Daman and Diu">Daman and Diu</option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Ladakh">Ladakh</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
                                                         </select>
-                                                        <!-- {{ form.socity_corr_state }} -->
                                                         <label for="id_socity_corr_state" class="sty-label">State</label>
-                                                        <small id="id_socity_corr_state_Error" class="error-message"></small>
+                                                        <span v-if="errors.society_corr_city" class="error">{{ errors.society_corr_city[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="col-lg-2 sty-input-wrapper">
-                                                        <select name="state" id="id_society_corr_city" class="w-100 sty-inp">
-                                                            {% for key, value in state_names.items %}
-                                                                <option value="{{ key }}">{{ value }}</option>
-                                                            {% endfor %}
+                                                        <select class="w-100 sty-inp form-control" v-model="formData.socity_corr_state" :style="{ borderColor: errors.socity_corr_state ? 'red' : '' }">
+                                                            <option value="#">Select State</option>
+                                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Bihar">Bihar</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Goa">Goa</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Haryana">Haryana</option>
+                                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                            <option value="Jharkhand">Jharkhand</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Kerala">Kerala</option>
+                                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Manipur">Manipur</option>
+                                                            <option value="Meghalaya">Meghalaya</option>
+                                                            <option value="Mizoram">Mizoram</option>
+                                                            <option value="Nagaland">Nagaland</option>
+                                                            <option value="Odisha">Odisha</option>
+                                                            <option value="Punjab">Punjab</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Sikkim">Sikkim</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Telangana">Telangana</option>
+                                                            <option value="Tripura">Tripura</option>
+                                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                            <option value="Uttarakhand">Uttarakhand</option>
+                                                            <option value="West Bengal">West Bengal</option>
+                                                            <option value="Andaman and Nicobar ">Andaman and Nicobar </option>
+                                                            <option value="Islands">Islands</option>
+                                                            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                                            <option value="Daman and Diu">Daman and Diu</option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Ladakh">Ladakh</option>
+                                                            <option value="Lakshadweep">Lakshadweep</option>
+                                                            <option value="Puducherry">Puducherry</option>
                                                         </select>
                                                         <label for="id_society_corr_city" class="sty-label">City</label>
-                                                        <small id="id_society_corr_city_Error" class="error-message"></small>
+                                                        <span v-if="errors.socity_corr_state" class="error">{{ errors.socity_corr_state[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="col-lg-2 sty-input-wrapper">
-                                                        <input type="number" class="w-100 sty-inp" id="id_pin_corr_code"
-                                                            placeholder="">
-                                                            <!-- {{ form.pin_corr_code }} -->
+                                                        <input type="number" class="w-100 sty-inp" v-model="formData.pin_corr_code" :style="{ borderColor: errors.pin_corr_code ? 'red' : '' }">
                                                         <label for="id_pin_corr_code" class="sty-label">Pin Code</label>
-                                                        <small id="id_pin_corr_code_Error" class="error-message"></small>
+                                                        <span v-if="errors.pin_corr_code" class="error">{{ errors.pin_corr_code[0] }}</span>
+                                                        <span v-else></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        {% comment %} <input type="button" id="SocSubmit" /> {% endcomment %}
+                                        <input type="button" name="next" class="action-button" value="Save" @click="addSocietyForm" />
                                     </form>
+                                    {% endverbatim %}
+                                    {% comment %} <input type="submit" value="Save & Next" /> {% endcomment %}
                                 </div>
-                                <input type="button" id="SocSubmit" name="next" class="next action-button" value="Save & Next" />
+                                <p id="nextBtn"></p>
                                 <hr>
                             </fieldset>
                             <fieldset>
-                                <div class="">
-                                    <form id="bankForm", class="form">
-                                        {% csrf_token %}
-                                        <div id="bankclonedFieldsContainer">
-                                        <div class="row p-2 mt-2">
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="mb-2 w-100 sty-input-wrapper">
-                                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_name1"
-                                                        placeholder="">
-                                                    <label for="id_beneficiary_name" class="sty-label">Beneficiary Name</label>
-                                                    <small id="id_beneficiary_name1_Error" class="error-message"></small>
-                                                </div>
-                                                <small id="beneficiaryName1_Error" class="error-message"></small>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="mb-2 w-100 sty-input-wrapper">
-                                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_code1"
-                                                        placeholder="">
-                                                    <label for="id_beneficiary_code" class="sty-label">Beneficiary IFSC Code</label>
-                                                    <small id="id_beneficiary_code1_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="mb-2 w-100 sty-input-wrapper">
-                                                    <input class="w-100 sty-inp" type="number" id="id_beneficiary_acc_number1" placeholder="">
-                                                    <label for="id_beneficiary_acc_number" class="sty-label">Beneficiary Account
-                                                        Number</label>
-                                                        <small id="id_beneficiary_acc_number1_Error" class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <div class="mb-2 w-100 sty-input-wrapper">
-                                                    <input class="w-100 sty-inp" type="text" id="id_beneficiary_bank1"
-                                                        placeholder="">
-                                                    <label for="id_beneficiary_bank" class="sty-label">Beneficiary Bank Name & Branch</label>
-                                                    <small id="id_beneficiary_bank1_Error"  class="error-message"></small>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- <div class="col-lg-4 mb-4">
-                                                <div class="mb-2 w-100 sty-input-wrapper">
-                                                <input type="checkbox" id="id_isPrimary1" name="" value="yes" class="sty-inp">
-                                                <label for="">Make primary?</label>
-                                                <small id="id_isPrimary1_Error"  class="error-message"></small>
-                                            </div> -->
-                                            <div class="col-lg-4 mb-4 gap-3 align-items-center">
-                                                <input type="checkbox" class="sty-inp" id="id_isPrimary1">
-                                                <label>Make this Primary</label>
-                                                <small class="mb-3 error-message" id="id_isPrimary1_Error"></small>
-                                            </div>
-                                    </div>
-                                    </div>
-                                    <hr>
+                                <div id="bankContainer">
+                                    {% verbatim %}
+                                        <form enctype="multipart/form-data">
+                                            <div v-for="(form, index) in forms" :key="index">
+                                                <h3>Form {{ getFormNumber(index) }}</h3>
 
-                                    <div class="" id="bankCloneContainer"></div>
-
-                                </form>
+                                                <div class="row p-2 mt-2">
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="mb-2 w-100 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp" type="text" v-model="form.beneficiary_name">
+                                                            <label class="sty-label">Beneficiary Name</label>
+                                                            <span class="error" v-if="hasError(index, 'beneficiary_name')">{{ getError(index, 'beneficiary_name') }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="mb-2 w-100 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp" type="text" v-model="form.beneficiary_code">
+                                                            <label class="sty-label">Beneficiary IFSC Code</label>
+                                                            <span class="error" v-if="hasError(index, 'beneficiary_code')">{{ getError(index, 'beneficiary_code') }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="mb-2 w-100 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp" type="number" v-model="form.beneficiary_acc_number">
+                                                            <label class="sty-label">Beneficiary Account Number</label>
+                                                            <span class="error" v-if="hasError(index, 'beneficiary_acc_number')">{{ getError(index, 'beneficiary_acc_number') }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="mb-2 w-100 sty-input-wrapper">
+                                                            <input class="w-100 sty-inp" type="text" v-model="form.beneficiary_bank">
+                                                            <label class="sty-label">Beneficiary Bank Name & Branch</label>
+                                                            <span class="error" v-if="hasError(index, 'beneficiary_bank')">{{ getError(index, 'beneficiary_bank') }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                                        <input type="checkbox" class="sty-inp" v-model="form.is_primary"/>
+                                                        <label>Make this Primary</label>
+                                                        <span class="error" v-if="hasError(index, 'is_primary')">{{ getError(index, 'is_primary') }}</span>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                                        <span @click.prevent="removeForm(index)"><i class="fa-solid fa-trash-can"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span @click.prevent="addForm" class="add-mem-btn float-start">Add Form</span>
+                                            <input type="button" class="add-mem-btn" @click="submitBank" value="Submit All Forms">
+                                            <hr>
+                                        </form>
+                                    {% endverbatim %}
                                 </div>
-                                <input type="button" onclick="addOtherBankDetail()" name="addNewDocs" class="add-mem-btn float-start" id="" value="Add Another Bank" />
-                                 <input type="button" id="bankSubmit" name="" class="next action-button" value="Save & Next" />
-                                  <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                                <p id="nextBtn2"></p>
                             </fieldset>
                             <fieldset>
+                                <div id="societyDocumentsContainer">
+                                    {% verbatim %}
+                                    <form enctype="multipart/form-data">
+                                        <div class="row p-2 mt-2">
+                                            <div class="col-lg-4 mb-3 d-flex">
 
-                                <form action="" method="" id="socDocumentForm" class="form">
-                                    {% csrf_token %}
-                                <div class="row p-2 mt-2">
-                                    <div class="col-lg-4 mb-3 d-flex">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="file" class="w-100 sty-inp form-control" ref="completion_cert">
+                                                    <label for="" class="sty-label">Completion Certificate</label>
+                                                    <span v-if="required_docs_errors.completion_cert" class="error">{{ required_docs_errors.completion_cert[0] }}</span>
+                                                    <span v-else></span>
+                                                </div>
+                                                <div class="prev">
+                                                    <button type="button" class="sty-inp form-control"
+                                                        onclick="PreviewImage('compDoc')">
+                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-3 d-flex">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="file" class="w-100 sty-inp form-control" ref="occupancy_cert">
+                                                    <label for="" class="sty-label">Occupancy Certificate</label>
+                                                    <span v-if="required_docs_errors.occupancy_cert" class="error">{{ required_docs_errors.occupancy_cert[0] }}</span>
+                                                </div>
+                                                <div class="prev">
+                                                    <button type="button" class="sty-inp form-control"
+                                                        onclick="PreviewImage('id_occupancy_cert')">
+                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-3 d-flex">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="file" class="w-100 sty-inp form-control" ref="deed_of_conveyance">
+                                                    <label for="" class="sty-label">Deed of Conveyance</label>
+                                                    <span v-if="required_docs_errors.deed_of_conveyance" class="error">{{ required_docs_errors.deed_of_conveyance[0] }}</span>
+                                                </div>
+                                                <div class="prev">
+                                                    <button type="button" class="sty-inp form-control"
+                                                        onclick="PreviewImage('id_deed_of_conveyance')">
+                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 mb-3 d-flex">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="file" class="w-100 sty-inp form-control" ref="society_by_law">
+                                                    <label for="" class="sty-label">Society Bye Laws</label>
+                                                    <span v-if="required_docs_errors.society_by_law" class="error">{{ required_docs_errors.society_by_law[0] }}</span>
+                                                </div>
+                                                <div class="prev">
+                                                    <button type="button" class="sty-inp form-control"
+                                                        onclick="PreviewImage('id_society_by_law')">
+                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mb-3 d-flex">
 
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_completion_cert">
-                                            <label for="" class="sty-label">Completion Certificate</label>
-                                            <small id="id_completion_cert_Error" class="error-message"></small>
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="file" class="w-100 sty-inp form-control" ref="soc_other_document">
+                                                    <label for="" class="sty-label">Other Documents</label>
+                                                    <span v-if="required_docs_errors.soc_other_document" class="error">{{ required_docs_errors.soc_other_document[0] }}</span>
+                                                </div>
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="text" class="w-100 sty-inp" v-model="formData.soc_other_document_spec" />
+                                                    <label for="" class="sty-label">Specify your Document</label>
+                                                    <span v-if="required_docs_errors.soc_other_document_spec" class="error">{{ required_docs_errors.soc_other_document_spec[0] }}</span>
+                                                </div>
+                                                <div class="prev">
+                                                    <button type="button" class="sty-inp form-control"
+                                                        onclick="PreviewImage('otherDoc')">
+                                                        <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="prev">
-                                            <button type="button" class="sty-inp form-control"
-                                                onclick="PreviewImage('compDoc')">
-                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3 d-flex">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_occupancy_cert">
-                                            <label for="" class="sty-label">Occupancy Certificate</label>
-                                            <small id="id_occupancy_cert_Error" class="error-message"></small>
-                                        </div>
-                                        <div class="prev">
-                                            <button type="button" class="sty-inp form-control"
-                                                onclick="PreviewImage('id_occupancy_cert')">
-                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3 d-flex">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_deed_of_conveyance">
-                                            <label for="" class="sty-label">Deed of Conveyance</label>
-                                            <small id="id_deed_of_conveyance_Error" class="error-message"></small>
-                                        </div>
-                                        <div class="prev">
-                                            <button type="button" class="sty-inp form-control"
-                                                onclick="PreviewImage('id_deed_of_conveyance')">
-                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3 d-flex">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_society_by_law">
-                                            <label for="" class="sty-label">Society Bye Laws</label>
-                                            <small id="id_society_by_law_Error" class="error-message"></small>
-                                        </div>
-                                        <div class="prev">
-                                            <button type="button" class="sty-inp form-control"
-                                                onclick="PreviewImage('id_society_by_law')">
-                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-3 d-flex">
+                                    </form>
 
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="file" class="w-100 sty-inp form-control" name="" id="id_soc_other_document">
-                                            <label for="" class="sty-label">Other Documents</label>
-                                            <small id="id_soc_other_document_Error" class="error-message"></small>
+                                    <form enctype="multipart/form-data">
+                                        <div v-for="(form, index) in forms" :key="index">
+                                            <h3>Form {{ getFormNumber(index) }}</h3>
+
+                                            <div class="row p-2 mt-2">
+                                                <div class="d-flex isVisible">
+                                                    <div class="sty-input-wrapper">
+                                                        <input type="file" class="sty-inp form-control" ref="other_document">
+                                                        <label class="sty-label">Other Document</label>
+                                                        <span class="error" v-if="hasError(index, 'other_document')">{{ getError(index, 'other_document') }}</span>
+                                                    </div>
+                                                    <div class="sty-input-wrapper">
+                                                        <input type="text" class="sty-inp form-control" v-model="form.other_document_specification" />
+                                                        <label class="sty-label">Specify your Document</label>
+                                                        <span class="error" v-if="hasError(index, 'other_document_specification')">{{ getError(index, 'other_document_specification') }}</span>
+                                                   </div>
+                                                    <button class="sty-inp mb-4" style="background: transparent;">
+                                                        <svg class="svg-inline--fa fa-eye" style="color: #2b96f1 !important;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
+                                                            <path fill="currentColor" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="sty-inp mb-4 ms-2" style="background: transparent;">
+                                                        <svg class="svg-inline--fa fa-trash-can" style="color: red !important;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash-can" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                                                            <path fill="currentColor" d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <div class="col-lg-4 mb-4 gap-3 align-items-center">
+                                                        <span @click.prevent="removeForm(index)"><i class="fa-solid fa-trash-can"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="text" name="" class="w-100 sty-inp" placeholder="" id="id_soc_other_document_spec">
-                                            <label for="" class="sty-label">Specify your Document</label>
-                                            <small id="id_soc_other_document_spec_Error" class="error-message"></small>
-                                        </div>
-                                        <div class="prev">
-                                            <button type="button" class="sty-inp form-control"
-                                                onclick="PreviewImage('otherDoc')">
-                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-7 mb-2 mt-2">
-                                        <div id="CloneContainer"></div>
-                                    </div>
+                                        <span @click.prevent="addForm" class="add-mem-btn float-start">Add Form</span>
+                                        <input type="button" class="add-mem-btn" @click="submitBothDocs" value="Submit All Forms">
+                                        <hr>
+                                    </form>
+
+
+                                    {% endverbatim %}
                                 </div>
-                            </form>
-                            <hr>
-                                <input type="button" onclick="addOtherDoc()" name="addNewDocs" class="add-mem-btn float-start" id="" value="Add Another Documents" />
-                                <input type="button" id="SocietyDocumentForm" name="next" class="next action-button" value="Save & Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                                <p id="nextBtn3"></p>
                             </fieldset>
                             <fieldset>
                                 <div class="row">
@@ -511,7 +632,7 @@
                                     <!-- <button type="submit" class="sbmt-button  ms-2" >Submit</button> -->
                                 </div>
                                 <!-- <input type="button" id="wingSubmit" name="" class="action-button" value="SAVE====" /> -->
-                                <input type="button" id="wingSubmit" name="next" class="next action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                                <input type="button" id="wingSubmit" name="next" class=" action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                             </fieldset>
                         </div>
                     </div>

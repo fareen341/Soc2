@@ -12,88 +12,132 @@
 {% verbatim %}
 <div id="app">
     <form @submit.prevent="submitForm">
-      <div v-for="(form, index) in forms" :key="index">
-        <h3>Form {{ getFormNumber(index) }}</h3>
-        <div>
-          <label>Wing/Flat:</label>
-          <input v-model="form.wing_flat" type="text">
-          <span class="error" v-if="errors">{{ errors[index] }}</span>
-          <!-- <span class="error" v-if="errors">{{ errors }}</span> -->
-          <!-- <span class="error" v-if="errors">{{ errors[index].wing_flat }}</span> -->
-          <!-- <span class="error" v-if="errors[index]?.wing_flat">{{ errors[index].wing_flat[0] }}</span> -->
+            <div>
+                <label>Wing/Flat:</label>
+                <input type="text">
+            </div>
+
+
+        <div v-for="(form, index) in forms" :key="index">
+            <h3>Form {{ getFormNumber(index) }}</h3>
+
+            <div>
+                <label>Parking Lot:</label>
+                <input v-model="form.parking_lot" type="text">
+                <span class="error" v-if="hasError(index, 'parking_lot')">{{ getError(index, 'parking_lot') }}</span>
+            </div>
+            <div>
+                <label>Vehicle Type:</label>
+                <input v-model="form.vehicle_type" type="text">
+                <span class="error" v-if="hasError(index, 'vehicle_type')">{{ getError(index, 'vehicle_type') }}</span>
+            </div>
+
+            <div>
+                <label>Vehicle Number:</label>
+                <input v-model="form.vehicle_number" type="text">
+                <span class="error" v-if="hasError(index, 'vehicle_number')">{{ getError(index, 'vehicle_number') }}</span>
+            </div>
+
+            <div>
+                <label>Vehicle Brand:</label>
+                <input v-model="form.vehicle_brand" type="text">
+                <span class="error" v-if="hasError(index, 'vehicle_brand')">{{ getError(index, 'vehicle_brand') }}</span>
+            </div>
+
+            <div>
+                <label>RC Copy:</label>
+                <input v-model="form.rc_copy" type="file">
+                <span class="error" v-if="hasError(index, 'rc_copy')">{{ getError(index, 'rc_copy') }}</span>
+            </div>
+
+            <div>
+                <label>Sticker Number:</label>
+                <input v-model="form.sticker_number" type="number">
+                <span class="error" v-if="hasError(index, 'sticker_number')">{{ getError(index, 'sticker_number') }}</span>
+            </div>
+
+                <!-- ... (other form fields) ... -->
+
+            <div>
+                <label>Vehicle Chargeable?:</label>
+                <select class="w-100 sty-inp form-control" @change="toggleChargeAmount(index, $event)">
+                    <option value="" selected>YES / NO</option>
+                    <option value="no">NO</option>
+                    <option value="yes">YES</option>
+                </select>
+            </div>
+
+            <div v-if="form.showChargeAmount">
+                <label>Charge Amount:</label>
+                <input v-model="form.chargable" type="number">
+                <span class="error" v-if="hasError(index, 'chargable')">{{ getError(index, 'chargable') }}</span>
+            </div>
+
+            <button @click.prevent="removeForm(index)">Remove Form</button>
+            <hr>
         </div>
-        <div>
-          <label>Parking Lot:</label>
-          <input v-model="form.parking_lot" type="text">
-          <!-- <span class="error" v-if="errors[index] && errors[index].parking_lot">{{ errors[index].parking_lot }}</span> -->
-        </div>
-        <div>
-          <label>Vehicle Type:</label>
-          <input v-model="form.vehicle_type" type="text">
-          <!-- <span class="error" v-if="errors[index] && errors[index].vehicle_type">{{ errors[index].vehicle_type }}</span> -->
-        </div>
-        <!-- Add more fields here -->
-  
-        <button @click.prevent="removeForm(index)">Remove Form</button>
-        <hr>
-      </div>
-      <button @click.prevent="addForm">Add Form</button>
-      <hr>
-      <button type="submit">Submit All Forms</button>
+            <button @click.prevent="addForm">Add Form</button>
+            <hr>
+            <button type="submit">Submit All Forms</button>
     </form>
-  </div>  
+</div>
 {% endverbatim %}
 
-<script>
+  <script>
   new Vue({
-    el: '#app',
-    data: {
-      forms: [
-        { wing_flat: '', parking_lot: '', vehicle_type: '', vehicle_number: '', vehicle_brand: '', rc_copy: '', sticker_number: ''}
-      ],
-      errors: [],
-      wing_flat: '',
-    },
-    methods: {
-      addForm() {
-        this.forms.push({ wing_flat: '', parking_lot: '', vehicle_type: '', vehicle_number: '', vehicle_brand: '', rc_copy: '', sticker_number: ''});
+      el: '#app',
+      data: {
+          forms: [
+              { wing_flat: '', parking_lot: '', vehicle_type: '', vehicle_number: '', vehicle_brand: '', rc_copy: '', sticker_number: '', chargable: '', showChargeAmount: false }
+          ],
+          errors: [],
+          wing_flat: '',
       },
-      removeForm(index) {
-        this.forms.splice(index, 1);
-      },
-      submitForm() {
-        axios.defaults.xsrfCookieName = 'csrftoken';
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+      methods: {
+          addForm() {
+              this.forms.push({ wing_flat: '', parking_lot: '', vehicle_type: '', vehicle_number: '', vehicle_brand: '', rc_copy: '', sticker_number: '', chargable: '', showChargeAmount: false });
+              const newIndex = this.forms.length - 1;
+              this.errors = this.errors.filter(error => error.index !== newIndex);
+          },
+          removeForm(index) {
+              this.forms.splice(index, 1);
+          },
+          hasError(index, field) {
+              return this.errors.some(error => error.index === index && error[field]);
+          },
+          getError(index, field) {
+              const error = this.errors.find(error => error.index === index);
+              return error ? error[field][0] : '';
+          },
+          toggleChargeAmount(index, event) {
+              console.log("toggle");
+              this.forms[index].showChargeAmount = event.target.value === 'yes';
+          },
+          submitForm() {
+              axios.defaults.xsrfCookieName = 'csrftoken';
+              axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-        axios.post('http://127.0.0.1:8000/api/vehicle/', this.forms, {})
-          .then(response => {
-            console.log('Form data submitted successfully:', response.data);
-          })
-          .catch(errors => {
-            console.error('Error submitting form data:', errors);
-            this.errors = errors.response.data.errors;
-            // this.errors = errors.response.data;
-            console.log("ERROR====================", this.errors[0]['wing_flat'][0]);
-            // if (errors.response && errors.response.status === 400 && errors.response.data){
-            //   if(errors.response.data.wing_flat){
-            //     this.wing_flat = error.response.data.wing_flat.join('');
-            //   }else{
-            //     this.wing_flat = '';
-            //   }
-            // }
-          });
-        },
-      getFormNumber: index => index + 1
-    }
+              axios.post('http://127.0.0.1:8000/api/vehicle/', this.forms, {})
+                  .then(response => {
+                      console.log('Form data submitted successfully:', response.data);
+                  })
+                  .catch(errors => {
+                      console.error('Error submitting form data:', errors);
+                      this.errors = errors.response.data.errors;
+                      console.log("ERROR====================", this.errors[0]['wing_flat'][0]);
+                  });
+          },
+          getFormNumber: index => index + 1
+      }
   });
-</script>
+  </script>
 
-<style>
+  <style>
   .error {
-    color: red;
-    font-size: 14px;
+      color: red;
+      font-size: 14px;
   }
-</style>
+  </style>
 
 </body>
 </html>

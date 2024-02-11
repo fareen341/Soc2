@@ -1,648 +1,221 @@
-<div class="accordion" id="">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" id="heading" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Sameer Nasir Shaikh
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-          <div class="row mt-3">
-              <div class="col-lg-3">
-                  <p class="ms-3 view-label">Member's Name</p>
-              </div>
-              <div class="col-lg-9">
-                  <p class=" view-inps">Sameer Nasir Shaikh</p>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Flat Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">A-1001</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Ownership %</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">100%</p>
-                      </div>
-                  </div>
-              </div>
+{% extends 'base.html' %}
+{% load static %}
 
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Position</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">Secretary</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Date of Birth</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">17-10-2000</p>
-                      </div>
-                  </div>
-              </div>
+{% block title %} <title>Society Management | Member-Master-Creation</title> {% endblock title %}
 
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Aadhaar Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">2653 8564 4663</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">PAN Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">ABCDE1234F</p>
-                      </div>
-                  </div>
-              </div>
+{% block body %}
 
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Permanent Address</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">3, DLH Park, S. V. Road,
-                              Goregaon (West),
-                              Mumbai – 400062.
-                              Maharashtra, India.</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row m-0 p-0">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">State</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="view-inps">Maharashtra</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="ms-3 view-label">Pincode</p>
-                      </div>
-                      <div class="col-lg-2">
-                          <p class="view-inps">400062</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Email Id</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">sameer.sk.8066@gmail.com</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Occupation</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">Salaried</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Contact Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">8850397205</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Emergency Contact Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">9082214755</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <hr class="m-0 p-0">
-
-          <div class="row mt-3">
-              <div class="col-lg-3">
-                  <p class="ms-3 view-label">Nominee's Name</p>
-              </div>
-              <div class="col-lg-9">
-                  <p class=" view-inps">Sameer Nasir Shaikh</p>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Date of Nomination</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">25-12-2023</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Date of Birth</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">15-08-2002</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Relation with Nominator</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">Brother</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Nominee Sharein %</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">50%</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Aadhaar Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">2653 8564 4663</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Nominee PAN Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">ABCDE1234F</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Permanent Address</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">3, DLH Park, S. V. Road,
-                              Goregaon (West),
-                              Mumbai – 400062.
-                              Maharashtra, India.</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">State</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="view-inps">Maharashtra</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="ms-3 view-label">Pincode</p>
-                      </div>
-                      <div class="col-lg-2">
-                          <p class="view-inps">400062</p>
-                      </div>
-                  </div>
-              </div>
-
-              
-              <!-- <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Occupation</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">Salaried</p>
-                      </div>
-                  </div>
-              </div> -->
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Contact Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">8850397205</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Emergency Contact Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">9082214755</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Email Id</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">sameer.sk.8066@gmail.com</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+<div class="container">
+    <div class="member-title mt-4 d-flex" style="justify-content: space-between;">
+        <h3 class="lead" style="font-size: 27px;">Allocated House Help Details</h3>
+        <div class="gap-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#houseHelpAllocation">Allocate House Help</button>
+        </div>
     </div>
-  </div>
+    <div class="mt-4">
+        <table id="example" class="display dt-table order-column" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="exclude-print">Actions</th>
+                    {% for item in house_help_allocation_lable %}
+                    <th>{{ item }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in house_help_allocation_objects %}
+                <tr>
+                    <td><button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#houseHelpAllocationEdit"><i
+                        class="fa-solid fa-pen-to-square"></i></button></td>
+                    <td>{{ item.wing_flat }}</td>
+                    <td>{{ item.owner_name__house_help_name }}</td>
+                    <td>{{ item.house_help_aadhar__house_help_aadhar_number }}</td>
+                    <td>{{ item.house_help_pan__house_help_pan_number }}</td>
+                    <td>{{ item.house_help_name }}</td>
+                    <td>{{ item.house_help_role }}</td>
+                    <td>{{ item.house_help_period_from }}</td>
+                    <td>{{ item.house_help_period_to }}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="modal fade" id="houseHelpAllocation" tabindex="-1" aria-labelledby="houseHelpAllocationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="houseHelpAllocationLabel">Allocate House Help</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="houseHelpCreationForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <select name="wing_flat_select" id="id_get_hh_flat_owner_name"
+                                        class="w-100 sty-inp form-control">
+                                        {% for key, value in wing_flat_no.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label for="id_get_hh_flat_owner_name" class="sty-label">Wing & Flat No.</label>
+                                    <small id="id_get_hh_flat_owner_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_flat_primary_owner_hh">
+                                    <label for="id_flat_primary_owner_hh" class="sty-label">Owner Name</label>
+                                    <small id="id_flat_primary_owner_hh_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_hh_aadhar_pan">
+                                    <label for="id_hh_aadhar_pan" class="sty-label">Aadhaar / PAN No.</label>
+                                    <small id="id_hh_aadhar_pan_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_hh_name">
+                                    <label for="id_hh_name" class="sty-label">House Help Name</label>
+                                    <small id="id_hh_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_hh_role">
+                                    <label for="id_hh_role" class="sty-label">House Help Role</label>
+                                    <small id="id_hh_role_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_from_Edit">
+                                    <label for="id_tenant_period_from_Edit" class="sty-label">Period From</label>
+                                    <small id="id_tenant_period_from_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_from_Edit" disabled>
+                                    <label for="id_tenant_period_from_Edit" class="sty-label">Period To</label>
+                                    <small id="id_tenant_period_from_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="allocateTenant_Edit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="houseHelpAllocationEdit" tabindex="-1" aria-labelledby="houseHelpAllocationLabelEdit" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="houseHelpAllocationLabel">Edit Allocated HOuse Help</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="houseHelpCreationForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <select name="wing_flat_select" id="id_get_hh_flat_owner_name"
+                                        class="w-100 sty-inp form-control">
+                                        {% for key, value in wing_flat_no.items %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label for="id_get_hh_flat_owner_name" class="sty-label">Wing & Flat No.</label>
+                                    <small id="id_get_hh_flat_owner_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_flat_primary_owner_hh">
+                                    <label for="id_flat_primary_owner_hh" class="sty-label">Owner Name</label>
+                                    <small id="id_flat_primary_owner_hh_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_hh_aadhar_pan">
+                                    <label for="id_hh_aadhar_pan" class="sty-label">Aadhaar / PAN No.</label>
+                                    <small id="id_hh_aadhar_pan_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_hh_name">
+                                    <label for="id_hh_name" class="sty-label">House Help Name</label>
+                                    <small id="id_hh_name_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="text" class="sty-inp form-control w-100" id="id_hh_role">
+                                    <label for="id_hh_role" class="sty-label">House Help Role</label>
+                                    <small id="id_hh_role_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_to_Edit" disabled>
+                                    <label for="id_tenant_period_to_Edit" class="sty-label">Period From</label>
+                                    <small id="id_tenant_period_to_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="sty-input-wrapper w-100">
+                                    <input type="date" class="sty-inp form-control w-100" id="id_tenant_period_to_Edit">
+                                    <label for="id_tenant_period_to_Edit" class="sty-label">Period To</label>
+                                    <small id="id_tenant_period_to_Edit_Error" class="error-message"></small>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="allocateTenant_Edit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" id="heading" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Sameer Nasir Shaikh
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-          <div class="row mt-3">
-              <div class="col-lg-3">
-                  <p class="ms-3 view-label">Member's Name</p>
-              </div>
-              <div class="col-lg-9">
-                  <p class=" view-inps">Sameer Nasir Shaikh</p>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Flat Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">A-1001</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Ownership %</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">100%</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Position</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">Secretary</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Date of Birth</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">17-10-2000</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Aadhaar Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">2653 8564 4663</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">PAN Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">ABCDE1234F</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Permanent Address</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">3, DLH Park, S. V. Road,
-                              Goregaon (West),
-                              Mumbai – 400062.
-                              Maharashtra, India.</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row m-0 p-0">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">State</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="view-inps">Maharashtra</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="ms-3 view-label">Pincode</p>
-                      </div>
-                      <div class="col-lg-2">
-                          <p class="view-inps">400062</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Email Id</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">sameer.sk.8066@gmail.com</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Occupation</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">Salaried</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Contact Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">8850397205</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Emergency Contact Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">9082214755</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <hr class="m-0 p-0">
-
-          <div class="row mt-3">
-              <div class="col-lg-3">
-                  <p class="ms-3 view-label">Nominee's Name</p>
-              </div>
-              <div class="col-lg-9">
-                  <p class=" view-inps">Sameer Nasir Shaikh</p>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Date of Nomination</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">25-12-2023</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Date of Birth</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">15-08-2002</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Relation with Nominator</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">Brother</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Nominee Sharein %</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">50%</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Aadhaar Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">2653 8564 4663</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Nominee PAN Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">ABCDE1234F</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Permanent Address</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">3, DLH Park, S. V. Road,
-                              Goregaon (West),
-                              Mumbai – 400062.
-                              Maharashtra, India.</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">State</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="view-inps">Maharashtra</p>
-                      </div>
-                      <div class="col-lg-3">
-                          <p class="ms-3 view-label">Pincode</p>
-                      </div>
-                      <div class="col-lg-2">
-                          <p class="view-inps">400062</p>
-                      </div>
-                  </div>
-              </div>
-
-              
-              <!-- <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Occupation</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">Salaried</p>
-                      </div>
-                  </div>
-              </div> -->
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Contact Number</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">8850397205</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <p class="ms-3 view-label">Emergency Contact Number</p>
-                      </div>
-                      <div class="col-lg-8">
-                          <p class="view-inps">9082214755</p>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <p class="ms-3 view-label">Nominee Email Id</p>
-                      </div>
-                      <div class="col-lg-6">
-                          <p class="view-inps">sameer.sk.8066@gmail.com</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% endblock body %}

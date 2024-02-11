@@ -27,7 +27,7 @@
                 <tbody>
                     <tr v-for="(houseHelp, index) in houseHelp" :key="index">
                         <td>
-                            <span class="me-3"><i class="fa-solid fa-eye"></i></span>
+                            <span @click="viewRequestedData(houseHelp.id)" class="me-3"><i class="fa-solid fa-eye"></i></span>
                             <span @click="editRequestedData(houseHelp.id)"><i class="fa-solid fa-pen-to-square"></i></span>
                         </td>
                         <td v-for="(value, key) in houseHelp" :key="key">{{ value }}</td>
@@ -58,13 +58,13 @@
                                         </div>
                                         <div class="col-lg-8 mb-3">
                                             <div class="mb-2">
-                                                
+
                                                 <div class="input-group">
                                                     <div class="firstinp w-50 sty-input-wrapper">
                                                         <input class="w-100 sty-inp" type="text" id="id_house_help_pan_number" v-model="formData.house_help_pan_number">
                                                         <label for="id_house_help_pan_number" class="sty-label">House-Help PAN No.</label>
                                                         <span v-if="errors.house_help_pan_number" class="error">{{ errors.house_help_pan_number[0] }}</span>
-                                                        <span v-else></span>                                             
+                                                        <span v-else></span>
                                                     </div>
                                                     <div class="secinp w-50 d-flex">
                                                         <div class="fileinp">
@@ -77,7 +77,7 @@
                                                                 onclick="PreviewImage('houseHelpPanDoc')">
                                                                 <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
                                                             </button>
-                                                        </div>  
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="col-lg-8 mb-3">
                                             <div class="mb-2">
-                                                
+
                                                 <div class="input-group">
                                                     <div class="firstinp w-50 sty-input-wrapper">
                                                         <input class="w-100 sty-inp" type="text" v-model="formData.house_help_aadhar_number" />
@@ -111,20 +111,20 @@
                                                                 onclick="PreviewImage('houseHelpAadhaarDoc')">
                                                                 <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
                                                             </button>
-                                                        </div>  
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-12 mb-3">
                                             <div class="row">
-                                                <div class="col-lg-6  sty-input-wrapper">                                            
+                                                <div class="col-lg-6  sty-input-wrapper">
                                                     <textarea class="w-100 sty-inp" cols="30" rows="1" v-model="formData.house_help_address"></textarea>
                                                     <label for="id_house_help_address" class="sty-label">House-Help Address</label>
                                                     <span v-if="errors.house_help_address" class="error">{{ errors.house_help_address[0] }}</span>
                                                     <span v-else></span>
                                                 </div>
-                                                <div class="col-lg-2 sty-input-wrapper">                                            
+                                                <div class="col-lg-2 sty-input-wrapper">
                                                     <input type="text" class=" w-100 sty-inp" v-model="formData.house_help_city" />
                                                     <label for="id_house_help_city" class="sty-label">City</label>
                                                     <span v-if="errors.house_help_city" class="error">{{ errors.house_help_city[0] }}</span>
@@ -175,7 +175,7 @@
                                                     <span v-if="errors.house_help_state" class="error">{{ errors.house_help_state[0] }}</span>
                                                     <span v-else></span>
                                                 </div>
-                                                <div class="col-lg-2 sty-input-wrapper">                                            
+                                                <div class="col-lg-2 sty-input-wrapper">
                                                     <input type="number" class="w-100 sty-inp" v-model="formData.house_help_pin" />
                                                     <label for="id_house_help_pin" class="sty-label">Pin Code</label>
                                                     <span v-if="errors.house_help_pin" class="error">{{ errors.house_help_pin[0] }}</span>
@@ -214,6 +214,35 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="houseHelpView" tabindex="-1" aria-labelledby="houseHelpViewLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="houseHelpViewLabel">House Help View</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% verbatim %}
+                                <h1>View Data</h1>
+                                <p>house_help_name: {{ houseHelpData.house_help_name }}</p>
+                                <p>house_help_pan_number: {{ houseHelpData.house_help_pan_number }}</p>
+                                <p>house_help_pan_doc: {{ houseHelpData.house_help_pan_doc }}</p>
+                                <p>house_help_contact: {{ houseHelpData.house_help_contact }}</p>
+                                <p>house_help_aadhar_number: {{ houseHelpData.house_help_aadhar_number }}</p>
+                                <p>house_help_aadhar_doc: {{ houseHelpData.house_help_aadhar_doc }}</p>
+                                <p>house_help_address: {{ houseHelpData.house_help_address }}</p>
+                                <p>house_help_city: {{ houseHelpData.house_help_city }}</p>
+                                <p>house_help_state: {{ houseHelpData.house_help_state }}</p>
+                                <p>house_help_pin: {{ houseHelpData.house_help_pin }}</p>
+                                <p>other_doc: {{ houseHelpData.other_doc }}</p>
+                                <p>other_document_specifications: {{ houseHelpData.other_document_specifications }}</p>
+                            {% endverbatim %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -226,26 +255,26 @@
             </div>
             <div class="modal-body">
                 {% verbatim %}
-                    <div id="househelpcreation">
+                    <div id="househelpcreationForm">
                         <form @submit.prevent="submitHouseHelp" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-lg-4 mb-3">
                                     <div class="w-100 sty-input-wrapper">
-                                        <input type="text" class="w-100 sty-inp" v-model="formData.house_help_name">
+                                        <input type="text" class="w-100 sty-inp" v-model="formData.house_help_name" :style="{ borderColor: errors.house_help_name ? 'red' : '' }">
                                         <label for="id_house_help_name" class="sty-label">House-Help Name</label>
-                                        <span v-if="errors.house_help_name" class="error">{{ errors.house_help_name[0] }}</span>
+                                        <span v-if="errors.house_help_name" :style="{ color: errors.house_help_name ? 'red' : 'black' }" class="error">{{ errors.house_help_name[0] }}</span>
                                         <span v-else></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-8 mb-3">
                                     <div class="mb-2">
-                                        
+
                                         <div class="input-group">
                                             <div class="firstinp w-50 sty-input-wrapper">
                                                 <input class="w-100 sty-inp" type="text" id="id_house_help_pan_number" v-model="formData.house_help_pan_number">
                                                 <label for="id_house_help_pan_number" class="sty-label">House-Help PAN No.</label>
                                                 <span v-if="errors.house_help_pan_number" class="error">{{ errors.house_help_pan_number[0] }}</span>
-                                                <span v-else></span>                                             
+                                                <span v-else></span>
                                             </div>
                                             <div class="secinp w-50 d-flex">
                                                 <div class="fileinp">
@@ -258,7 +287,7 @@
                                                         onclick="PreviewImage('houseHelpPanDoc')">
                                                         <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
                                                     </button>
-                                                </div>  
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -273,7 +302,7 @@
                                 </div>
                                 <div class="col-lg-8 mb-3">
                                     <div class="mb-2">
-                                        
+
                                         <div class="input-group">
                                             <div class="firstinp w-50 sty-input-wrapper">
                                                 <input class="w-100 sty-inp" type="text" v-model="formData.house_help_aadhar_number" />
@@ -292,20 +321,20 @@
                                                         onclick="PreviewImage('houseHelpAadhaarDoc')">
                                                         <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
                                                     </button>
-                                                </div>  
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 mb-3">
                                     <div class="row">
-                                        <div class="col-lg-6  sty-input-wrapper">                                            
+                                        <div class="col-lg-6  sty-input-wrapper">
                                             <textarea class="w-100 sty-inp" cols="30" rows="1" v-model="formData.house_help_address"></textarea>
                                             <label for="id_house_help_address" class="sty-label">House-Help Address</label>
                                             <span v-if="errors.house_help_address" class="error">{{ errors.house_help_address[0] }}</span>
                                             <span v-else></span>
                                         </div>
-                                        <div class="col-lg-2 sty-input-wrapper">                                            
+                                        <div class="col-lg-2 sty-input-wrapper">
                                             <input type="text" class=" w-100 sty-inp" v-model="formData.house_help_city" />
                                             <label for="id_house_help_city" class="sty-label">City</label>
                                             <span v-if="errors.house_help_city" class="error">{{ errors.house_help_city[0] }}</span>
@@ -356,7 +385,7 @@
                                             <span v-if="errors.house_help_state" class="error">{{ errors.house_help_state[0] }}</span>
                                             <span v-else></span>
                                         </div>
-                                        <div class="col-lg-2 sty-input-wrapper">                                            
+                                        <div class="col-lg-2 sty-input-wrapper">
                                             <input type="number" class="w-100 sty-inp" v-model="formData.house_help_pin" />
                                             <label for="id_house_help_pin" class="sty-label">Pin Code</label>
                                             <span v-if="errors.house_help_pin" class="error">{{ errors.house_help_pin[0] }}</span>

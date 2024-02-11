@@ -12,9 +12,25 @@ from rest_framework.routers import DefaultRouter
 #creatting router object
 router=DefaultRouter()
 router.register('meetingsapi',apiviews.MeetingsViewSet,basename='meetings')
-router.register('vehicle', apiviews.MemberVehicleView, basename='vehicle')
+router.register('vehicle', apiviews.MemberVehicleViewSet, basename='vehicle')
 router.register('shares', apiviews.FlatSharesView, basename='shares')
 router.register('househelp', apiviews.HouseHelpView, basename='househelp')
+router.register('househelpallocation', apiviews.HouseHelpAllocationView, basename='househelpallocation')
+router.register('suggestion', apiviews.suggestionView, basename='suggestion')
+router.register('wint-unit', apiviews.UnitWingView, basename='wint_unit')
+router.register('members', apiviews.MemberView, basename='members')
+
+router.register('society-creation', apiviews.SocietyCreationNewView, basename='society_creation')
+router.register('society-registration-documents', apiviews.SocietyRegistrationDocumentsView, basename='society_registration_documents')
+router.register('bank-creation', apiviews.BankNewView, basename='bank_creation')
+router.register('flat-wing', apiviews.FlatWingView, basename='flat_wing')
+router.register('society-other-docs', apiviews.SocDocumentNewView, basename='society_other_docs')
+router.register('society-required-docs', apiviews.SocietyRegistrationDocumentsView, basename='ssociety_required_docs')
+router.register('home-loan', apiviews.FlatHomeLoanView, basename='home_loan')
+router.register('flat-gst', apiviews.FlatGSTView, basename='flat_gst')
+
+
+
 
 
 
@@ -22,6 +38,9 @@ router.register('househelp', apiviews.HouseHelpView, basename='househelp')
 
 urlpatterns = [
     path('api/',include(router.urls)),
+
+    # path('api/get-soc-id/', apiviews.GetSingleSocView, name='get-soc-id'),
+    path('api/getjson/', apiviews.GetSingleSocView, name='getjson'),
 
     path('admin/', admin.site.urls),
     path('login/', views.login, name="login"),
@@ -48,12 +67,12 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
 
-    
 
-    
 
-    
-    
+
+
+
+
 ]
 
 if settings.DEBUG:

@@ -70,11 +70,11 @@ class MemberMasterCreation(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE, verbose_name="Flat No.")
     member_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Name")
     ownership_percent = models.IntegerField(null=True, blank=True, verbose_name="Ownership %")
-    member_position = models.CharField(max_length=200, null=True, blank=True, verbose_name="Position") 
+    member_position = models.CharField(max_length=200, null=True, blank=True, verbose_name="Position")
     member_dob = models.DateField(null=True, blank=True, verbose_name="DOB")
     member_pan_no = models.CharField(max_length=200, null=True, blank=True, verbose_name="PAN No.")
     member_aadhar_no = models.CharField(max_length=200, null=True, blank=True, verbose_name="Aadhar No.")
-    member_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Address") 
+    member_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Address")
     member_state = models.CharField(max_length=200, null=True, blank=True, verbose_name="State")
     member_pin_code = models.CharField(max_length=200, null=True, blank=True, verbose_name="Pin Code")
     member_email = models.EmailField(null=True, blank=True, verbose_name="Email")
@@ -110,7 +110,7 @@ class MemberNomineeCreation(models.Model):
     member_name = models.ForeignKey(MemberMasterCreation, on_delete=models.CASCADE)
     nominee_name = models.CharField(max_length=300, null=True, blank=True)
     date_of_nomination = models.DateField(null=True, blank=True)
-    relation_with_nominee = models.CharField(max_length=300, null=True, blank=True) 
+    relation_with_nominee = models.CharField(max_length=300, null=True, blank=True)
     nominee_sharein_percent = models.IntegerField(null=True, blank=True)
     nominee_dob = models.DateField(null=True, blank=True)
     nominee_aadhar_no = models.CharField(max_length=300, null=True, blank=True)
@@ -120,7 +120,7 @@ class MemberNomineeCreation(models.Model):
     nominee_state = models.CharField(max_length=300, null=True, blank=True)
     nominee_pin_code = models.CharField(max_length=300, null=True, blank=True)
     nominee_contact = models.CharField(max_length=300, null=True, blank=True)
-    nominee_emergency_contact = models.CharField(max_length=300, null=True, blank=True) 
+    nominee_emergency_contact = models.CharField(max_length=300, null=True, blank=True)
 
 class FlatSharesDetails(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
@@ -171,22 +171,22 @@ class FlatHomeLoanDetails(models.Model):
 class FlatGSTDetails(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
     gst_number = models.CharField(max_length=300, null=True, blank=True)
-    gst_state = models.CharField(max_length=300, null=True, blank=True) 
-    gst_billing_name = models.CharField(max_length=300, null=True, blank=True) 
+    gst_state = models.CharField(max_length=300, null=True, blank=True)
+    gst_billing_name = models.CharField(max_length=300, null=True, blank=True)
     gst_billing_address = models.CharField(max_length=300, null=True, blank=True)
-    gst_contact_no = models.CharField(max_length=300, null=True, blank=True) 
+    gst_contact_no = models.CharField(max_length=300, null=True, blank=True)
 
 
 class FlatVehicleDetails(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
-    parking_lot = models.CharField(max_length=300, null=True, blank=True) 
-    vehicle_type = models.CharField(max_length=300, null=True, blank=True) 
-    vehicle_number = models.CharField(max_length=300, null=True, blank=True) 
-    vehicle_brand = models.CharField(max_length=300, null=True, blank=True) 
+    parking_lot = models.CharField(max_length=300, null=True, blank=True)
+    vehicle_type = models.CharField(max_length=300, null=True, blank=True)
+    vehicle_number = models.CharField(max_length=300, null=True, blank=True)
+    vehicle_brand = models.CharField(max_length=300, null=True, blank=True)
     rc_copy = models.FileField(upload_to='files/', null=True, blank=True)
-    sticker_number = models.CharField(max_length=300, null=True, blank=True) 
-    select_charge = models.CharField(max_length=300, null=True, blank=True) 
-    new_vehicle_id_select_charge = models.CharField(max_length=300, null=True, blank=True) 
+    sticker_number = models.CharField(max_length=300, null=True, blank=True)
+    select_charge = models.CharField(max_length=300, null=True, blank=True)
+    new_vehicle_id_select_charge = models.CharField(max_length=300, null=True, blank=True)
 
 
 class TenentMasterCreation(models.Model):
