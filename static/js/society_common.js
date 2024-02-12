@@ -165,613 +165,613 @@ $(document).ready(function () {
     });
     // MEMBER ON-CHANGE END
 
-    $('#save_and_next_member, #save_and_add_member').click(function (e) {
-        clickedButton = this;
-        let isValid = true;
-        let ajax_ownsership = false;
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // const max100NumberRegex = /^(?:[1-9]\d{2,}|1000+)$/;
-        let numberregex = /^([1-9]\d{0,1}|100)$/;
-        let required_fields = {
-            // members ids
-            "id_wing_flat": "Pls select the flat number!",
-            "id_member_name": "Member name is required!",
-            "id_member_ownership": "Member ownership is required!",
-            "id_member_position": "Member position is required!",
-            "id_member_dob": "Date of birth is required!",
-            "id_member_pan_number": "Member pan number is required!",
-            "id_member_aadhar_no": "Member aadhar number is required!",
-            "id_member_address": "Address is required!",
-            "id_member_state": "State is required!",
-            "id_member_pin_code": "Pin code is required",
-            "id_member_email": "Email is reqired!",
-            "id_member_contact": "Contact number is required!",
-            "id_member_emergency_contact": "Emergency contact no. is required!",
-            "id_member_occupation": "Occupation is required!",
-            "id_flat_status": "Flat status is required!",
-            "id_is_primary_val": "Pls check this to make this member primary!",
-            "id_date_of_admission": "Date of admission is required!",
-            "id_sales_agreement": "Sales agreement is required!",
-            "id_date_of_entrance_fees": "Date of entrance is required!",
-            "id_other_attachment": "Other document is required!"
-        };
+    // $('#save_and_next_member, #save_and_add_member').click(function (e) {
+    //     clickedButton = this;
+    //     let isValid = true;
+    //     let ajax_ownsership = false;
+    //     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     // const max100NumberRegex = /^(?:[1-9]\d{2,}|1000+)$/;
+    //     let numberregex = /^([1-9]\d{0,1}|100)$/;
+    //     let required_fields = {
+    //         // members ids
+    //         "id_wing_flat": "Pls select the flat number!",
+    //         "id_member_name": "Member name is required!",
+    //         "id_member_ownership": "Member ownership is required!",
+    //         "id_member_position": "Member position is required!",
+    //         "id_member_dob": "Date of birth is required!",
+    //         "id_member_pan_number": "Member pan number is required!",
+    //         "id_member_aadhar_no": "Member aadhar number is required!",
+    //         "id_member_address": "Address is required!",
+    //         "id_member_state": "State is required!",
+    //         "id_member_pin_code": "Pin code is required",
+    //         "id_member_email": "Email is reqired!",
+    //         "id_member_contact": "Contact number is required!",
+    //         "id_member_emergency_contact": "Emergency contact no. is required!",
+    //         "id_member_occupation": "Occupation is required!",
+    //         "id_flat_status": "Flat status is required!",
+    //         "id_is_primary_val": "Pls check this to make this member primary!",
+    //         "id_date_of_admission": "Date of admission is required!",
+    //         "id_sales_agreement": "Sales agreement is required!",
+    //         "id_date_of_entrance_fees": "Date of entrance is required!",
+    //         "id_other_attachment": "Other document is required!"
+    //     };
 
-        let get_nominee_detail = {
-            // nominee ids
-            "id_nominee_name": "Nominee name is required!",
-            "id_nomination_date": "Date of nomination is required!",
-            "id_nominee_relation": "Nominee relation is required!",
-            "id_naminee_sharein": "Nominee sharein is required!",
-            "id_nominee_dob": "Nominee date of birth is required!",
-            "id_nominee_aadhar_no": "Nominee aadhar no. is required!",
-            "id_nominee_pan_no": "Nominee pan no. is required!",
-            "id_nominee_email": "Nominee email is required!",
-            "id_nominee_address": "Nominee address is required!",
-            "id_nominee_state": "Nominee state is required!",
-            "id_nominee_pin_code": "Nominee pin code is required!",
-            "id_nominee_contact_number": "Nominee contact number is required!",
-            "id_nominee_emergency_contact": "Nominee emergency contact is required!",
-        };
+    //     let get_nominee_detail = {
+    //         // nominee ids
+    //         "id_nominee_name": "Nominee name is required!",
+    //         "id_nomination_date": "Date of nomination is required!",
+    //         "id_nominee_relation": "Nominee relation is required!",
+    //         "id_naminee_sharein": "Nominee sharein is required!",
+    //         "id_nominee_dob": "Nominee date of birth is required!",
+    //         "id_nominee_aadhar_no": "Nominee aadhar no. is required!",
+    //         "id_nominee_pan_no": "Nominee pan no. is required!",
+    //         "id_nominee_email": "Nominee email is required!",
+    //         "id_nominee_address": "Nominee address is required!",
+    //         "id_nominee_state": "Nominee state is required!",
+    //         "id_nominee_pin_code": "Nominee pin code is required!",
+    //         "id_nominee_contact_number": "Nominee contact number is required!",
+    //         "id_nominee_emergency_contact": "Nominee emergency contact is required!",
+    //     };
 
-        let email_fields = {
-            // "id_member_email": "Invalid Email",
-            // "id_nominee_email": "Invalid Email"
-        }
+    //     let email_fields = {
+    //         // "id_member_email": "Invalid Email",
+    //         // "id_nominee_email": "Invalid Email"
+    //     }
 
-        for (let key in get_nominee_detail) {
-            Array.from(document.querySelectorAll('[id^="' + key + '"]'))
-                .filter(element => !element.id.includes('_Error'))
-                .map(element => {
-                    required_fields[element.id] = get_nominee_detail[key]; // Use the corresponding message from get_nominee_detail
-                    return element;
-                });
-        }
+    //     for (let key in get_nominee_detail) {
+    //         Array.from(document.querySelectorAll('[id^="' + key + '"]'))
+    //             .filter(element => !element.id.includes('_Error'))
+    //             .map(element => {
+    //                 required_fields[element.id] = get_nominee_detail[key]; // Use the corresponding message from get_nominee_detail
+    //                 return element;
+    //             });
+    //     }
 
-        function validateForm(step) {
-            for (let key in required_fields) {
-                let inputValue = $("#" + key).val();
-                let value = (inputValue !== null && inputValue !== undefined) ? inputValue.trim() : "";
+    //     function validateForm(step) {
+    //         for (let key in required_fields) {
+    //             let inputValue = $("#" + key).val();
+    //             let value = (inputValue !== null && inputValue !== undefined) ? inputValue.trim() : "";
 
-                if ((value === "") || (key === "id_is_primary_val" && !$('#id_is_primary_val').prop("checked"))) {
-                    isValid = false;
-                    if (key === "id_is_primary_val") {
-                        console.log("========================")
-                    }
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text(required_fields[key]);
-                } else if (value && ((key === "id_member_email") && !emailRegex.test(value) || (key.startsWith("id_nominee_email")) && !emailRegex.test(value))) {
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text("Invalid Email!");
-                } else if (value && ((key === "id_member_ownership") && !numberregex.test(value))) {
-                    // console.log("NUMBER===============")
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text("Percentage shoule be below 100");
-                } else {
-                    $("#" + key).css("border-color", ""); // Reset to default
-                    $("#" + key + "_Error").text(""); // Clear the error message
-                }
-            }
+    //             if ((value === "") || (key === "id_is_primary_val" && !$('#id_is_primary_val').prop("checked"))) {
+    //                 isValid = false;
+    //                 if (key === "id_is_primary_val") {
+    //                     console.log("========================")
+    //                 }
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text(required_fields[key]);
+    //             } else if (value && ((key === "id_member_email") && !emailRegex.test(value) || (key.startsWith("id_nominee_email")) && !emailRegex.test(value))) {
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text("Invalid Email!");
+    //             } else if (value && ((key === "id_member_ownership") && !numberregex.test(value))) {
+    //                 // console.log("NUMBER===============")
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text("Percentage shoule be below 100");
+    //             } else {
+    //                 $("#" + key).css("border-color", ""); // Reset to default
+    //                 $("#" + key + "_Error").text(""); // Clear the error message
+    //             }
+    //         }
 
-            for (let key in email_fields) {
-                let value = $("#" + key).val().trim();
-                if (value && (!emailRegex.test(value))) {
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text("Invalid Email");
-                } else {
-                    $("#" + key).css("border-color", ""); // Reset to default
-                    $("#" + key + "_Error").text(""); // Clear the error message
-                }
-            }
+    //         for (let key in email_fields) {
+    //             let value = $("#" + key).val().trim();
+    //             if (value && (!emailRegex.test(value))) {
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text("Invalid Email");
+    //             } else {
+    //                 $("#" + key).css("border-color", ""); // Reset to default
+    //                 $("#" + key + "_Error").text(""); // Clear the error message
+    //             }
+    //         }
 
-            // let validate_ownership = [{"member_ownership": $('#id_member_ownership').val(), "wing_flat_number": $('#id_wing_flat').val()}]
-            let formData = new FormData();
-            formData.append('get_ownership_ajax', true);
-            formData.append('ajax_get_primary', false);
-            formData.append('member_ownership', $('#id_member_ownership').val());
-            formData.append('wing_flat_number', $('#id_wing_flat').val());
+    //         // let validate_ownership = [{"member_ownership": $('#id_member_ownership').val(), "wing_flat_number": $('#id_wing_flat').val()}]
+    //         let formData = new FormData();
+    //         formData.append('get_ownership_ajax', true);
+    //         formData.append('ajax_get_primary', false);
+    //         formData.append('member_ownership', $('#id_member_ownership').val());
+    //         formData.append('wing_flat_number', $('#id_wing_flat').val());
 
-            let headers = {
-                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-            };
+    //         let headers = {
+    //             "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+    //         };
 
-            $.ajax({
-                url: '/member-master/',
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                async: false,
-                success: function (response) {
-                    console.log("Success=======Success");
-                    if (response.ownership) {
-                        $("#id_member_ownership").css("border-color", "red");
-                        $("#id_member_ownership_Error").text(response.ownership);
-                        ajax_ownsership = true;
-                        isValid = false;
-                        console.log("in if=====================in if")
-                    } else {
-                        $("#id_member_ownership").css("border-color", "");
-                        $("#id_member_ownership_Error").text("");
-                        console.log("in else=====================in else")
+    //         $.ajax({
+    //             url: '/member-master/',
+    //             method: 'POST',
+    //             data: formData,
+    //             headers: headers,
+    //             processData: false,
+    //             contentType: false,
+    //             async: false,
+    //             success: function (response) {
+    //                 console.log("Success=======Success");
+    //                 if (response.ownership) {
+    //                     $("#id_member_ownership").css("border-color", "red");
+    //                     $("#id_member_ownership_Error").text(response.ownership);
+    //                     ajax_ownsership = true;
+    //                     isValid = false;
+    //                     console.log("in if=====================in if")
+    //                 } else {
+    //                     $("#id_member_ownership").css("border-color", "");
+    //                     $("#id_member_ownership_Error").text("");
+    //                     console.log("in else=====================in else")
 
-                        // tryna fix it might create problem later
-                        // stopNext = false
-                    }
-                },
-                error: function (xhr) {
-                    console.log("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                }
-            });
+    //                     // tryna fix it might create problem later
+    //                     // stopNext = false
+    //                 }
+    //             },
+    //             error: function (xhr) {
+    //                 console.log("Something went wrong! " + xhr.status + " " + xhr.statusText);
+    //             }
+    //         });
 
-            return isValid;
-        }
-
-
-        // if (ajax_ownsership){}
-        if (!validateForm(1)) {
-            console.log("INVALID========================");
-            console.log("ajax_ownsership=========", ajax_ownsership)
-            toastr.error("Please correct all error to proceed!!");
-            stopNext = false
-        } else {
-            console.log("VALID========================")
-            stopNext = true;
-            const nominee_form_count = Array.from(document.querySelectorAll('[id^="id_nominee_name"]'))
-                .filter(element => !element.id.endsWith('_Error')).length;
-
-            for (var i = 0; i < nominee_form_count + 1; i++) {
-                let count = i
-                if (count === 0) {
-                    count = "";
-                }
-                console.log("number is===========", count)
-                nomineeData.push({
-                    ["nominee_name"]: $('#id_nominee_name' + count).val(),
-                    ["date_of_nomination"]: $('#id_nomination_date' + count).val() === "" ? null : $('#id_nomination_date' + count).val(),
-                    ["relation_with_nominee"]: $('#id_nominee_relation' + count).val(),
-                    ["nominee_sharein_percent"]: $('#id_naminee_sharein' + count).val() === "" ? 0 : $('#id_naminee_sharein' + count).val(),
-                    ["nominee_dob"]: $('#id_nominee_dob' + count).val() === "" ? null : $('#id_nominee_dob' + count).val(),
-                    ["nominee_aadhar_no"]: $('#id_nominee_aadhar_no' + count).val(),
-                    ["nominee_pan_no"]: $('#id_nominee_pan_no' + count).val(),
-                    ["nominee_email"]: $('#id_nominee_email' + count).val(),
-                    ["nominee_address"]: $('#id_nominee_address' + count).val(),
-                    ["nominee_state"]: $('#id_nominee_state' + count).val(),
-                    ["nominee_pin_code"]: $('#id_nominee_pin_code' + count).val(),
-                    ["nominee_contact"]: $('#id_nominee_contact_number' + count).val(),
-                    ["nominee_emergency_contact"]: $('#id_nominee_emergency_contact' + count).val(),
-                });
-            }
-            memberData.push({
-                ["member_name"]: $('#id_member_name').val(),
-                ["ownership_percent"]: $('#id_member_ownership').val(),
-                ["member_position"]: $('#id_member_position').val(),
-                ["member_dob"]: $('#id_member_dob').val() === "" ? null : $('#id_member_dob').val(),
-                ["member_pan_no"]: $('#id_member_pan_number').val(),
-                ["member_aadhar_no"]: $('#id_member_aadhar_no').val(),
-                ["member_address"]: $('#id_member_address').val(),
-                ["member_state"]: $('#id_member_state').val(),
-                ["member_pin_code"]: $('#id_member_pin_code').val(),
-                ["member_email"]: $('#id_member_email').val(),
-                ["member_contact"]: $('#id_member_contact').val(),
-                ["member_emergency_contact"]: $('#id_member_emergency_contact').val(),
-                ["member_occupation"]: $('#id_member_occupation').val(),
-                ["member_is_primary"]: $('#id_is_primary_val').prop('checked'),
-                ["flat_status"]: $('#id_flat_status').val()
-            });
-
-            let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-            let headers = {
-                "X-CSRFToken": csrfToken
-            };
-            let formData = new FormData();
-            let memberDataJson = JSON.stringify(memberData);
-            let nomineeDataJson = JSON.stringify(nomineeData);
-            formData.append('form_name', 'member_form_creation');
-            formData.append('memberData', memberDataJson);
-            formData.append('nomineeData', nomineeDataJson);
-            formData.append('member_ownership', $('#id_member_ownership').val());
-            formData.append('wing_flat_number', $('#id_wing_flat').val());
+    //         return isValid;
+    //     }
 
 
-            $.ajax({
-                url: '/member-master-creation/',
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    console.log("Success");
-                    toastr.success(response.message, "Member Details Added!");
-                    // $("#msform")[0].reset();
-                    if ($(clickedButton).is('#save_and_add_member')) {
-                        setTimeout(function () {
-                            location.reload();
-                        }, 500);
-                    }
+    //     // if (ajax_ownsership){}
+    //     if (!validateForm(1)) {
+    //         console.log("INVALID========================");
+    //         console.log("ajax_ownsership=========", ajax_ownsership)
+    //         toastr.error("Please correct all error to proceed!!");
+    //         stopNext = false
+    //     } else {
+    //         console.log("VALID========================")
+    //         stopNext = true;
+    //         const nominee_form_count = Array.from(document.querySelectorAll('[id^="id_nominee_name"]'))
+    //             .filter(element => !element.id.endsWith('_Error')).length;
 
-                },
-                error: function (xhr) {
-                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                }
-            });
-        }
-    });
+    //         for (var i = 0; i < nominee_form_count + 1; i++) {
+    //             let count = i
+    //             if (count === 0) {
+    //                 count = "";
+    //             }
+    //             console.log("number is===========", count)
+    //             nomineeData.push({
+    //                 ["nominee_name"]: $('#id_nominee_name' + count).val(),
+    //                 ["date_of_nomination"]: $('#id_nomination_date' + count).val() === "" ? null : $('#id_nomination_date' + count).val(),
+    //                 ["relation_with_nominee"]: $('#id_nominee_relation' + count).val(),
+    //                 ["nominee_sharein_percent"]: $('#id_naminee_sharein' + count).val() === "" ? 0 : $('#id_naminee_sharein' + count).val(),
+    //                 ["nominee_dob"]: $('#id_nominee_dob' + count).val() === "" ? null : $('#id_nominee_dob' + count).val(),
+    //                 ["nominee_aadhar_no"]: $('#id_nominee_aadhar_no' + count).val(),
+    //                 ["nominee_pan_no"]: $('#id_nominee_pan_no' + count).val(),
+    //                 ["nominee_email"]: $('#id_nominee_email' + count).val(),
+    //                 ["nominee_address"]: $('#id_nominee_address' + count).val(),
+    //                 ["nominee_state"]: $('#id_nominee_state' + count).val(),
+    //                 ["nominee_pin_code"]: $('#id_nominee_pin_code' + count).val(),
+    //                 ["nominee_contact"]: $('#id_nominee_contact_number' + count).val(),
+    //                 ["nominee_emergency_contact"]: $('#id_nominee_emergency_contact' + count).val(),
+    //             });
+    //         }
+    //         memberData.push({
+    //             ["member_name"]: $('#id_member_name').val(),
+    //             ["ownership_percent"]: $('#id_member_ownership').val(),
+    //             ["member_position"]: $('#id_member_position').val(),
+    //             ["member_dob"]: $('#id_member_dob').val() === "" ? null : $('#id_member_dob').val(),
+    //             ["member_pan_no"]: $('#id_member_pan_number').val(),
+    //             ["member_aadhar_no"]: $('#id_member_aadhar_no').val(),
+    //             ["member_address"]: $('#id_member_address').val(),
+    //             ["member_state"]: $('#id_member_state').val(),
+    //             ["member_pin_code"]: $('#id_member_pin_code').val(),
+    //             ["member_email"]: $('#id_member_email').val(),
+    //             ["member_contact"]: $('#id_member_contact').val(),
+    //             ["member_emergency_contact"]: $('#id_member_emergency_contact').val(),
+    //             ["member_occupation"]: $('#id_member_occupation').val(),
+    //             ["member_is_primary"]: $('#id_is_primary_val').prop('checked'),
+    //             ["flat_status"]: $('#id_flat_status').val()
+    //         });
 
-    $("#addSharesDetail").click(function (e) {
-        // alert("CALLING");
-        let required_fields = {
-            "id_shared_wing_flat_select": "Pls select the flat number!",
-            "id_folio_number": "Folio number is required!",
-            // "id_shares_date": "Shares date is required",
-            // "id_application_number": "Application number is required!",
-            // "id_shares_certificate": "Shares certificate is reqired!",
-            // "id_allotment_number": "Allotment number is required!",
-            // "id_shares_from": "Shares from date is required!",
-            // "id_shares_to": "Shares to date is required!",
-            // "id_shares_transfer_date": "Shares trasfer date is required!",
-            // "id_total_amount_received": "Total amount received is required!",
-            // "id_total_amount_date": "Amount received date is required!",
-            // "id_transfer_from_folio_no": "Transfer from folio number is reqired!",
-            // "id_transfer_to_folio_no": "Transfer to folio number is required!"
-        };
-
-        let isValid = true
-        function validateForm(step) {
-            for (let key in required_fields) {
-                let value = $("#" + key).val().trim();
-                if (value === "" || ((key == "id_shared_wing_flat_select") && (value == "#"))) {
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text(required_fields[key]);
-                } else {
-                    $("#" + key).css("border-color", ""); // Reset to default
-                    $("#" + key + "_Error").text(""); // Clear the error message
-                }
-            }
-            return isValid;
-        }
-
-        if (!validateForm()) {
-            toastr.error("Please correct all error to proceed!!");
-            stopNext = false
-        } else {
-            stopNext = true;
-            let sharedData = {};
-            const shares_form_fields = [
-                "folio_number", "shares_date", "application_number",
-                "shares_certificate", "allotment_number", "shares_from", "shares_to", "shares_transfer_date",
-                "total_amount_received", "total_amount_date", "transfer_from_folio_no", "transfer_to_folio_no",
-            ];
-
-            shares_form_fields.forEach(function (field) {
-                // Use the actual field name from the Django model
-                let modelFieldName = field;
-
-                if (field === "shares_date" || field === "shares_transfer_date" || field === "total_amount_date") {
-                    sharedData[modelFieldName] = $('#id_' + field).val() === "" ? null : $('#id_' + field).val();
-                } else if (field === "total_amount_received") {
-                    sharedData[modelFieldName] = $('#id_' + field).val() === "" ? 0 : $('#id_' + field).val();
-                } else {
-                    sharedData[modelFieldName] = $('#id_' + field).val();
-                }
-            });
-
-            let jsonSharedData = JSON.stringify(sharedData);
-            var formData = new FormData();
-            formData.append('form_name', "shared_form");
-            formData.append('shares_json', jsonSharedData);
-            formData.append('id_shared_wing_flat_select', $('#id_shared_wing_flat_select').val());
-
-            let headers = {
-                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-            };
-
-            $.ajax({
-                url: "/member-master-creation/",
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    console.log("Success");
-                    toastr.success(response.message, "Shares Details Added!");
-                    // $("#Societyform")[0].reset();
-                },
-                error: function (xhr) {
-                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                }
-            });
-        }
-    });
-
-    $("#homeLoanSubmit").click(function (e) {
-        let required_fields = {
-            "id_home_loan_flat_select": "Pls select flat no.",
-            // "id_bank_loan_name": "Bank name is required!",
-            // "id_bank_loan_object": "Object of loan is required!",
-            // "id_bank_loan_date": "Loan issue date is required!",
-            // "id_bank_loan_value": "Loan value is required!",
-            // "id_bank_loan_acc_no": "Loan account no. is required!",
-            // "id_bank_loan_installment": "Loan installment is required!",
-            // "id_bank_loan_status": "Loan status is required",
-            // "id_bank_loan_remark": "Loan remark is reqired!"
-        }
-        let isValid = true
-        let fileStatusCheck = true
-        function validateForm(step) {
-            for (let key in required_fields) {
-                let value = $("#" + key).val().trim();
-                if (value === "" || ((key == "id_bank_loan_status") && (value == "#")) || ((key == "id_home_loan_flat_select") && (value == "#"))) {
-                    // if ($("#id_bank_loan_status").length > 0 && $("#id_bank_loan_status").val() === "Closed" && isValid == true) {
-                    //     // fileStatusCheck = true
-                    //     continue
-                    // }
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text(required_fields[key]);
-
-                } else {
-                    $("#" + key).css("border-color", "");
-                    $("#" + key + "_Error").text("");
-                }
-            }
-            if ($("#id_bank_loan_status").length > 0 && $("#id_bank_loan_status").val() === "Active") {
-                if ($("#id_bank_loan_noc_file").val() === "") {
-                    isValid = false
-                    $("#id_bank_loan_noc_file").css("border-color", "red");
-                    $("#id_bank_loan_noc_file_Error").text("File needed");
-                } else {
-                    $("#id_bank_loan_noc_file").css("border-color", "");
-                    $("#id_bank_loan_noc_file_Error").text("");
-                }
-            } else if ($("#id_bank_loan_status").length > 0 && ($("#id_bank_loan_status").val() === "Closed")) {
-                isValid = true
-                $("#id_bank_loan_noc_file").css("border-color", "");
-                $("#id_bank_loan_noc_file_Error").text("");
-            }
-            return isValid;
-        }
-
-        if (!validateForm()) {
-            toastr.error("Please correct all error to proceed!!");
-            stopNext = false
-        } else {
-            const homeLoanData = {};
-            console.log("ELSE=================")
-            const homeLoanFormFields = [
-                "bank_loan_name", "bank_loan_object", "bank_loan_date", "bank_loan_value",
-                "bank_loan_acc_no", "bank_loan_installment", "bank_loan_status", "bank_loan_remark"
-            ];
-
-            homeLoanFormFields.forEach(function (field) {
-                if (field === "bank_loan_date") {
-                    homeLoanData[field] = $('#id_' + field).val() === "" ? null : $('#id_' + field).val();
-                } else if (field === "bank_loan_status") {
-                    homeLoanData[field] = $("#id_" + field).prop("checked")
-                } else {
-                    homeLoanData[field] = $('#id_' + field).val();
-                }
-            });
-
-            const homeLoanDataJson = JSON.stringify(homeLoanData);
-            var formData = new FormData();
-            formData.append('form_name', "home_loan_form");
-            formData.append('wing_flat', $('#id_home_loan_flat_select').val());
-            formData.append('home_loan_json', homeLoanDataJson);
-            if ($('#id_bank_loan_noc_file')[0].files.length > 0) {
-                formData.append('id_bank_loan_noc_file', $('#id_bank_loan_noc_file')[0].files[0]);
-            }
-
-            let headers = {
-                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-            };
-
-            $.ajax({
-                url: "/member-master-creation/",
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    console.log("Success")
-                    // if (response.reg_number) {
-                    //     $("#unique_reg_number").val(response.reg_number)
-                    //     // alert(response.reg_number)
-                    // }
-                    toastr.success(response.message, "Shares Details Added!");
-                    // $("#Societyform")[0].reset();
-                },
-                error: function (xhr) {
-                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                }
-            });
-            stopNext = true
-        }
-    });
-
-    $("#gstFormSubmit").click(function (e) {
-        // alert("call");
-        let isValid = true;
-        let required_fields = {
-            "id_gst_flat_select": "Pls select flat",
-            // "id_gst_number": "Gst number required!",
-            // "id_gst_state": "GST state required!",
-            // "id_gst_billing_name": "Billing name is required!",
-            // "id_gst_billing_address": "Billing address is required!",
-            // "id_gst_contact_no": "Contact number is required!"
-        }
-
-        function validateForm(step) {
-            for (let key in required_fields) {
-                let value = $("#" + key).val().trim();
-                if (value === "" || ((key == "id_gst_state") && (value == "#"))) {
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#" + key + "_Error").text(required_fields[key]);
-                } else {
-                    $("#" + key).css("border-color", ""); // Reset to default
-                    $("#" + key + "_Error").text(""); // Clear the error message
-                }
-            }
-            return isValid;
-        }
-
-        if (!validateForm()) {
-            toastr.error("Please correct all error to proceed!!");
-            stopNext = false
-        } else {
-            const GSTData = {};
-            const GSTFormFields = [
-                "gst_number", "gst_state", "gst_billing_name", "gst_billing_address",
-                "gst_contact_no",
-            ];
-
-            GSTFormFields.forEach(function (field) {
-                GSTData[field] = $('#id_' + field).val();
-            });
-
-            const GSTDataJson = JSON.stringify(GSTData);
-            var formData = new FormData();
-            formData.append('form_name', "gst_form");
-            formData.append('wing_flat', $('#id_gst_flat_select').val());
-            formData.append('gst_json', GSTDataJson);
-
-            let headers = {
-                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-            };
-
-            $.ajax({
-                url: "/member-master-creation/",
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    console.log("Success")
-                    // if (response.reg_number) {
-                    //     $("#unique_reg_number").val(response.reg_number)
-                    //     // alert(response.reg_number)
-                    // }
-                    toastr.success(response.message, "Shares Details Added!");
-                    // $("#Societyform")[0].reset();
-                },
-                error: function (xhr) {
-                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                }
-            });
-            stopNext = true
-        }
-
-    });
+    //         let csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    //         let headers = {
+    //             "X-CSRFToken": csrfToken
+    //         };
+    //         let formData = new FormData();
+    //         let memberDataJson = JSON.stringify(memberData);
+    //         let nomineeDataJson = JSON.stringify(nomineeData);
+    //         formData.append('form_name', 'member_form_creation');
+    //         formData.append('memberData', memberDataJson);
+    //         formData.append('nomineeData', nomineeDataJson);
+    //         formData.append('member_ownership', $('#id_member_ownership').val());
+    //         formData.append('wing_flat_number', $('#id_wing_flat').val());
 
 
-    $("#vehicleFormSubmit").click(function (e) {
-        // get all the values here
-        let isValid = true;
-        let required_fields = {};
-        let vehicleData = [];
-        getAllVehicleDetails = {
-            "id_parking_lot": "Parking log is reqired!",
-            // "id_vehicle_type": "Vehicle type is required!",
-            // "id_vehicle_number": "Vehicle number is required!",
-            // "id_vehicle_brand": "Vehicle brand is required!",
-            // "id_rc_copy": "Vehicle cpy is required!",
-            // "id_sticker_number": "Sticker number is required!",
-            // "id_select_charge": "Vehiche chargable or not, pls select one!",
-            // "new_vehicle_id_select_charge": "Charge amount is reqired!",
-        }
+    //         $.ajax({
+    //             url: '/member-master-creation/',
+    //             method: 'POST',
+    //             data: formData,
+    //             headers: headers,
+    //             processData: false,
+    //             contentType: false,
+    //             success: function (response) {
+    //                 console.log("Success");
+    //                 toastr.success(response.message, "Member Details Added!");
+    //                 // $("#msform")[0].reset();
+    //                 if ($(clickedButton).is('#save_and_add_member')) {
+    //                     setTimeout(function () {
+    //                         location.reload();
+    //                     }, 500);
+    //                 }
 
-        for (let key in getAllVehicleDetails) {
-            Array.from(document.querySelectorAll('[id^="' + key + '"]'))
-                .filter(element => !element.id.includes('_Error'))
-                .map(element => {
-                    required_fields[element.id] = getAllVehicleDetails[key]; // Use the corresponding message from get_nominee_detail
-                    return element;
-                });
-        }
+    //             },
+    //             error: function (xhr) {
+    //                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+    //             }
+    //         });
+    //     }
+    // });
 
-        function validateForm(step) {
-            for (let key in required_fields) {
-                let value = $("#" + key).val().trim();
-                if (value === "" || (key.startsWith("id_select_charge") && (value == "#"))) {
-                    isValid = false;
-                    $("#" + key).css("border-color", "red");
-                    $("#Error_" + key).text(required_fields[key]);
-                } else {
-                    $("#" + key).css("border-color", ""); // Reset to default
-                    $("#Error_" + key).text(""); // Clear the error message
-                }
-            }
-            return isValid;
-        }
+    // $("#addSharesDetail").click(function (e) {
+    //     // alert("CALLING");
+    //     let required_fields = {
+    //         "id_shared_wing_flat_select": "Pls select the flat number!",
+    //         "id_folio_number": "Folio number is required!",
+    //         // "id_shares_date": "Shares date is required",
+    //         // "id_application_number": "Application number is required!",
+    //         // "id_shares_certificate": "Shares certificate is reqired!",
+    //         // "id_allotment_number": "Allotment number is required!",
+    //         // "id_shares_from": "Shares from date is required!",
+    //         // "id_shares_to": "Shares to date is required!",
+    //         // "id_shares_transfer_date": "Shares trasfer date is required!",
+    //         // "id_total_amount_received": "Total amount received is required!",
+    //         // "id_total_amount_date": "Amount received date is required!",
+    //         // "id_transfer_from_folio_no": "Transfer from folio number is reqired!",
+    //         // "id_transfer_to_folio_no": "Transfer to folio number is required!"
+    //     };
 
-        // console.log("REQ fields===", required_fields)
+    //     let isValid = true
+    //     function validateForm(step) {
+    //         for (let key in required_fields) {
+    //             let value = $("#" + key).val().trim();
+    //             if (value === "" || ((key == "id_shared_wing_flat_select") && (value == "#"))) {
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text(required_fields[key]);
+    //             } else {
+    //                 $("#" + key).css("border-color", ""); // Reset to default
+    //                 $("#" + key + "_Error").text(""); // Clear the error message
+    //             }
+    //         }
+    //         return isValid;
+    //     }
 
-        if (!validateForm()) {
-            toastr.error("Please correct all error to proceed!!");
-            stopNext = false
-            console.log("failed")
-        } else {
-            console.log("success")
-            const vehicleCount = Array.from(document.querySelectorAll('[id^="id_vehicle_number"]'))
-                .filter(element => !element.id.endsWith('_Error')).length;
+    //     if (!validateForm()) {
+    //         toastr.error("Please correct all error to proceed!!");
+    //         stopNext = false
+    //     } else {
+    //         stopNext = true;
+    //         let sharedData = {};
+    //         const shares_form_fields = [
+    //             "folio_number", "shares_date", "application_number",
+    //             "shares_certificate", "allotment_number", "shares_from", "shares_to", "shares_transfer_date",
+    //             "total_amount_received", "total_amount_date", "transfer_from_folio_no", "transfer_to_folio_no",
+    //         ];
 
-            // let file = $('#id_rc_copy0')[0].files[0];
-            let formData = new FormData();
-            for (var i = 0; i < vehicleCount; i++) {
-                vehicleData.push({
-                    ["parking_lot"]: $('#id_parking_lot' + i).val(),
-                    ["vehicle_type"]: $('#id_vehicle_type' + i).val(),
-                    ["vehicle_number"]: $('#id_vehicle_number' + i).val(),
-                    ["vehicle_brand"]: $('#id_vehicle_brand' + i).val(),
-                    // ["rc_copy"]: $('#id_rc_copy' + i)[0].files[0],
-                    ["sticker_number"]: $('#id_sticker_number' + i).val(),
-                    ["select_charge"]: $('#id_select_charge' + i).val(),
-                    ["new_vehicle_id_select_charge"]: $('#new_vehicle_id_select_charge' + i).val(),
-                });
-                formData.append('file' + i, $('#id_rc_copy' + i)[0].files[0]);
-            }
+    //         shares_form_fields.forEach(function (field) {
+    //             // Use the actual field name from the Django model
+    //             let modelFieldName = field;
 
-            let headers = {
-                "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
-            };
+    //             if (field === "shares_date" || field === "shares_transfer_date" || field === "total_amount_date") {
+    //                 sharedData[modelFieldName] = $('#id_' + field).val() === "" ? null : $('#id_' + field).val();
+    //             } else if (field === "total_amount_received") {
+    //                 sharedData[modelFieldName] = $('#id_' + field).val() === "" ? 0 : $('#id_' + field).val();
+    //             } else {
+    //                 sharedData[modelFieldName] = $('#id_' + field).val();
+    //             }
+    //         });
 
-            let vehicleDataJson = JSON.stringify(vehicleData);
-            formData.append('form_name', "vehicle_form");
-            formData.append('wing_flat', $('#id_vehicle_flat_select').val());
-            formData.append('vehicleDataJson', vehicleDataJson);
-            // formData.append('file', file);
+    //         let jsonSharedData = JSON.stringify(sharedData);
+    //         var formData = new FormData();
+    //         formData.append('form_name', "shared_form");
+    //         formData.append('shares_json', jsonSharedData);
+    //         formData.append('id_shared_wing_flat_select', $('#id_shared_wing_flat_select').val());
 
-            $.ajax({
-                url: '/member-master-creation/',
-                method: 'POST',
-                data: formData,
-                headers: headers,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    console.log("Success");
-                    toastr.success(response.message, "Member Details Added!");
-                    // $("#bankForm")[0].reset();
-                },
-                error: function (xhr) {
-                    alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
-                }
-            });
+    //         let headers = {
+    //             "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+    //         };
 
-            console.log("DATA================", vehicleData)
-            stopNext = true
-        }
+    //         $.ajax({
+    //             url: "/member-master-creation/",
+    //             method: 'POST',
+    //             data: formData,
+    //             headers: headers,
+    //             processData: false,
+    //             contentType: false,
+    //             success: function (response) {
+    //                 console.log("Success");
+    //                 toastr.success(response.message, "Shares Details Added!");
+    //                 // $("#Societyform")[0].reset();
+    //             },
+    //             error: function (xhr) {
+    //                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+    //             }
+    //         });
+    //     }
+    // });
 
-    });
+    // $("#homeLoanSubmit").click(function (e) {
+    //     let required_fields = {
+    //         "id_home_loan_flat_select": "Pls select flat no.",
+    //         // "id_bank_loan_name": "Bank name is required!",
+    //         // "id_bank_loan_object": "Object of loan is required!",
+    //         // "id_bank_loan_date": "Loan issue date is required!",
+    //         // "id_bank_loan_value": "Loan value is required!",
+    //         // "id_bank_loan_acc_no": "Loan account no. is required!",
+    //         // "id_bank_loan_installment": "Loan installment is required!",
+    //         // "id_bank_loan_status": "Loan status is required",
+    //         // "id_bank_loan_remark": "Loan remark is reqired!"
+    //     }
+    //     let isValid = true
+    //     let fileStatusCheck = true
+    //     function validateForm(step) {
+    //         for (let key in required_fields) {
+    //             let value = $("#" + key).val().trim();
+    //             if (value === "" || ((key == "id_bank_loan_status") && (value == "#")) || ((key == "id_home_loan_flat_select") && (value == "#"))) {
+    //                 // if ($("#id_bank_loan_status").length > 0 && $("#id_bank_loan_status").val() === "Closed" && isValid == true) {
+    //                 //     // fileStatusCheck = true
+    //                 //     continue
+    //                 // }
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text(required_fields[key]);
+
+    //             } else {
+    //                 $("#" + key).css("border-color", "");
+    //                 $("#" + key + "_Error").text("");
+    //             }
+    //         }
+    //         if ($("#id_bank_loan_status").length > 0 && $("#id_bank_loan_status").val() === "Active") {
+    //             if ($("#id_bank_loan_noc_file").val() === "") {
+    //                 isValid = false
+    //                 $("#id_bank_loan_noc_file").css("border-color", "red");
+    //                 $("#id_bank_loan_noc_file_Error").text("File needed");
+    //             } else {
+    //                 $("#id_bank_loan_noc_file").css("border-color", "");
+    //                 $("#id_bank_loan_noc_file_Error").text("");
+    //             }
+    //         } else if ($("#id_bank_loan_status").length > 0 && ($("#id_bank_loan_status").val() === "Closed")) {
+    //             isValid = true
+    //             $("#id_bank_loan_noc_file").css("border-color", "");
+    //             $("#id_bank_loan_noc_file_Error").text("");
+    //         }
+    //         return isValid;
+    //     }
+
+    //     if (!validateForm()) {
+    //         toastr.error("Please correct all error to proceed!!");
+    //         stopNext = false
+    //     } else {
+    //         const homeLoanData = {};
+    //         console.log("ELSE=================")
+    //         const homeLoanFormFields = [
+    //             "bank_loan_name", "bank_loan_object", "bank_loan_date", "bank_loan_value",
+    //             "bank_loan_acc_no", "bank_loan_installment", "bank_loan_status", "bank_loan_remark"
+    //         ];
+
+    //         homeLoanFormFields.forEach(function (field) {
+    //             if (field === "bank_loan_date") {
+    //                 homeLoanData[field] = $('#id_' + field).val() === "" ? null : $('#id_' + field).val();
+    //             } else if (field === "bank_loan_status") {
+    //                 homeLoanData[field] = $("#id_" + field).prop("checked")
+    //             } else {
+    //                 homeLoanData[field] = $('#id_' + field).val();
+    //             }
+    //         });
+
+    //         const homeLoanDataJson = JSON.stringify(homeLoanData);
+    //         var formData = new FormData();
+    //         formData.append('form_name', "home_loan_form");
+    //         formData.append('wing_flat', $('#id_home_loan_flat_select').val());
+    //         formData.append('home_loan_json', homeLoanDataJson);
+    //         if ($('#id_bank_loan_noc_file')[0].files.length > 0) {
+    //             formData.append('id_bank_loan_noc_file', $('#id_bank_loan_noc_file')[0].files[0]);
+    //         }
+
+    //         let headers = {
+    //             "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+    //         };
+
+    //         $.ajax({
+    //             url: "/member-master-creation/",
+    //             method: 'POST',
+    //             data: formData,
+    //             headers: headers,
+    //             processData: false,
+    //             contentType: false,
+    //             success: function (response) {
+    //                 console.log("Success")
+    //                 // if (response.reg_number) {
+    //                 //     $("#unique_reg_number").val(response.reg_number)
+    //                 //     // alert(response.reg_number)
+    //                 // }
+    //                 toastr.success(response.message, "Shares Details Added!");
+    //                 // $("#Societyform")[0].reset();
+    //             },
+    //             error: function (xhr) {
+    //                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+    //             }
+    //         });
+    //         stopNext = true
+    //     }
+    // });
+
+    // $("#gstFormSubmit").click(function (e) {
+    //     // alert("call");
+    //     let isValid = true;
+    //     let required_fields = {
+    //         "id_gst_flat_select": "Pls select flat",
+    //         // "id_gst_number": "Gst number required!",
+    //         // "id_gst_state": "GST state required!",
+    //         // "id_gst_billing_name": "Billing name is required!",
+    //         // "id_gst_billing_address": "Billing address is required!",
+    //         // "id_gst_contact_no": "Contact number is required!"
+    //     }
+
+    //     function validateForm(step) {
+    //         for (let key in required_fields) {
+    //             let value = $("#" + key).val().trim();
+    //             if (value === "" || ((key == "id_gst_state") && (value == "#"))) {
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#" + key + "_Error").text(required_fields[key]);
+    //             } else {
+    //                 $("#" + key).css("border-color", ""); // Reset to default
+    //                 $("#" + key + "_Error").text(""); // Clear the error message
+    //             }
+    //         }
+    //         return isValid;
+    //     }
+
+    //     if (!validateForm()) {
+    //         toastr.error("Please correct all error to proceed!!");
+    //         stopNext = false
+    //     } else {
+    //         const GSTData = {};
+    //         const GSTFormFields = [
+    //             "gst_number", "gst_state", "gst_billing_name", "gst_billing_address",
+    //             "gst_contact_no",
+    //         ];
+
+    //         GSTFormFields.forEach(function (field) {
+    //             GSTData[field] = $('#id_' + field).val();
+    //         });
+
+    //         const GSTDataJson = JSON.stringify(GSTData);
+    //         var formData = new FormData();
+    //         formData.append('form_name', "gst_form");
+    //         formData.append('wing_flat', $('#id_gst_flat_select').val());
+    //         formData.append('gst_json', GSTDataJson);
+
+    //         let headers = {
+    //             "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+    //         };
+
+    //         $.ajax({
+    //             url: "/member-master-creation/",
+    //             method: 'POST',
+    //             data: formData,
+    //             headers: headers,
+    //             processData: false,
+    //             contentType: false,
+    //             success: function (response) {
+    //                 console.log("Success")
+    //                 // if (response.reg_number) {
+    //                 //     $("#unique_reg_number").val(response.reg_number)
+    //                 //     // alert(response.reg_number)
+    //                 // }
+    //                 toastr.success(response.message, "Shares Details Added!");
+    //                 // $("#Societyform")[0].reset();
+    //             },
+    //             error: function (xhr) {
+    //                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+    //             }
+    //         });
+    //         stopNext = true
+    //     }
+
+    // });
+
+
+    // $("#vehicleFormSubmit").click(function (e) {
+    //     // get all the values here
+    //     let isValid = true;
+    //     let required_fields = {};
+    //     let vehicleData = [];
+    //     getAllVehicleDetails = {
+    //         "id_parking_lot": "Parking log is reqired!",
+    //         // "id_vehicle_type": "Vehicle type is required!",
+    //         // "id_vehicle_number": "Vehicle number is required!",
+    //         // "id_vehicle_brand": "Vehicle brand is required!",
+    //         // "id_rc_copy": "Vehicle cpy is required!",
+    //         // "id_sticker_number": "Sticker number is required!",
+    //         // "id_select_charge": "Vehiche chargable or not, pls select one!",
+    //         // "new_vehicle_id_select_charge": "Charge amount is reqired!",
+    //     }
+
+    //     for (let key in getAllVehicleDetails) {
+    //         Array.from(document.querySelectorAll('[id^="' + key + '"]'))
+    //             .filter(element => !element.id.includes('_Error'))
+    //             .map(element => {
+    //                 required_fields[element.id] = getAllVehicleDetails[key]; // Use the corresponding message from get_nominee_detail
+    //                 return element;
+    //             });
+    //     }
+
+    //     function validateForm(step) {
+    //         for (let key in required_fields) {
+    //             let value = $("#" + key).val().trim();
+    //             if (value === "" || (key.startsWith("id_select_charge") && (value == "#"))) {
+    //                 isValid = false;
+    //                 $("#" + key).css("border-color", "red");
+    //                 $("#Error_" + key).text(required_fields[key]);
+    //             } else {
+    //                 $("#" + key).css("border-color", ""); // Reset to default
+    //                 $("#Error_" + key).text(""); // Clear the error message
+    //             }
+    //         }
+    //         return isValid;
+    //     }
+
+    //     // console.log("REQ fields===", required_fields)
+
+    //     if (!validateForm()) {
+    //         toastr.error("Please correct all error to proceed!!");
+    //         stopNext = false
+    //         console.log("failed")
+    //     } else {
+    //         console.log("success")
+    //         const vehicleCount = Array.from(document.querySelectorAll('[id^="id_vehicle_number"]'))
+    //             .filter(element => !element.id.endsWith('_Error')).length;
+
+    //         // let file = $('#id_rc_copy0')[0].files[0];
+    //         let formData = new FormData();
+    //         for (var i = 0; i < vehicleCount; i++) {
+    //             vehicleData.push({
+    //                 ["parking_lot"]: $('#id_parking_lot' + i).val(),
+    //                 ["vehicle_type"]: $('#id_vehicle_type' + i).val(),
+    //                 ["vehicle_number"]: $('#id_vehicle_number' + i).val(),
+    //                 ["vehicle_brand"]: $('#id_vehicle_brand' + i).val(),
+    //                 // ["rc_copy"]: $('#id_rc_copy' + i)[0].files[0],
+    //                 ["sticker_number"]: $('#id_sticker_number' + i).val(),
+    //                 ["select_charge"]: $('#id_select_charge' + i).val(),
+    //                 ["new_vehicle_id_select_charge"]: $('#new_vehicle_id_select_charge' + i).val(),
+    //             });
+    //             formData.append('file' + i, $('#id_rc_copy' + i)[0].files[0]);
+    //         }
+
+    //         let headers = {
+    //             "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value
+    //         };
+
+    //         let vehicleDataJson = JSON.stringify(vehicleData);
+    //         formData.append('form_name', "vehicle_form");
+    //         formData.append('wing_flat', $('#id_vehicle_flat_select').val());
+    //         formData.append('vehicleDataJson', vehicleDataJson);
+    //         // formData.append('file', file);
+
+    //         $.ajax({
+    //             url: '/member-master-creation/',
+    //             method: 'POST',
+    //             data: formData,
+    //             headers: headers,
+    //             processData: false,
+    //             contentType: false,
+    //             success: function (response) {
+    //                 console.log("Success");
+    //                 toastr.success(response.message, "Member Details Added!");
+    //                 // $("#bankForm")[0].reset();
+    //             },
+    //             error: function (xhr) {
+    //                 alert("Something went wrong! " + xhr.status + " " + xhr.statusText);
+    //             }
+    //         });
+
+    //         console.log("DATA================", vehicleData)
+    //         stopNext = true
+    //     }
+
+    // });
 
     // Society form validation
     $("#SocSubmit").click(function (e) {
@@ -1423,7 +1423,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#nextBtn, #nextBtn2").click(function (e) {
+    $(".next").click(function (e) {
+    // $("#nextBtn, #nextBtn2").click(function (e) {
         e.preventDefault(); // Prevent default form submission behavior
         e.stopPropagation();
 
@@ -6394,116 +6395,101 @@ new Vue({
 
 
 // ADD MEMBER
-// new Vue({
-//     el: '#memberCreationDiv',
-//     data: {
-//         formData: {
-//         },
-//         forms: [
-//             {
-//                 // other_document: '',
-//                 other_document_specification: ''
-//             }
-//         ],
-//         errors: [],
-//         required_docs_errors: {},
-//     },
-//     methods: {
-//         addForm() {
-//             this.forms.push({
-//                 // other_document: '',
-//                 other_document_specification: ''
-//             });
-//             const newIndex = this.forms.length - 1;
-//             this.errors = this.errors.filter(error => error.index !== newIndex);
-//         },
-//         removeForm(index) {
-//             this.forms.splice(index, 1);
-//         },
-//         hasError(index, field) {
-//             return this.errors.some(error => error.index === index && error[field]);
-//         },
-//         getError(index, field) {
-//             const error = this.errors.find(error => error.index === index);
-//             return error ? error[field][0] : '';
-//         },
-//         submitBothDocs() {
-//             axios.defaults.xsrfCookieName = 'csrftoken';
-//             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+new Vue({
+    el: '#addMemberDiv',
+    data: {
+        units: [],
+        formData: {
+        },
+        forms: [
+            {
+                // other_document: '',
+                other_document_specification: ''
+            }
+        ],
+        errors: [],
+        required_docs_errors: {},
+    },
+    methods: {
+        addForm() {
+            this.forms.push({
+                // other_document: '',
+                other_document_specification: ''
+            });
+            const newIndex = this.forms.length - 1;
+            this.errors = this.errors.filter(error => error.index !== newIndex);
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitBothDocs() {
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-//             // SAVE REQUIRED DOC
+            // SAVE REQUIRED DOC
 
-//             // this.required_docs_errors = {};
-//             // const formData = new FormData();
+            // this.required_docs_errors = {};
+            const formData = new FormData();
 
-//             // if (this.$refs.completion_cert.files[0]) {
-//             //     formData.append('completion_cert', this.$refs.completion_cert.files[0]);
-//             // }
-//             // if (this.$refs.occupancy_cert.files[0]) {
-//             //     formData.append('occupancy_cert', this.$refs.occupancy_cert.files[0]);
-//             // }
-//             // if (this.$refs.deed_of_conveyance.files[0]) {
-//             //     formData.append('deed_of_conveyance', this.$refs.deed_of_conveyance.files[0]);
-//             // }
-//             // if (this.$refs.society_by_law.files[0]) {
-//             //     formData.append('society_by_law', this.$refs.society_by_law.files[0]);
-//             // }
-//             // if (this.$refs.soc_other_document.files[0]) {
-//             //     formData.append('soc_other_document', this.$refs.soc_other_document.files[0]);
-//             // }
-//             // formData.append('soc_other_document_spec', this.formData.soc_other_document_spec)
-
-//             // axios.post('http://127.0.0.1:8000/api/society-required-docs/', formData, {
-//             //         headers: {
-//             //             'Content-Type': 'multipart/form-data'
-//             //         }
-//             //     })
-//             //     .then(response => {
-//             //         this.submitted = true;
-//             //     })
-//             //     .catch(error => {
-//             //         this.required_docs_errors = error.response.data
-//             //     });
-
-//             // SAVE OTHER DOCS
-
-//             // CALL AJAX HERE .........................................
-
-//             // console.log("FORMS======", this.forms);
-//             // const formData = new FormData();
-
-//             // Append each form data to FormData object
-//             // this.forms.forEach((form, index) => {
-//             //     console.log("dddddddddddddd==", form['other_document']);
-//             //     formData.append('other_document', form['other_document']);
-//             //     formData.append('other_document_specification', form['other_document_specification']);
-//             // });
-
-//             // console.log("FORMS======", formData);
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    if (this.formData[key] !== null) {
+                        formData.append(key, this.formData[key]);
+                    }
+                }
+            }
 
 
-//             // axios.post('http://127.0.0.1:8000/api/society-other-docs/', this.forms, {})
-//             //     .then(response => {
-//             //         console.log('Form data submitted successfully:', response.data);
-//             //     })
-//             //     .catch(errors => {
-//             //         console.error('Error submitting form data:', errors);
-//             //         this.errors = errors.response.data.errors;
-//             //     });
-//         },
-//         handleFileUpload(event, index) {
-//             console.log("file===========");
-//             const selectedFile = event.target.files[0];
-//             console.log('Selected File:', selectedFile);
+            if (this.$refs.sales_agreement.files[0]) {
+                formData.append('sales_agreement', this.$refs.sales_agreement.files[0]);
+            }
+            if (this.$refs.other_attachment.files[0]) {
+                formData.append('other_attachment', this.$refs.other_attachment.files[0]);
+            }
 
-//             if (selectedFile) {
-//                 this.forms[index]['other_document'] = selectedFile;
-//             }
-//             console.log("again", this.forms[index]);
-//         },
-//         getFormNumber: index => index + 1
-//     }
-// });
+            axios.post('http://127.0.0.1:8000/api/members/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    this.submitted = true;
+                })
+                .catch(error => {
+                    this.required_docs_errors = error.response.data
+                });
+
+        },
+        handleFileUpload(event, index) {
+            console.log("file===========");
+            const selectedFile = event.target.files[0];
+            console.log('Selected File:', selectedFile);
+
+            if (selectedFile) {
+                this.forms[index]['other_document'] = selectedFile;
+            }
+            console.log("again", this.forms[index]);
+        },
+        getFormNumber: index => index + 1
+    },
+    mounted() {
+        console.log("mounted===========");
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
 
 
 
