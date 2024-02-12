@@ -174,7 +174,7 @@
 
                       <div class="col-lg-6 mb-2 d-flex">
                         <div class="w-100 sty-input-wrapper">
-                            <input type="file" class="w-100 sty-inp form-control" ref="sales_agreement" />
+                            <input type="file" class="w-100 sty-inp form-control" ref="sales_agreement" @change="handleChangeFile" />
                             <label for="id_sales_agreement" class="sty-label">Sales Agreement</label>
                             <span v-if="errors.sales_agreement" class="error">{{ errors.sales_agreement[0] }}</span>
                           <span v-else></span>
@@ -189,7 +189,7 @@
 
                       <div class="col-lg-6 mb-2 d-flex">
                         <div class="w-100 sty-input-wrapper">
-                            <input type="file" class="w-100 sty-inp form-control" ref="other_attachment" />
+                            <input type="file" class="w-100 sty-inp form-control" ref="other_attachment" @change="handleChangeFile"  />
                             <label for="id_other_attachment" class="sty-label">Other Attachment</label>
                             <span v-if="errors.other_attachment" class="error">{{ errors.other_attachment[0] }}</span>
                           <span v-else></span>
@@ -236,19 +236,17 @@
                         </small>
                       </div>
                     </div>
-                  </form>
-
-                  <form enctype="multipart/form-data">
+                    <hr>
+                    <h1>Nominee</h1>
                     <div v-for="(form, index) in forms" :key="index">
                       <h3>Form {{ getFormNumber(index) }}</h3>
 
-                      <h1>Add Nominee</h1>
                       <div class="row abcd" id="cloneNominee">
                         <div class="col-lg-4 mb-3">
                           <div class="w-100 sty-input-wrapper">
-                            <input type="text" class="w-100 sty-inp" v-model="form.beneficiary_name" />
+                            <input type="text" class="w-100 sty-inp" v-model="form.nominee_name" />
                             <label for="" class="sty-label">Nominee Name</label>
-                            <span class="error" v-if="hasError(index, 'beneficiary_name')">{{ getError(index, 'beneficiary_name') }}</span>
+                            <span class="error" v-if="hasError(index, 'nominee_name')">{{ getError(index, 'nominee_name') }}</span>
                           </div>
                         </div>
 

@@ -154,6 +154,7 @@ class MemberView(viewsets.ModelViewSet):
         return queryset.distinct()
 
 
+
 class HouseHelpAllocationView(viewsets.ModelViewSet):
     print("ADDDDD==================")
     queryset = HouseHelpAllocationMaster.objects.all()
@@ -329,4 +330,63 @@ class FlatHomeLoanView(viewsets.ModelViewSet):
 class FlatGSTView(viewsets.ModelViewSet):
     queryset = FlatGSTDetails.objects.all()
     serializer_class = FlatGSTSerializer
+
+
+import json
+
+class MemberNomineeView(viewsets.ModelViewSet):
+    queryset = Members.objects.all()
+    serializer_class = MembersSerializer
+
+    def create(self, request, *args, **kwargs):
+        print("DATA=====================")
+        print(request.data)  # Printing request data
+        return super().create(request, *args, **kwargs)
+
+    # def create(self, request, *args, **kwargs):
+    #     # Extract the JSON data string from the QueryDict
+    #     json_data_str = list(request.data.keys())[0]
+
+    #     # Parse the JSON string into a Python dictionary
+    #     try:
+    #         json_data = json.loads(json_data_str)
+    #         print("DDDDDDDDDD", json_data)
+    #     except json.JSONDecodeError as e:
+    #         return Response({'error': 'Invalid JSON format'}, status=400)
+
+    #     serializer = MembersSerializer(data=json_data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response({'message': 'Data saved successfully'}, status=status.HTTP_201_CREATED)
+    #     else:
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+    # def create(self, request, *args, **kwargs):
+    #     errors = []
+    #     saved_data = []
+
+    #     for index, data in enumerate(request.data):
+    #         serializer = self.get_serializer(data=data)
+    #         if not serializer.is_valid():
+    #             error_detail = serializer.errors
+    #             error_detail['index'] = index  # Include the index number
+    #             errors.append(error_detail)
+
+    #     if errors:
+    #         print("ERRORS=========", errors)
+    #         return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+    #     else:
+    #         for data in request.data:
+    #             print("DATA=======", request.data)
+    #             # LOOP OVER FLATS AND STORE
+    #             serializer = self.get_serializer(data=data)
+    #             serializer.is_valid(raise_exception=True)
+    #             self.perform_create(serializer)
+    #             saved_data.append(serializer.data)
+    #         return Response(saved_data, status=status.HTTP_201_CREATED)
+
+
+
 

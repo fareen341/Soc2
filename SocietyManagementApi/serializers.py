@@ -168,3 +168,52 @@ class FlatGSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = FlatGSTDetails
         fields = '__all__'
+
+
+class NomineesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nominees
+        fields = [
+            # 'member_name',
+            'nominee_name',
+            'date_of_nomination',
+            'relation_with_nominee',
+            'nominee_sharein_percent',
+            'nominee_dob',
+            'nominee_aadhar_no',
+            'nominee_pan_no',
+            'nominee_email',
+            'nominee_address',
+            'nominee_state',
+            'nominee_pin_code',
+            'nominee_contact',
+            'nominee_emergency_contact',
+        ]
+
+
+class MembersSerializer(serializers.ModelSerializer):
+    nominees = NomineesSerializer(many=True, required=False)
+
+    class Meta:
+        model = Members
+        fields = '__all__'
+
+    def create(self, validated_data):
+        nominees_data = validated_data.pop('nominees', [])
+        member = Members.objects.create(**validated_data)
+        for nominee_data in nominees_data:
+            Nominees.objects.create(member_name=member, **nominee_data)
+        return member
+
+    # def create(self, validated_data):
+    #     nominees_data = validated_data.pop('nominees', [])
+    #     member = Members.objects.create(**validated_data)
+    #     for nominee_data in nominees_data:
+    #         nominee_serializer = NomineesSerializer(data=nominee_data)
+    #         if nominee_serializer.is_valid():
+    #             Nominees.objects.create(member_name=member, **nominee_data)
+    #         else:
+    #             # Handle the case where the nominee data is invalid
+    #             # You might raise an exception, log the error, or handle it in a different way
+    #             pass
+    #     return member

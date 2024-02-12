@@ -185,3 +185,63 @@ class SocietyRegistrationDocuments(models.Model):
                 self.society_creation = last_society_creation
 
         super().save(*args, **kwargs)
+
+
+
+
+# BELOW BOTH CODE IS NOT UTILIZING
+class Members(models.Model):
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE, verbose_name="Flat No.")
+    member_name = models.CharField(max_length=200)
+    ownership_percent = models.IntegerField(null=True, blank=True, verbose_name="Ownership %")
+    member_position = models.CharField(max_length=200, null=True, blank=True, verbose_name="Position")
+    member_dob = models.DateField(null=True, blank=True, verbose_name="DOB")
+    member_pan_no = models.CharField(max_length=200, null=True, blank=True, verbose_name="PAN No.")
+    member_aadhar_no = models.CharField(max_length=200, null=True, blank=True, verbose_name="Aadhar No.")
+    member_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Address")
+    member_state = models.CharField(max_length=200, null=True, blank=True, verbose_name="State")
+    member_pin_code = models.CharField(max_length=200, null=True, blank=True, verbose_name="Pin Code")
+    member_email = models.EmailField(null=True, blank=True, verbose_name="Email")
+    member_contact = models.CharField(max_length=200, null=True, blank=True, verbose_name="Contact No.")
+    member_emergency_contact = models.CharField(max_length=200, null=True, blank=True, verbose_name="Emerg. Contact No.")
+    member_occupation = models.CharField(max_length=200, null=True, blank=True, verbose_name="Occupation")
+    member_is_primary = models.BooleanField(default = False, null=True, blank=True, verbose_name="Primary")
+    date_of_admission = models.DateField(null=True, blank=True)
+    age_at_date_of_admission = models.IntegerField(null=True, blank=True)
+    sales_agreement = models.FileField(upload_to='files/', null=True, blank=True)
+    other_attachment = models.FileField(upload_to='files/', null=True, blank=True)
+    date_of_entrance_fees = models.DateField(null=True, blank=True)
+    date_of_cessation = models.DateField(null=True, blank=True)
+    reason_for_cessation = models.CharField(max_length=200, null=True, blank=True)
+    flat_status = models.CharField(max_length=200, null=True, blank=True)
+    same_flat_member_identification = models.CharField(max_length=100, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and self.member_is_primary == True:
+            # Only update the field if the instance is being saved for the first time
+            super(Members, self).save(*args, **kwargs)  # Save the instance to generate the primary key
+            self.same_flat_member_identification = f"{self.wing_flat.unit_flat_unique}MEM{self.pk}"
+            self.save(update_fields=['same_flat_member_identification'])  # Save again to update the field
+        else:
+            super(Members, self).save(*args, **kwargs)
+
+
+    def __str__(self):
+        return self.member_name
+
+
+class Nominees(models.Model):
+    member_name = models.ForeignKey(Members, on_delete=models.CASCADE)
+    nominee_name = models.CharField(max_length=300)
+    date_of_nomination = models.DateField(null=True, blank=True)
+    relation_with_nominee = models.CharField(max_length=300, null=True, blank=True)
+    nominee_sharein_percent = models.IntegerField(null=True, blank=True)
+    nominee_dob = models.DateField(null=True, blank=True)
+    nominee_aadhar_no = models.CharField(max_length=300, null=True, blank=True)
+    nominee_pan_no = models.CharField(max_length=300, null=True, blank=True)
+    nominee_email = models.EmailField(null=True, blank=True)
+    nominee_address = models.CharField(max_length=300, null=True, blank=True)
+    nominee_state = models.CharField(max_length=300, null=True, blank=True)
+    nominee_pin_code = models.CharField(max_length=300, null=True, blank=True)
+    nominee_contact = models.CharField(max_length=300, null=True, blank=True)
+    nominee_emergency_contact = models.CharField(max_length=300, null=True, blank=True)

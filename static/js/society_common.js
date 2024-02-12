@@ -1423,8 +1423,8 @@ $(document).ready(function () {
         }
     });
 
-    $(".next").click(function (e) {
-    // $("#nextBtn, #nextBtn2").click(function (e) {
+    // $(".next").click(function (e) {
+    $("#nextBtn, #nextBtn2").click(function (e) {
         e.preventDefault(); // Prevent default form submission behavior
         e.stopPropagation();
 
@@ -6399,12 +6399,23 @@ new Vue({
     el: '#addMemberDiv',
     data: {
         units: [],
-        formData: {
-        },
+        formData: new FormData(),
+        formData2: new FormData(),
         forms: [
             {
-                // other_document: '',
-                other_document_specification: ''
+                // nominee_name: '',
+                // date_of_nomination: '',
+                // relation_with_nominee: '',
+                // nominee_sharein_percent: '',
+                // nominee_dob: '',
+                // nominee_aadhar_no: '',
+                // nominee_pan_no: '',
+                // nominee_email: '',
+                // nominee_address: '',
+                // nominee_state: '',
+                // nominee_pin_code: '',
+                // nominee_contact: '',
+                // nominee_emergency_contact: '',
             }
         ],
         errors: [],
@@ -6413,8 +6424,19 @@ new Vue({
     methods: {
         addForm() {
             this.forms.push({
-                // other_document: '',
-                other_document_specification: ''
+                // nominee_name: '',
+                // date_of_nomination: '',
+                // relation_with_nominee: '',
+                // nominee_sharein_percent: '',
+                // nominee_dob: '',
+                // nominee_aadhar_no: '',
+                // nominee_pan_no: '',
+                // nominee_email: '',
+                // nominee_address: '',
+                // nominee_state: '',
+                // nominee_pin_code: '',
+                // nominee_contact: '',
+                // nominee_emergency_contact: '',
             });
             const newIndex = this.forms.length - 1;
             this.errors = this.errors.filter(error => error.index !== newIndex);
@@ -6433,32 +6455,195 @@ new Vue({
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-            // SAVE REQUIRED DOC
+            // this.formData.append('wing_flat', this.formData.wing_flat)
+            // this.formData.append('member_name', this.formData.member_name)
 
-            // this.required_docs_errors = {};
-            const formData = new FormData();
+            // this.formData2.append('nominee_name', this.formData2.nominee_name)
+
 
             for (const key in this.formData) {
                 if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
                     if (this.formData[key] !== null) {
-                        formData.append(key, this.formData[key]);
+                        this.formData.append(key, this.formData[key]);
                     }
                 }
             }
 
 
-            if (this.$refs.sales_agreement.files[0]) {
-                formData.append('sales_agreement', this.$refs.sales_agreement.files[0]);
-            }
-            if (this.$refs.other_attachment.files[0]) {
-                formData.append('other_attachment', this.$refs.other_attachment.files[0]);
+            this.forms.forEach((form, index) => {
+                // Create a new FormData object for each form
+                const formData = new FormData();
+
+                // Append form data fields to FormData object
+                Object.entries(form).forEach(([key, value]) => {
+                    formData.append(key, value);
+                });
+
+                // Append the FormData object to forms list
+                this.forms.push(formData);
+            });
+
+            // this.formData.append("nominee", this.forms)
+
+            console.log("Nominees=========", this.forms)
+            console.log("Members=====", this.formData)
+
+
+            for (const pair of this.formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
             }
 
-            axios.post('http://127.0.0.1:8000/api/members/', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+
+
+
+            // this.forms.forEach((nominee, index) => {
+            //     for (const key in nominee) {
+            //         if (Object.prototype.hasOwnProperty.call(nominee, key)) {
+            //             this.formData2.append(key, nominee[key]);
+            //         }
+            //     }
+            // });
+
+
+
+            // console.log("break=====================");
+            // for (const pair of this.formData2.entries()) {
+            //     console.log(pair[0] + ', ' + pair[1]);
+            // }
+
+            // const nominees = [
+            //     {
+            //         "nominee_name": "John Nominee",
+            //     },
+            //     {
+            //         "nominee_name": "John Nominee",
+            //     }
+            // ]
+
+
+            // const data = {
+            //     "wing_flat": 62,
+            //     "member_name": "John",
+            //     "ownership_percent": 50,
+            //     "member_position": "Owner",
+            //     "member_dob": "1990-01-01",
+            //     "member_pan_no": "ABCDE1234F",
+            //     "member_aadhar_no": "1234 5678 9012",
+            //     "member_address": "123 Main St, City",
+            //     "member_state": "State",
+            //     "member_pin_code": "123456",
+            //     "member_email": "john@example.com",
+            //     "member_contact": "123-456-7890",
+            //     "member_emergency_contact": "987-654-3210",
+            //     "member_occupation": "Engineer",
+            //     "member_is_primary": true,
+            //     "date_of_admission": "2022-01-01",
+            //     "age_at_date_of_admission": 32,
+            //     "date_of_entrance_fees": "2022-01-01",
+            //     "flat_status": "Active",
+            //     "same_flat_member_identification": null,
+            //     "nominees": [
+            //         {
+            //             "unique_nominee": true,
+            //             "nominee_name": "John Nominee================",
+            //             "date_of_nomination": "2022-01-01",
+            //             "relation_with_nominee": "Spouse",
+            //             "nominee_sharein_percent": 50,
+            //             "nominee_dob": "1990-01-01",
+            //             "nominee_aadhar_no": "9876 5432 1098",
+            //             "nominee_pan_no": "WXYZE6789R",
+            //             "nominee_email": "jane@example.com",
+            //             "nominee_address": "456 Elm St, City",
+            //             "nominee_state": "State",
+            //             "nominee_pin_code": "654321",
+            //             "nominee_contact": "987-654-3210",
+            //             "nominee_emergency_contact": "123-456-7890"
+            //         },
+            //         {
+            //             "unique_nominee": true,
+            //             "nominee_name": "John Nominee ===========",
+            //             "date_of_nomination": "2022-01-01",
+            //             "relation_with_nominee": "Child",
+            //             "nominee_sharein_percent": 25,
+            //             "nominee_dob": "2010-01-01",
+            //             "nominee_aadhar_no": "5432 1098 7654",
+            //             "nominee_pan_no": "PQRSF1234G",
+            //             "nominee_email": "jack@example.com",
+            //             "nominee_address": "789 Oak St, City",
+            //             "nominee_state": "State",
+            //             "nominee_pin_code": "789012",
+            //             "nominee_contact": "123-456-7890",
+            //             "nominee_emergency_contact": "987-654-3210"
+            //         }
+            //     ]
+            // };
+
+            // Object.entries(data).forEach(([key, value]) => {
+            //     if (key !== "nominees") {
+            //         this.formData.append(key, value);
+            //     }
+            // });
+
+            // // Append nominee data to FormData
+            // data.nominees.forEach(nominee => {
+            //     Object.entries(nominee).forEach(([key, value]) => {
+            //         this.formData.append(key, value);
+            //     });
+            // });
+
+            // // Log FormData entries
+            // for (const pair of this.formData.entries()) {
+            //     console.log(pair[0] + ', ' + pair[1]);
+            // }
+            //   const jsonString = JSON.stringify(data);
+            //   console.log(jsonString);
+
+            // const nomineesJsonString = JSON.stringify(nominees);
+
+
+            // this.forms.forEach((nominee, index) => {
+            //     for (const key in nominee) {
+            //         if (Object.prototype.hasOwnProperty.call(nominee, key)) {
+            //             this.formData.append(`nominee[${index}][${key}]`, nominee[key]);
+            //         }
+            //     }
+            // });
+
+            // console.log("FORMDATA=======", formData);
+            // console.log("FORMDATA=======", this.forms);
+
+
+            // formData.append('wing_flat', 62); // Example value, replace with actual value
+            // formData.append('member_name', 'John'); // Example value, replace with actual value
+            // formData.append('ownership_percent', 50); // Example value, replace with actual value
+            // formData.append('member_position', 'Owner'); // Example value, replace with actual value
+            // formData.append('member_dob', '1990-01-01'); // Example value, replace with actual value
+            // formData.append('member_pan_no', 'ABCDE1234F'); // Example value, replace with actual value
+            // formData.append('member_aadhar_no', '1234 5678 9012'); // Example value, replace with actual value
+            // formData.append('member_address', '123 Main St, City'); // Example value, replace with actual value
+            // formData.append('member_state', 'State'); // Example value, replace with actual value
+            // formData.append('member_pin_code', '123456'); // Example value, replace with actual value
+            // formData.append('member_email', 'john@example.com'); // Example value, replace with actual value
+            // formData.append('member_contact', '123-456-7890'); // Example value, replace with actual value
+            // formData.append('member_emergency_contact', '987-654-3210'); // Example value, replace with actual value
+            // formData.append('member_occupation', 'Engineer'); // Example value, replace with actual value
+            // formData.append('member_is_primary', true); // Example value, replace with actual value
+            // formData.append('date_of_admission', '2022-01-01'); // Example value, replace with actual value
+            // formData.append('age_at_date_of_admission', 32); // Example value, replace with actual value
+            // formData.append('date_of_entrance_fees', '2022-01-01'); // Example value, replace with actual value
+            // formData.append('flat_status', 'Active'); // Example value, replace with actual value
+
+
+            // formData.append('transfer_to_folio_no', this.formData.transfer_to_folio_no);
+
+
+
+
+            axios.post('http://127.0.0.1:8000/api/members-creation/', this.forms, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     this.submitted = true;
                 })
@@ -6467,15 +6652,14 @@ new Vue({
                 });
 
         },
-        handleFileUpload(event, index) {
-            console.log("file===========");
-            const selectedFile = event.target.files[0];
-            console.log('Selected File:', selectedFile);
-
-            if (selectedFile) {
-                this.forms[index]['other_document'] = selectedFile;
+        handleChangeFile() {
+            if (this.$refs.sales_agreement.files[0]) {
+                this.formData.append('sales_agreement', this.$refs.sales_agreement.files[0]);
+                console.log(this.$refs.sales_agreement.files[0]);
             }
-            console.log("again", this.forms[index]);
+            if (this.$refs.other_attachment.files[0]) {
+                this.formData.append('other_attachment', this.$refs.other_attachment.files[0]);
+            }
         },
         getFormNumber: index => index + 1
     },

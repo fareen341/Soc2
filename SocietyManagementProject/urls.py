@@ -28,6 +28,7 @@ router.register('society-other-docs', apiviews.SocDocumentNewView, basename='soc
 router.register('society-required-docs', apiviews.SocietyRegistrationDocumentsView, basename='ssociety_required_docs')
 router.register('home-loan', apiviews.FlatHomeLoanView, basename='home_loan')
 router.register('flat-gst', apiviews.FlatGSTView, basename='flat_gst')
+router.register('members-creation', apiviews.MemberNomineeView, basename='members-creation')
 
 
 
