@@ -36,79 +36,59 @@
       {% endverbatim %}
 
 
-  <script>
-    new Vue({
-      el: '#app',
-      data: {
-        memberData: {
-          wing_flat: 74,
-          member_name: '',
-          s_file: null,
-          // Add other member fields here
-        },
-        nomineeData: [{
-          nominee_name: '',
-          // Add other nominee fields here
-        }]
-      },
-      methods: {
-        addNominee() {
-          this.nomineeData.push({
-            nominee_name: '',
-            // Initialize other nominee fields
-          });
-        },
-        submitForms() {
-            if (this.$refs.sales_agreement.files[0]) {
-                s_file = this.$refs.sales_agreement.files[0];
-            }
+      <script>
+        new Vue({
+            el: '#app',
+            data: {
+                memberData: {
+                    wing_flat: 74,
+                    member_name: 'fareen',
+                },
+                nomineeData: [{
+                    nominee_name: 'fareen-nom',
+                }, {
+                    nominee_name: 'fareen-nom 2',
+                }]
+            },
+            methods: {
+                addNominee() {
+                    this.nomineeData.push({
+                        nominee_name: '',
+                    });
+                },
+                submitForms() {
 
-          const formData = {
-            wing_flat: 74,
-            member_name: this.memberData.member_name,
-            sales_agreement: s_file,
-            nominees: this.nomineeData
-          };
-          console.log(formData); // You can see the combined data in the console
-          // Now, you can send formData to your backend server using Axios or fetch API
-          // Example:
-          axios.defaults.xsrfCookieName = 'csrftoken';
-          axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-          //axios.defaults.headers.post['Content-Type'] = 'application/json';
-//
-          axios.post('http://127.0.0.1:8000/api/members-creation/', formData, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data'
-            }
-            })
-            .then(response => {
-              console.log(response.data);
-            })
-            .catch(error => {
-              console.error(error);
-            });
+                  if (this.$refs.sales_agreement.files[0]) {
+                      s_file = this.$refs.sales_agreement.files[0];
+                  }
 
-            //fd.append("hello", "world")
-            //fd.append("file", fs.createReadStream(file))
-            //axios({
-            //    method: 'post',
-            //    url: 'http://127.0.0.1:8000/api/members-creation/',
-            //    data: formData,
-            //    header: {
-            //              // 'Accept': 'application/json',
-            //              'Content-Type': 'multipart/form-data',
-            //            },
-            //      })
-            //    .then(response => {
-            //            console.log(response.data);
-            //            })
-            //    .catch(error => {
-            //    console.error(error);
-            //    });
-        }
-      }
-    });
-  </script>
+
+                    // Append file object to FormData
+                    
+                    const formData = new FormData();
+                    formData.append('sales_agreement', s_file);
+                    formData.append('data', JSON.stringify({
+                        wing_flat: this.memberData.wing_flat,
+                        member_name: this.memberData.member_name,
+                        nominees: this.nomineeData.map(nominee => ({ nominee_name: nominee.nominee_name })),
+                    }));
+    
+                    axios.defaults.xsrfCookieName = 'csrftoken';
+                    axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+                    axios.post('http://127.0.0.1:8000/api/members-creation/', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>

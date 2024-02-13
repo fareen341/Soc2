@@ -63,14 +63,23 @@
                 s_file = this.$refs.sales_agreement.files[0];
             }
 
-          const formData = {
-            wing_flat: 74,
-            member_name: this.memberData.member_name,
-            sales_agreement: s_file,
-            nominees: this.nomineeData
+
+          // Create a new FormData object
+          const formData = new FormData();
+
+          // Append file object to FormData
+          formData.append('sales_agreement', s_file);
+
+          // Define your data object
+          const data = {
+              wing_flat: 74,
+              member_name: this.memberData.member_name,
+              nominees: this.nomineeData
           };
 
-          
+          // Append the entire payload object to the FormData object under the key 'data'
+          formData.append('data', JSON.stringify(data));
+                    
           console.log(formData); // You can see the combined data in the console
           // Now, you can send formData to your backend server using Axios or fetch API
           // Example:
