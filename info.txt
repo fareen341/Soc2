@@ -38,3 +38,37 @@ when period to date is given then change the status to false(inactive)
             // } else {
             //   this.error = 'An error occurred while submitting the form.';
             // }
+
+
+
+
+
+
+
+
+
+{
+    "wing_flat": 74, 
+    "member_name": "fareen", 
+    "nominees": 
+    [
+        {"nominee_name": "fareen-nom"}
+    ]
+}
+
+
+
+method 1:
+data: {"wing_flat": 74,  "member_name": "fareen", "nominees": [{"nominee_name": "fareen-nom"}]}
+
+
+method 2:
+{"wing_flat": 74,  "member_name": "fareen", "nominees": {"nominee_name": "fareen-nom"}}
+
+
+
+
+{"wing_flat": 74,  "member_name": "fareen", "nominees": {"nominee_name": "fareen-nom"}, {"nominee_name": "fareen-nom"}}
+
+
+{"wing_flat": 74, "member_name": "fareen", "nominees": [{"nominee_name": "fareen-nom1"}, {"nominee_name": "fareen-nom2"}]}

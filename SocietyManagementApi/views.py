@@ -333,15 +333,43 @@ class FlatGSTView(viewsets.ModelViewSet):
 
 
 import json
+from rest_framework.parsers import MultiPartParser, JSONParser
+from .utils import MultipartJsonParser
+
 
 class MemberNomineeView(viewsets.ModelViewSet):
     queryset = Members.objects.all()
     serializer_class = MembersSerializer
+    parser_classes = (MultipartJsonParser, JSONParser)
+
+    # def create(self, request, *args, **kwargs):
+    #     print("ALL DATA", request.data)
+    #     nominees_data = request.POST.getlist('nominees') 
+    #     print("NOMINEE DATA", nominees_data[0])
+    #     return super().create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        print("DATA=====================")
-        print(request.data)  # Printing request data
-        return super().create(request, *args, **kwargs)
+        print("ALL DATA", request.data)
+        nominees_data = request.POST.getlist('nominees')[0]
+        # nominees_data = request.POST.getlist('nominees')
+        print("NOM----", nominees_data)
+        member_serializer = self.get_serializer(data=request.data)
+        if member_serializer.is_valid():
+            member_instance = member_serializer.save()
+
+            # Loop through nominee data and save each nominee
+            for nominee_dict in nominees_data:
+                print("NOMINEE", nominee_dict)
+                nominee_serializer = NomineesSerializer(data=nominee_dict)
+                if nominee_serializer.is_valid():
+                    # Associate the nominee with the member instance
+                    nominee_serializer.save(member_name=member_instance)
+                else:
+                    return Response(nominee_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(member_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(member_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def create(self, request, *args, **kwargs):
     #     # Extract the JSON data string from the QueryDict

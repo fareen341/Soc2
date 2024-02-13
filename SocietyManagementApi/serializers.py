@@ -198,12 +198,14 @@ class MembersSerializer(serializers.ModelSerializer):
         model = Members
         fields = '__all__'
 
-    def create(self, validated_data):
-        nominees_data = validated_data.pop('nominees', [])
-        member = Members.objects.create(**validated_data)
-        for nominee_data in nominees_data:
-            Nominees.objects.create(member_name=member, **nominee_data)
-        return member
+    # def create(self, validated_data):
+    #     print("VALIDATON===", validated_data)
+    #     nominees_data = validated_data.pop('nominees', [])
+    #     print("SERIALIZERS==============", nominees_data)
+    #     member = Members.objects.create(**validated_data)
+    #     for nominee_data in nominees_data:
+    #         Nominees.objects.create(member_name=member, **nominee_data)
+    #     return member
 
     # def create(self, validated_data):
     #     nominees_data = validated_data.pop('nominees', [])
