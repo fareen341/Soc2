@@ -219,3 +219,18 @@ class MembersSerializer(serializers.ModelSerializer):
     #             # You might raise an exception, log the error, or handle it in a different way
     #             pass
     #     return member
+
+
+
+class OldFlatSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = SocietyUnitFlatCreation
+        fields = '__all__'
+
+
+class VehicleSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = FlatVehicleDetails
+        fields = '__all__'

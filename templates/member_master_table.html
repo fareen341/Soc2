@@ -21,739 +21,153 @@
             </a>
         </div>
     </div>
-    <div class="mt-4">
+    <div id="memberMasterTableVue">
+        {% verbatim %}
         <table id="example" class="display dt-table order-column" style="width:100%">
+            <!-- <table id="houseHelpDataTable"> -->
             <thead>
                 <tr>
-                    <th class="exclude-print">Actions</th>
-                    {% for item in member_data_label %}
-                    {% if item == "ID" %}
-                    <th hidden>{{ item }}============</th>
-                    {% else %}
-                    <th>{{ item }}</th>
-                    {% endif %}
-                    {% endfor %}
+                    <th>Actions</th>
+                    <th v-for="(value, key) in members[0]" :key="key">{{ key }}</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in member_details %}
-                <tr>
-                    <td class="d-flex" style="justify-content: space-evenly;">
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            onclick="updateMemberDetails(`{{item.wing_flat__id}}`)"><i
-                                class="fa-solid fa-eye"></i></button>
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModalEdit"
-                            onclick="editMemberDetails(`{{item.wing_flat__id}}`)"><i
-                                class="fa-solid fa-pen-to-square"></i></button>
-                        <button title="Add Member" type="button" data-bs-toggle="modal" data-bs-target="#addMemberModal"
-                            onclick="addMemberDetails(`{{item.wing_flat__id}}`)" class="btn"><i
-                                class="fa-solid fa-user-plus"></i></button>
-                        <button title="View History" type="button" data-bs-toggle="modal" data-bs-target="#historyModal"
-                            onclick="flatHistoryDetails(`{{item.wing_flat__id}}`)" class="btn">
-                            <svg class="svg-inline--fa fa-clock-rotate-left" aria-hidden="true" focusable="false"
-                                data-prefix="fas" data-icon="clock-rotate-left" role="img"
-                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                                <path fill="currentColor"
-                                    d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z">
-                                </path>
-                            </svg><!-- <i class="fa-solid fa-clock-rotate-left"></i> Font Awesome fontawesome.com --></button>
-
+                <tr v-for="(members, index) in members" :key="index">
+                    <td>
+                        <span @click="viewMemberData(members.id)" class="me-3"><i class="fa-solid fa-eye"></i></span>
+                        <span @click="editMemberData(members.id)" class="me-3"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <span @click="addMemberData(members.id)" class="me-3"><i class="fa-solid fa-user-plus"></i></span>
+                        <span @click="memberHistoryData(members.id)" class="me-3"><i class="fa-solid fa-clock-rotate-left"></i></span>
                     </td>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.wing_flat__unit_flat_unique }}</td>
-                    <td>{{ item.member_name }}</td>
-                    {% if item.ownership_percent < 100 %} <td><span
-                            style="background-color: #c32525; color: white; font-size: 10px; padding: 4px 6px; border-radius: 6px;">
-                            {{item.ownership_percent }}</span></td>
-                        {% else %}
-                        <td><span
-                                style="background-color: green; color: white; font-size: 10px; padding: 3px; border-radius: 6px;">
-                                {{item.ownership_percent }}</span></td>
-                        {% endif %}
-                        <td>{{ item.member_position }}</td>
-                        <td>{{ item.member_dob }}</td>
-                        <td>{{ item.member_pan_no }}</td>
-                        <td>{{ item.member_aadhar_no }}</td>
-                        <td>{{ item.member_address|slice:"20" }}...</td>
-                        <td>{{ item.member_state }}</td>
-                        <td>{{ item.member_pin_code }}</td>
-                        <td>{{ item.member_email }}</td>
-                        <td>{{ item.member_contact }}</td>
-                        <td>{{ item.member_emergency_contact }}</td>
-                        <td>{{ item.member_occupation }}</td>
-                        <td>{{ item.date_of_admission }}</td>
-                        <td>{{ item.date_of_entrance_fees }}</td>
-                        <td>{{ item.date_of_cessation }}</td>
-                        <td>{{ item.reason_for_cessation }}</td>
-                        <td>{{ item.status }}</td>
-                        {% if item.member_is_primary %}
-                        <td>
-                            <p class="view-inps"><i class="fa-solid fa-check" style="color: green;"></i></p>
-                        </td>
-                        {% else %}
-                        <td>
-                            <p class="view-inps"><i class="fa-solid fa-xmark" style="color: red;"></i></p>
-                        </td>
-                        {% endif %}
-
+                    <td v-for="(value, key) in members" :key="key">{{ value }}</td>
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
+        {% endverbatim %}
 
-    </div>
-    <!-- -------------------Modal------------------ -->
-    <!-- Button trigger modal -->
-    <!-- <button type="button" class="btn btn-primary" >
-        Launch demo modal
-    </button> -->
-
-
-    <!-- Add member -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="exampleModalLabel">
-                        Details of Flat No. A-1103</h1>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
-                    <div class="abs">
-                        <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item " role="presentation">
-                                <button class="nav-link abc active" id="member-tab" data-bs-toggle="tab"
-                                    data-bs-target="#member-tab-pane" type="button" role="tab"
-                                    aria-controls="member-tab-pane" aria-selected="true">Members Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="shares-tab" data-bs-toggle="tab"
-                                    data-bs-target="#shares-tab-pane" type="button" role="tab"
-                                    aria-controls="shares-tab-pane" aria-selected="false">Shares Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="loan-tab" data-bs-toggle="tab"
-                                    data-bs-target="#loan-tab-pane" type="button" role="tab"
-                                    aria-controls="loan-tab-pane" aria-selected="false">Home Loan Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="gst-tab" data-bs-toggle="tab"
-                                    data-bs-target="#gst-tab-pane" type="button" role="tab" aria-controls="gst-tab-pane"
-                                    aria-selected="false">GST Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="vehicle-tab" data-bs-toggle="tab"
-                                    data-bs-target="#vehicle-tab-pane" type="button" role="tab"
-                                    aria-controls="vehicle-tab-pane" aria-selected="false">Vehicle Details</button>
-                            </li>
-                            <!-- <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
-                        </li> -->
-                        </ul>
-                    </div>
-                    <!-- </div> -->
-                    <!-- <div class="container-fluid"> -->
-                    <div class="tab-content w-100" id="myTabContent">
-                        <div class="tab-pane fade show active" id="member-tab-pane" role="tabpanel"
-                            aria-labelledby="member-tab" tabindex="0">
-                            <div class="accordion" id="accordionExample">
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="shares-tab-pane" role="tabpanel" aria-labelledby="shares-tab"
-                            tabindex="0">
-                            <div class="container-fluid">
-                                <div class="row mt-3" id="sharedContent">
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="tab-pane fade" id="loan-tab-pane" role="tabpanel" aria-labelledby="loan-tab"
-                            tabindex="0">
-                            <div class="container-fluid">
-                                <div class="row mt-3" id="homeLoanContent">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="gst-tab-pane" role="tabpanel" aria-labelledby="gst-tab"
-                            tabindex="0">
-                            <div class="container-fluid">
-                                <div class="row mt-3" id="gstContent">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="vehicle-tab-pane" role="tabpanel" aria-labelledby="vehicle-tab"
-                            tabindex="0">
-                            <div class="container-fluid">
-                                <div class="row mt-3" id="vehicleContent">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- ------Edit Modal--------- -->
-    <div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="exampleModalLabel">Edit
-                        Flat No. A-1103</h1>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
-                    <div class="abs" style="z-index: 100;">
-                        <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item " role="presentation">
-                                <button class="nav-link abc active" id="member-edit-tab" data-bs-toggle="tab"
-                                    data-bs-target="#member-edit-tab-pane" type="button" role="tab"
-                                    aria-controls="member-edit-tab-pane" aria-selected="true">Members Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="shares-edit-tab" data-bs-toggle="tab"
-                                    data-bs-target="#shares-edit-tab-pane" type="button" role="tab"
-                                    aria-controls="shares-edit-tab-pane" aria-selected="false">Shares Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="loan-edit-tab" data-bs-toggle="tab"
-                                    data-bs-target="#loan-edit-tab-pane" type="button" role="tab"
-                                    aria-controls="loan-edit-tab-pane" aria-selected="false">Home Loan Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="gst-edit-tab" data-bs-toggle="tab"
-                                    data-bs-target="#gst-edit-tab-pane" type="button" role="tab"
-                                    aria-controls="gst-edit-tab-pane" aria-selected="false">GST Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link abc" id="vehicle-edit-tab" data-bs-toggle="tab"
-                                    data-bs-target="#vehicle-edit-tab-pane" type="button" role="tab"
-                                    aria-controls="vehicle-edit-tab-pane" aria-selected="false">Vehicle Details</button>
-                            </li>
-                            <!-- <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
-                    </li> -->
-                        </ul>
-                    </div>
-                    <!-- </div> -->
-                    <!-- <div class="container-fluid"> -->
-                    <div class="tab-content w-100" id="myTabContent">
-                        <div class="tab-pane fade show active" id="member-edit-tab-pane" role="tabpanel"
-                            aria-labelledby="member-edit-tab" tabindex="0">
-                            <div class="accordion" id="memberEditForm">
-                            </div>
-
-                        </div>
-
-                        <div class="tab-pane fade" id="shares-edit-tab-pane" role="tabpanel"
-                            aria-labelledby="shares-edit-tab" tabindex="0">
-                            <div class="container-fluid" id="sharedmemberEditForm">
-                                    {% verbatim %}
-                                    <div id="sharesEditContent">
-                                            <form @submit.prevent="submitForm" enctype="multipart/form-data">
-                                                    <div class="row pt-3 ps-4 pe-4">
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <select v-model="formData.wing_flat" class="w-100 sty-inp form-control">
-                                                                    <option value="#">Select your Wing & Flat No.</option>
-                                                                    <option value="70">A-Wing(101)</option>
-                                                                    <option value="B-Wing(301)">B-Wing(301)</option>
-                                                                    <option value="C-Wing(301)">C-Wing(301)</option>
-                                                                </select>
-                                                                <label for="" class="sty-label">Wing & Flat No.</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.folio_number" />
-                                                                <label for="" class="sty-label">Folio Number</label>
-                                                                <span v-if="errors.folio_number" class="error">{{ errors.folio_number[0] }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="date" class="w-100 sty-inp" v-model="formData.shares_date" ref="shares_dateInput" @change="handleFileChange" />
-                                                                <label for="" class="sty-label">Share Issue Date</label>
-                                                                <span v-if="errors.shares_date" class="error">{{ errors.shares_date[0] }}</span>
-                                                                <span v-else></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.application_number" />
-                                                                <label for="" class="sty-label">Application Number</label>
-                                                                <span v-if="errors.application_number" class="error">{{ errors.application_number[0] }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.shares_certificate" />
-                                                                <label for="" class="sty-label">Serial No. of Certificate</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.allotment_number" />
-                                                                <label for="" class="sty-label">Allotment Number</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.shares_from" />
-                                                                <label for="" class="sty-label">Share No. from</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.shares_to" />
-                                                                <label for="" class="sty-label">Share No. To</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="date" class="w-100 sty-inp" v-model="formData.shares_transfer_date" />
-                                                                <label for="" class="sty-label">Share Transfer Date</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.total_amount_received" />
-                                                                <label for="" class="sty-label">Total Amount Received</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="date" class="w-100 sty-inp" v-model="formData.total_amount_date" />
-                                                                <label for="" class="sty-label">Total Amount Received On</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.transfer_from_folio_no" />
-                                                                <label for="" class="sty-label">Transfer from Folio Number</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 mb-3">
-                                                            <div class="w-100 sty-input-wrapper">
-                                                                <input type="number" class="w-100 sty-inp" v-model="formData.transfer_to_folio_no" />
-                                                                <label for="" class="sty-label">Transfer to Folio Number</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-
-                                                    <div class="two-btn float-end pb-3 pe-4">
-                                                        <button type="submit" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Update</button>
-                                                    </div>
-                                            </form>
-                                        </div>
-                                    {% endverbatim %}
-
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="loan-edit-tab-pane" role="tabpanel"
-                            aria-labelledby="loan-edit-tab" tabindex="0">
-                            <div class="container-fluid" id="homeloanEditForm">
-                                {% comment %} {% verbatim %}
-                                    <div id="editHomeLoanDiv">
-                                        <form @submit.prevent="editHomeLoanForm" enctype="multipart/form-data">
-                                        </form>
-                                    </div>
-                                {% endverbatim %} {% endcomment %}
-
-                            </div>
-
-
-
-                        </div>
-                        <div class="tab-pane fade" id="gst-edit-tab-pane" role="tabpanel" aria-labelledby="gst-edit-tab"
-                            tabindex="0">
-                            <div class="container-fluid" id="gstEditform">
-
-                            </div>
-
-                        </div>
-                        <div class="tab-pane fade" id="vehicle-edit-tab-pane" role="tabpanel"
-                            aria-labelledby="vehicle-edit-tab" tabindex="0">
-                            <div class="container-fluid" id="vehicleEditForm">
-                            </div>
-
-                        </div>
-                        <!-- </div> -->
-                    </div>
-                    <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-        </div> -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Add Member Modal -->
-    <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Member in Flat A-1103</h1>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body">
-                    <form id="forms-container">
-                        <div class="form-container">
-                            <div class="row mt-3" style="text-align: left">
-                                <h2 id="heading" class="mb-3">Member Details</h2>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <!-- <input type="text" class="w-100 sty-inp "> -->
-                                        <select name="wing_flat_select" id="id_wing_flat"
-                                            class="w-100 sty-inp form-control">
-                                            {% for key, value in wing_flat_no.items %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                            {% endfor %}
-                                        </select>
-
-                                        <label for="wing_flat_select" class="sty-label">Wing & Flat No.</label>
-                                        <small id="id_wing_flat_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="text" class="w-100 sty-inp" id="id_member_name" />
-                                        <label for="" class="sty-label">Member's Name</label>
-                                    </div>
-                                    <small id="id_member_name_Error" class="error-message"></small>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="number" id="id_member_ownership" min="0" max="100"
-                                            class="w-100 sty-inp percentage-input">
-
-                                        <label for="" class="sty-label">Ownership %</label>
-                                        <small id="id_member_ownership_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <select name="member_position" id="id_member_position" class="w-100 sty-inp">
-                                            {% for key, value in member_position.items %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <label for="" class="sty-label">Position</label>
-                                        <small id="id_member_position_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="date" id="id_member_dob" class="w-100 sty-inp form-control" />
-                                        <label for="" class="sty-label">Member DOB</label>
-                                    </div>
-                                    <small id="id_member_dob_Error" class="error-message"></small>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="text" id="id_member_pan_number" class="w-100 sty-inp" />
-                                        <label for="" class="sty-label">Member PAN No</label>
-                                    </div>
-                                    <small id="id_member_pan_number_Error" class="error-message"></small>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="number" id="id_member_aadhar_no" class="w-100 sty-inp" />
-                                        <label for="" class="sty-label">Member Aadhaar No</label>
-                                    </div>
-                                    <small id="id_member_aadhar_no_Error" class="error-message"></small>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <textarea class="w-100 sty-inp form-control" name="" id="id_member_address"
-                                            cols="30" rows="1"></textarea>
-                                        <label for="" class="sty-label">Member Permanent Address</label>
-                                        <small id="id_member_address_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-
-                                    <div class="w-100 sty-input-wrapper">
-                                        <select name="state" id="id_member_state" class="w-100 sty-inp">
-                                            {% for key, value in state_names.items %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                            {% endfor %}
-                                        </select>
-
-                                        <label for="" class="sty-label">State</label>
-                                    </div>
-                                    <small id="id_member_state_Error" class="error-message"></small>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="number" class="w-100 sty-inp" id="id_member_pin_code" />
-                                        <label for="" class="sty-label">Pin Code</label>
-                                        <small id="id_member_pin_code_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="email" class="w-100 sty-inp" id="id_member_email" />
-                                        <label for="" class="sty-label">Member Email</label>
-                                        <small id="id_member_email_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="number" id="id_member_contact"
-                                            class="w-100 sty-inp form-control" />
-                                        <label for="" class="sty-label">Member Contact No.</label>
-                                        <small id="id_member_contact_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="number" class="w-100 sty-inp" id="id_member_emergency_contact" />
-                                        <label for="" class="sty-label">Emergency Contact No.</label>
-                                        <small id="id_member_emergency_contact_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="text" class="w-100 sty-inp" id="id_member_occupation" />
-                                        <label for="" class="sty-label">Occupation</label>
-                                        <small id="id_member_occupation_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="date" class="w-100 sty-inp" id="id_date_of_admission" />
-                                        <label for="id_date_of_admission" class="sty-label">Date of admission</label>
-                                        <small id="id_date_of_admission_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <select id="id_flat_status" class="w-100 sty-inp">
-                                            <option value="">Select Status</option>
-                                            <option value="owned">Owned</option>
-                                            <option value="rented">Rented</option>
-                                            <option value="vacant">Vacant</option>
-                                            <option value="black_listed">Black Listed</option>
-                                        </select>
-                                        <label for="id_flat_status" class="sty-label">Status</label>
-                                        <small id="id_flat_status_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 mb-3">
-                                    <div class="w-100 sty-input-wrapper">
-                                        <input type="date" class="w-100 sty-inp" id="id_date_of_entrance_fees" />
-                                        <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance
-                                            fees</label>
-                                        <small id="id_date_of_entrance_fees_Error" class="error-message"></small>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-lg-4 d-flex align-items-center">
-                                    <small id="id_is_primary">
-                                        <span>
-                                            <input type="checkbox" class="sty-inp" id="id_is_primary_val" />
-                                        </span>&nbsp;Make this Member as a Primary Member
-                                    </small>
-                                    <small id="id_is_primary_Error" class="error-message"></small>
-                                </div>
-
-                            </div>
-                            <hr />
-                            <h2 id="heading" class="mb-3">Nominee Details</h2>
-                            <div id="newNominee">
-                                <div class="row abcd" id="cloneNominee">
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp" id="id_nominee_name" />
-                                            <label for="" class="sty-label">Nominee Name</label>
-                                            <small id="id_nominee_name_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="date" class="w-100 sty-inp form-control"
-                                                id="id_nomination_date" />
-                                            <label for="" class="sty-label">Date of Nomination</label>
-                                            <small id="id_nomination_date_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input class="w-100 sty-inp form-control" type="text" name=""
-                                                id="id_nominee_relation" />
-                                            <label for="" class="sty-label">Relation with Nominator</label>
-                                            <small id="id_nominee_relation_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp form-control percentage-input"
-                                                id="id_naminee_sharein" />
-                                            <label for="" class="sty-label">Nominee Sharein %</label>
-                                            <small id="id_naminee_sharein_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
-                                            <label for="" class="sty-label">Nominee DOB</label>
-                                            <small id="id_nominee_dob_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
-                                            <label for="" class="sty-label">Nominee Aadhaar No</label>
-                                            <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
-                                            <label for="" class="sty-label">Nominee PAN No</label>
-                                            <small id="id_nominee_pan_no_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
-                                            <label for="id_nominee_email" class="sty-label">Nominee Email</label>
-                                            <small id="id_nominee_email_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address"
-                                                cols="30" rows="1"></textarea>
-                                            <label for="" class="sty-label">Nominee Permanent Address</label>
-                                            <small id="id_nominee_address_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <select name="state" id="id_nominee_state" class="w-100 sty-inp">
-                                                {% for key, value in state_names.items %}
-                                                <option value="{{ key }}">{{ value }}</option>
-                                                {% endfor %}
-                                            </select>
-
-                                            <label for="" class="sty-label">State</label>
-                                            <small id="id_nominee_state_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
-                                            <label for="" class="sty-label">Pin Code</label>
-                                            <small id="id_nominee_pin_code_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp form-control"
-                                                id="id_nominee_contact_number" />
-                                            <label for="" class="sty-label">Nominee Contact No.</label>
-                                            <small id="id_nominee_contact_number_Error" class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mb-3">
-                                        <div class="w-100 sty-input-wrapper">
-                                            <input type="number" class="w-100 sty-inp"
-                                                id="id_nominee_emergency_contact" />
-                                            <label for="" class="sty-label">Emergency Contact No.</label>
-                                            <small id="id_nominee_emergency_contact_Error"
-                                                class="error-message"></small>
-                                        </div>
-                                    </div>
-                                    <hr />
-                                </div>
-                            </div>
-                            <input type="button" name="" class="add-mem-btn float-start" id="" value="Add Nominee"
-                                onclick="addNominee()" />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- -----History Modal-------   -->
-    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div id="appendHistory">
+        <!-- View member -->
+        <div class="modal fade" id="viewMemberModal" tabindex="-1" aria-labelledby="viewMemberModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="exampleModalLabel">
-                            History of Flat No. A-1103</h1>
-                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                        <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="viewMemberModalLabel">
+                            Details of Flat No. A-1103</h1>
                     </div>
                     <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
                         <div class="abs">
                             <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item " role="presentation">
                                     <button class="nav-link abc active" id="member-tab" data-bs-toggle="tab"
-                                        data-bs-target="#member-history-tab-pane" type="button" role="tab"
-                                        aria-controls="member-history-tab-pane" aria-selected="true">Members
-                                        Details</button>
+                                        data-bs-target="#member-tab-pane" type="button" role="tab"
+                                        aria-controls="member-tab-pane" aria-selected="true">Members Details</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link abc" id="shares-tab" data-bs-toggle="tab"
-                                        data-bs-target="#shares-history-tab-pane" type="button" role="tab"
-                                        aria-controls="shares-history-tab-pane" aria-selected="false">Shares
-                                        Details</button>
+                                        data-bs-target="#shares-tab-pane" type="button" role="tab"
+                                        aria-controls="shares-tab-pane" aria-selected="false">Shares Details</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link abc" id="loan-tab" data-bs-toggle="tab"
-                                        data-bs-target="#loan-history-tab-pane" type="button" role="tab"
-                                        aria-controls="loan-history-tab-pane" aria-selected="false">Home Loan
-                                        Details</button>
+                                        data-bs-target="#loan-tab-pane" type="button" role="tab"
+                                        aria-controls="loan-tab-pane" aria-selected="false">Home Loan Details</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link abc" id="gst-tab" data-bs-toggle="tab"
-                                        data-bs-target="#gst-history-tab-pane" type="button" role="tab"
-                                        aria-controls="gst-history-tab-pane" aria-selected="false">GST Details</button>
+                                        data-bs-target="#gst-tab-pane" type="button" role="tab" aria-controls="gst-tab-pane"
+                                        aria-selected="false">GST Details</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link abc" id="vehicle-tab" data-bs-toggle="tab"
-                                        data-bs-target="#vehicle-history-tab-pane" type="button" role="tab"
-                                        aria-controls="vehicle-history-tab-pane" aria-selected="false">Vehicle
-                                        Details</button>
+                                        data-bs-target="#vehicle-tab-pane" type="button" role="tab"
+                                        aria-controls="vehicle-tab-pane" aria-selected="false">Vehicle Details</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content w-100" id="myTabContent">
+                            <div class="tab-pane fade show active" id="member-tab-pane" role="tabpanel"
+                                aria-labelledby="member-tab" tabindex="0">
+                                <div class="accordion" id="accordionExample">
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="shares-tab-pane" role="tabpanel" aria-labelledby="shares-tab"
+                                tabindex="0">
+                                <div class="container-fluid">
+                                    <div class="row mt-3" id="sharedContent">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="loan-tab-pane" role="tabpanel" aria-labelledby="loan-tab"
+                                tabindex="0">
+                                <div class="container-fluid">
+                                    <div class="row mt-3" id="homeLoanContent">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="gst-tab-pane" role="tabpanel" aria-labelledby="gst-tab"
+                                tabindex="0">
+                                <div class="container-fluid">
+                                    <div class="row mt-3" id="gstContent">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="vehicle-tab-pane" role="tabpanel" aria-labelledby="vehicle-tab"
+                                tabindex="0">
+                                <div class="container-fluid">
+                                    <div class="row mt-3" id="vehicleContent">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ------Edit Modal--------- -->
+        <div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="editMemberModalLabel">Edit
+                            Flat No. A-1103</h1>
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
+                        <div class="abs" style="z-index: 100;">
+                            <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item " role="presentation">
+                                    <button class="nav-link abc active" id="member-edit-tab" data-bs-toggle="tab"
+                                        data-bs-target="#member-edit-tab-pane" type="button" role="tab"
+                                        aria-controls="member-edit-tab-pane" aria-selected="true">Members Details</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link abc" id="shares-edit-tab" data-bs-toggle="tab"
+                                        data-bs-target="#shares-edit-tab-pane" type="button" role="tab"
+                                        aria-controls="shares-edit-tab-pane" aria-selected="false">Shares Details</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link abc" id="loan-edit-tab" data-bs-toggle="tab"
+                                        data-bs-target="#loan-edit-tab-pane" type="button" role="tab"
+                                        aria-controls="loan-edit-tab-pane" aria-selected="false">Home Loan Details</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link abc" id="gst-edit-tab" data-bs-toggle="tab"
+                                        data-bs-target="#gst-edit-tab-pane" type="button" role="tab"
+                                        aria-controls="gst-edit-tab-pane" aria-selected="false">GST Details</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link abc" id="vehicle-edit-tab" data-bs-toggle="tab"
+                                        data-bs-target="#vehicle-edit-tab-pane" type="button" role="tab"
+                                        aria-controls="vehicle-edit-tab-pane" aria-selected="false">Vehicle Details</button>
                                 </li>
                                 <!-- <li class="nav-item" role="presentation">
                             <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
@@ -763,174 +177,538 @@
                         <!-- </div> -->
                         <!-- <div class="container-fluid"> -->
                         <div class="tab-content w-100" id="myTabContent">
-                            <div class="tab-pane fade show active" id="member-history-tab-pane" role="tabpanel"
-                                aria-labelledby="member-tab" tabindex="0">
-                                <div id="flat_member_history">
+                            <div class="tab-pane fade show active" id="member-edit-tab-pane" role="tabpanel"
+                                aria-labelledby="member-edit-tab" tabindex="0">
+                                <div class="accordion" id="memberEditForm">
+                                </div>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="shares-edit-tab-pane" role="tabpanel"
+                                aria-labelledby="shares-edit-tab" tabindex="0">
+                                <div class="container-fluid" id="sharedmemberEditForm">
+                                        {% verbatim %}
+                                        <div id="sharesEditContent">
+                                                <form @submit.prevent="submitForm" enctype="multipart/form-data">
+                                                        <div class="row pt-3 ps-4 pe-4">
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <select v-model="formData.wing_flat" class="w-100 sty-inp form-control">
+                                                                        <option value="#">Select your Wing & Flat No.</option>
+                                                                        <option value="70">A-Wing(101)</option>
+                                                                        <option value="B-Wing(301)">B-Wing(301)</option>
+                                                                        <option value="C-Wing(301)">C-Wing(301)</option>
+                                                                    </select>
+                                                                    <label for="" class="sty-label">Wing & Flat No.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.folio_number" />
+                                                                    <label for="" class="sty-label">Folio Number</label>
+                                                                    <span v-if="errors.folio_number" class="error">{{ errors.folio_number[0] }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="date" class="w-100 sty-inp" v-model="formData.shares_date" ref="shares_dateInput" @change="handleFileChange" />
+                                                                    <label for="" class="sty-label">Share Issue Date</label>
+                                                                    <span v-if="errors.shares_date" class="error">{{ errors.shares_date[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.application_number" />
+                                                                    <label for="" class="sty-label">Application Number</label>
+                                                                    <span v-if="errors.application_number" class="error">{{ errors.application_number[0] }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.shares_certificate" />
+                                                                    <label for="" class="sty-label">Serial No. of Certificate</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.allotment_number" />
+                                                                    <label for="" class="sty-label">Allotment Number</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.shares_from" />
+                                                                    <label for="" class="sty-label">Share No. from</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.shares_to" />
+                                                                    <label for="" class="sty-label">Share No. To</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="date" class="w-100 sty-inp" v-model="formData.shares_transfer_date" />
+                                                                    <label for="" class="sty-label">Share Transfer Date</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.total_amount_received" />
+                                                                    <label for="" class="sty-label">Total Amount Received</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="date" class="w-100 sty-inp" v-model="formData.total_amount_date" />
+                                                                    <label for="" class="sty-label">Total Amount Received On</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.transfer_from_folio_no" />
+                                                                    <label for="" class="sty-label">Transfer from Folio Number</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.transfer_to_folio_no" />
+                                                                    <label for="" class="sty-label">Transfer to Folio Number</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+
+                                                        <div class="two-btn float-end pb-3 pe-4">
+                                                            <button type="submit" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                        </div>
+                                                </form>
+                                            </div>
+                                        {% endverbatim %}
 
                                 </div>
                             </div>
 
+                            <div class="tab-pane fade" id="loan-edit-tab-pane" role="tabpanel"
+                                aria-labelledby="loan-edit-tab" tabindex="0">
+                                <div class="container-fluid" id="homeloanEditForm">
+                                    {% comment %} {% verbatim %}
+                                        <div id="editHomeLoanDiv">
+                                            <form @submit.prevent="editHomeLoanForm" enctype="multipart/form-data">
+                                            </form>
+                                        </div>
+                                    {% endverbatim %} {% endcomment %}
 
-                            <div class="tab-pane fade" id="shares-history-tab-pane" role="tabpanel"
-                                aria-labelledby="shares-tab" tabindex="0">
-                                <div class="accordion" id="sharesHistory">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapsesharesOne" aria-expanded="true"
-                                                aria-controls="collapseOne" id="heading">
-                                                Sameer Nasir Shaikh
-                                            </button>
-                                        </h2>
-                                        <div id="collapsesharesOne" class="accordion-collapse collapse show"
-                                            data-bs-parent="#sharesHistory">
-                                            <div class="accordion-body">
-                                                <div class="row mt-3">
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Folio Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">7973</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Serial Number of Certificate
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">2</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Share Issue Date</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">21-01-2018</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Share Transfer Date</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">21-01-2023</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Application Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">210</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Allotment Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">21</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Share Number From</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">10</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Share Number To</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">16</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Total Amount Received</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">15000</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Total Amount Received on</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">25-01-2023</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Transfer from Folio Number
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">7955</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Transfer to Folio Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">7973</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                </div>
 
 
+
+                            </div>
+                            <div class="tab-pane fade" id="gst-edit-tab-pane" role="tabpanel" aria-labelledby="gst-edit-tab"
+                                tabindex="0">
+                                <div class="container-fluid" id="gstEditform">
+
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="vehicle-edit-tab-pane" role="tabpanel"
+                                aria-labelledby="vehicle-edit-tab" tabindex="0">
+                                <div class="container-fluid" id="vehicleEditForm">
+                                </div>
+
+                            </div>
+                            <!-- </div> -->
+                        </div>
+                        <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Member Modal -->
+        <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addMemberModalLabel">Add Member in Flat A-1103</h1>
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                        <form id="forms-container">
+                            <div class="form-container">
+                                <div class="row mt-3" style="text-align: left">
+                                    <h2 id="heading" class="mb-3">Member Details</h2>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <!-- <input type="text" class="w-100 sty-inp "> -->
+                                            <select name="wing_flat_select" id="id_wing_flat"
+                                                class="w-100 sty-inp form-control">
+                                                {% for key, value in wing_flat_no.items %}
+                                                <option value="{{ key }}">{{ value }}</option>
+                                                {% endfor %}
+                                            </select>
+
+                                            <label for="wing_flat_select" class="sty-label">Wing & Flat No.</label>
+                                            <small id="id_wing_flat_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" id="id_member_name" />
+                                            <label for="" class="sty-label">Member's Name</label>
+                                        </div>
+                                        <small id="id_member_name_Error" class="error-message"></small>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" id="id_member_ownership" min="0" max="100"
+                                                class="w-100 sty-inp percentage-input">
+
+                                            <label for="" class="sty-label">Ownership %</label>
+                                            <small id="id_member_ownership_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <select name="member_position" id="id_member_position" class="w-100 sty-inp">
+                                                {% for key, value in member_position.items %}
+                                                <option value="{{ key }}">{{ value }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <label for="" class="sty-label">Position</label>
+                                            <small id="id_member_position_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" id="id_member_dob" class="w-100 sty-inp form-control" />
+                                            <label for="" class="sty-label">Member DOB</label>
+                                        </div>
+                                        <small id="id_member_dob_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" id="id_member_pan_number" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Member PAN No</label>
+                                        </div>
+                                        <small id="id_member_pan_number_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" id="id_member_aadhar_no" class="w-100 sty-inp" />
+                                            <label for="" class="sty-label">Member Aadhaar No</label>
+                                        </div>
+                                        <small id="id_member_aadhar_no_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <textarea class="w-100 sty-inp form-control" name="" id="id_member_address"
+                                                cols="30" rows="1"></textarea>
+                                            <label for="" class="sty-label">Member Permanent Address</label>
+                                            <small id="id_member_address_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+
+                                        <div class="w-100 sty-input-wrapper">
+                                            <select name="state" id="id_member_state" class="w-100 sty-inp">
+                                                {% for key, value in state_names.items %}
+                                                <option value="{{ key }}">{{ value }}</option>
+                                                {% endfor %}
+                                            </select>
+
+                                            <label for="" class="sty-label">State</label>
+                                        </div>
+                                        <small id="id_member_state_Error" class="error-message"></small>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" id="id_member_pin_code" />
+                                            <label for="" class="sty-label">Pin Code</label>
+                                            <small id="id_member_pin_code_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="email" class="w-100 sty-inp" id="id_member_email" />
+                                            <label for="" class="sty-label">Member Email</label>
+                                            <small id="id_member_email_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" id="id_member_contact"
+                                                class="w-100 sty-inp form-control" />
+                                            <label for="" class="sty-label">Member Contact No.</label>
+                                            <small id="id_member_contact_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="number" class="w-100 sty-inp" id="id_member_emergency_contact" />
+                                            <label for="" class="sty-label">Emergency Contact No.</label>
+                                            <small id="id_member_emergency_contact_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="text" class="w-100 sty-inp" id="id_member_occupation" />
+                                            <label for="" class="sty-label">Occupation</label>
+                                            <small id="id_member_occupation_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp" id="id_date_of_admission" />
+                                            <label for="id_date_of_admission" class="sty-label">Date of admission</label>
+                                            <small id="id_date_of_admission_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <select id="id_flat_status" class="w-100 sty-inp">
+                                                <option value="">Select Status</option>
+                                                <option value="owned">Owned</option>
+                                                <option value="rented">Rented</option>
+                                                <option value="vacant">Vacant</option>
+                                                <option value="black_listed">Black Listed</option>
+                                            </select>
+                                            <label for="id_flat_status" class="sty-label">Status</label>
+                                            <small id="id_flat_status_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <div class="w-100 sty-input-wrapper">
+                                            <input type="date" class="w-100 sty-inp" id="id_date_of_entrance_fees" />
+                                            <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance
+                                                fees</label>
+                                            <small id="id_date_of_entrance_fees_Error" class="error-message"></small>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-4 d-flex align-items-center">
+                                        <small id="id_is_primary">
+                                            <span>
+                                                <input type="checkbox" class="sty-inp" id="id_is_primary_val" />
+                                            </span>&nbsp;Make this Member as a Primary Member
+                                        </small>
+                                        <small id="id_is_primary_Error" class="error-message"></small>
+                                    </div>
+
+                                </div>
+                                <hr />
+                                <h2 id="heading" class="mb-3">Nominee Details</h2>
+                                <div id="newNominee">
+                                    <div class="row abcd" id="cloneNominee">
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="id_nominee_name" />
+                                                <label for="" class="sty-label">Nominee Name</label>
+                                                <small id="id_nominee_name_Error" class="error-message"></small>
                                             </div>
                                         </div>
-                                        <hr>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="date" class="w-100 sty-inp form-control"
+                                                    id="id_nomination_date" />
+                                                <label for="" class="sty-label">Date of Nomination</label>
+                                                <small id="id_nomination_date_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input class="w-100 sty-inp form-control" type="text" name=""
+                                                    id="id_nominee_relation" />
+                                                <label for="" class="sty-label">Relation with Nominator</label>
+                                                <small id="id_nominee_relation_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp form-control percentage-input"
+                                                    id="id_naminee_sharein" />
+                                                <label for="" class="sty-label">Nominee Sharein %</label>
+                                                <small id="id_naminee_sharein_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="date" class="w-100 sty-inp" id="id_nominee_dob" />
+                                                <label for="" class="sty-label">Nominee DOB</label>
+                                                <small id="id_nominee_dob_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="number" class="w-100 sty-inp" id="id_nominee_aadhar_no" />
+                                                <label for="" class="sty-label">Nominee Aadhaar No</label>
+                                                <small id="id_nominee_aadhar_no_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="id_nominee_pan_no" />
+                                                <label for="" class="sty-label">Nominee PAN No</label>
+                                                <small id="id_nominee_pan_no_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="text" class="w-100 sty-inp" id="id_nominee_email" />
+                                                <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+                                                <small id="id_nominee_email_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <textarea class="w-100 sty-inp form-control" name="" id="id_nominee_address"
+                                                    cols="30" rows="1"></textarea>
+                                                <label for="" class="sty-label">Nominee Permanent Address</label>
+                                                <small id="id_nominee_address_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <select name="state" id="id_nominee_state" class="w-100 sty-inp">
+                                                    {% for key, value in state_names.items %}
+                                                    <option value="{{ key }}">{{ value }}</option>
+                                                    {% endfor %}
+                                                </select>
+
+                                                <label for="" class="sty-label">State</label>
+                                                <small id="id_nominee_state_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="number" class="w-100 sty-inp" id="id_nominee_pin_code" />
+                                                <label for="" class="sty-label">Pin Code</label>
+                                                <small id="id_nominee_pin_code_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="number" class="w-100 sty-inp form-control"
+                                                    id="id_nominee_contact_number" />
+                                                <label for="" class="sty-label">Nominee Contact No.</label>
+                                                <small id="id_nominee_contact_number_Error" class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <div class="w-100 sty-input-wrapper">
+                                                <input type="number" class="w-100 sty-inp"
+                                                    id="id_nominee_emergency_contact" />
+                                                <label for="" class="sty-label">Emergency Contact No.</label>
+                                                <small id="id_nominee_emergency_contact_Error"
+                                                    class="error-message"></small>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                    </div>
+                                </div>
+                                <input type="button" name="" class="add-mem-btn float-start" id="" value="Add Nominee"
+                                    onclick="addNominee()" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -----History Modal-------   -->
+        <div class="modal fade" id="memberHistoryModal" tabindex="-1" aria-labelledby="memberHistoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div id="appendHistory">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" style="font-family: 'Calibri', sans-serif;" id="memberHistoryModalLabel">
+                                History of Flat No. A-1103</h1>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                        </div>
+                        <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
+                            <div class="abs">
+                                <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item " role="presentation">
+                                        <button class="nav-link abc active" id="member-tab" data-bs-toggle="tab"
+                                            data-bs-target="#member-history-tab-pane" type="button" role="tab"
+                                            aria-controls="member-history-tab-pane" aria-selected="true">Members
+                                            Details</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link abc" id="shares-tab" data-bs-toggle="tab"
+                                            data-bs-target="#shares-history-tab-pane" type="button" role="tab"
+                                            aria-controls="shares-history-tab-pane" aria-selected="false">Shares
+                                            Details</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link abc" id="loan-tab" data-bs-toggle="tab"
+                                            data-bs-target="#loan-history-tab-pane" type="button" role="tab"
+                                            aria-controls="loan-history-tab-pane" aria-selected="false">Home Loan
+                                            Details</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link abc" id="gst-tab" data-bs-toggle="tab"
+                                            data-bs-target="#gst-history-tab-pane" type="button" role="tab"
+                                            aria-controls="gst-history-tab-pane" aria-selected="false">GST Details</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link abc" id="vehicle-tab" data-bs-toggle="tab"
+                                            data-bs-target="#vehicle-history-tab-pane" type="button" role="tab"
+                                            aria-controls="vehicle-history-tab-pane" aria-selected="false">Vehicle
+                                            Details</button>
+                                    </li>
+                                    <!-- <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+                            </li> -->
+                                </ul>
+                            </div>
+                            <!-- </div> -->
+                            <!-- <div class="container-fluid"> -->
+                            <div class="tab-content w-100" id="myTabContent">
+                                <div class="tab-pane fade show active" id="member-history-tab-pane" role="tabpanel"
+                                    aria-labelledby="member-tab" tabindex="0">
+                                    <div id="flat_member_history">
+
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane fade" id="shares-history-tab-pane" role="tabpanel"
+                                    aria-labelledby="shares-tab" tabindex="0">
+                                    <div class="accordion" id="sharesHistory">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapsesharesTwo"
-                                                    aria-expanded="false" id="heading" aria-controls="collapseTwo">
-                                                    Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapsesharesOne" aria-expanded="true"
+                                                    aria-controls="collapseOne" id="heading">
+                                                    Sameer Nasir Shaikh
                                                 </button>
                                             </h2>
-                                            <div id="collapsesharesTwo" class="accordion-collapse collapse"
+                                            <div id="collapsesharesOne" class="accordion-collapse collapse show"
                                                 data-bs-parent="#sharesHistory">
                                                 <div class="accordion-body">
-
                                                     <div class="row mt-3">
                                                         <div class="col-lg-6">
                                                             <div class="row">
@@ -945,8 +723,7 @@
                                                         <div class="col-lg-6">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <p class="ms-3 view-label">Serial Number of
-                                                                        Certificate
+                                                                    <p class="ms-3 view-label">Serial Number of Certificate
                                                                     </p>
                                                                 </div>
                                                                 <div class="col-lg-6">
@@ -1031,8 +808,7 @@
                                                         <div class="col-lg-6">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <p class="ms-3 view-label">Total Amount Received on
-                                                                    </p>
+                                                                    <p class="ms-3 view-label">Total Amount Received on</p>
                                                                 </div>
                                                                 <div class="col-lg-6">
                                                                     <p class="view-inps">25-01-2023</p>
@@ -1043,8 +819,7 @@
                                                         <div class="col-lg-6">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <p class="ms-3 view-label">Transfer from Folio
-                                                                        Number
+                                                                    <p class="ms-3 view-label">Transfer from Folio Number
                                                                     </p>
                                                                 </div>
                                                                 <div class="col-lg-6">
@@ -1055,8 +830,7 @@
                                                         <div class="col-lg-6">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <p class="ms-3 view-label">Transfer to Folio Number
-                                                                    </p>
+                                                                    <p class="ms-3 view-label">Transfer to Folio Number</p>
                                                                 </div>
                                                                 <div class="col-lg-6">
                                                                     <p class="view-inps">7973</p>
@@ -1068,155 +842,184 @@
 
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapsesharesTwo"
+                                                        aria-expanded="false" id="heading" aria-controls="collapseTwo">
+                                                        Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapsesharesTwo" class="accordion-collapse collapse"
+                                                    data-bs-parent="#sharesHistory">
+                                                    <div class="accordion-body">
+
+                                                        <div class="row mt-3">
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Folio Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">7973</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Serial Number of
+                                                                            Certificate
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">2</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Share Issue Date</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">21-01-2018</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Share Transfer Date</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">21-01-2023</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Application Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">210</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Allotment Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">21</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Share Number From</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">10</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Share Number To</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">16</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Total Amount Received</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">15000</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Total Amount Received on
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">25-01-2023</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Transfer from Folio
+                                                                            Number
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">7955</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Transfer to Folio Number
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">7973</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
-
                                 </div>
-                            </div>
 
 
-                            <div class="tab-pane fade" id="loan-history-tab-pane" role="tabpanel"
-                                aria-labelledby="loan-tab" tabindex="0">
-                                <div class="accordion" id="loanHistory">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseloanOne" aria-expanded="true"
-                                                aria-controls="collapseOne" id="heading">
-                                                Sameer Nasir Shaikh
-                                            </button>
-                                        </h2>
-                                        <div id="collapseloanOne" class="accordion-collapse collapse show"
-                                            data-bs-parent="#loanHistory">
-                                            <div class="accordion-body">
-                                                <div class="row mt-3">
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Hypothication Bank Name</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">ICICI Bank</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Object of Loan</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Home Loan</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Loan Issue Date</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">21-01-2010</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Loan Value</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">80,00,000</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Account Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">0123456789</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Installment</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">75</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Loan Status</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Active</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">NOC</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Null</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-3">
-                                                                <p class="ms-3 view-label">Remarks</p>
-                                                            </div>
-                                                            <div class="col-lg-9">
-                                                                <p class="view-inps">Lorem ipsum dolor sit amet,
-                                                                    consectetur
-                                                                    adipisicing elit. Hic itaque dolores tempore nam
-                                                                    laboriosam, atque cum reiciendis eveniet culpa odit
-                                                                    cupiditate eligendi explicabo aliquam adipisci error
-                                                                    soluta, iure aliquid quisquam!</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                        <hr>
+                                <div class="tab-pane fade" id="loan-history-tab-pane" role="tabpanel"
+                                    aria-labelledby="loan-tab" tabindex="0">
+                                    <div class="accordion" id="loanHistory">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseloanTwo"
-                                                    aria-expanded="false" id="heading" aria-controls="collapseTwo">
-                                                    Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseloanOne" aria-expanded="true"
+                                                    aria-controls="collapseOne" id="heading">
+                                                    Sameer Nasir Shaikh
                                                 </button>
                                             </h2>
-                                            <div id="collapseloanTwo" class="accordion-collapse collapse"
+                                            <div id="collapseloanOne" class="accordion-collapse collapse show"
                                                 data-bs-parent="#loanHistory">
                                                 <div class="accordion-body">
-
                                                     <div class="row mt-3">
 
                                                         <div class="col-lg-6">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <p class="ms-3 view-label">Hypothication Bank Name
-                                                                    </p>
+                                                                    <p class="ms-3 view-label">Hypothication Bank Name</p>
                                                                 </div>
                                                                 <div class="col-lg-6">
                                                                     <p class="view-inps">ICICI Bank</p>
@@ -1304,12 +1107,11 @@
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <p class="view-inps">Lorem ipsum dolor sit amet,
-                                                                        consectetur adipisicing elit. Hic itaque dolores
-                                                                        tempore nam laboriosam, atque cum reiciendis
-                                                                        eveniet
-                                                                        culpa odit cupiditate eligendi explicabo aliquam
-                                                                        adipisci error soluta, iure aliquid quisquam!
-                                                                    </p>
+                                                                        consectetur
+                                                                        adipisicing elit. Hic itaque dolores tempore nam
+                                                                        laboriosam, atque cum reiciendis eveniet culpa odit
+                                                                        cupiditate eligendi explicabo aliquam adipisci error
+                                                                        soluta, iure aliquid quisquam!</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1319,103 +1121,151 @@
 
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseloanTwo"
+                                                        aria-expanded="false" id="heading" aria-controls="collapseTwo">
+                                                        Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseloanTwo" class="accordion-collapse collapse"
+                                                    data-bs-parent="#loanHistory">
+                                                    <div class="accordion-body">
+
+                                                        <div class="row mt-3">
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Hypothication Bank Name
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">ICICI Bank</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Object of Loan</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Home Loan</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Loan Issue Date</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">21-01-2010</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Loan Value</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">80,00,000</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Account Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">0123456789</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Installment</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">75</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Loan Status</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Active</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">NOC</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Null</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12">
+                                                                <div class="row">
+                                                                    <div class="col-lg-3">
+                                                                        <p class="ms-3 view-label">Remarks</p>
+                                                                    </div>
+                                                                    <div class="col-lg-9">
+                                                                        <p class="view-inps">Lorem ipsum dolor sit amet,
+                                                                            consectetur adipisicing elit. Hic itaque dolores
+                                                                            tempore nam laboriosam, atque cum reiciendis
+                                                                            eveniet
+                                                                            culpa odit cupiditate eligendi explicabo aliquam
+                                                                            adipisci error soluta, iure aliquid quisquam!
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
 
                                 </div>
-
-                            </div>
-                            <div class="tab-pane fade" id="gst-history-tab-pane" role="tabpanel"
-                                aria-labelledby="gst-tab" tabindex="0">
+                                <div class="tab-pane fade" id="gst-history-tab-pane" role="tabpanel"
+                                    aria-labelledby="gst-tab" tabindex="0">
 
 
-                                <div class="accordion" id="gstHistory">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseHistoryOne" aria-expanded="true"
-                                                aria-controls="collapseOne" id="heading">
-                                                Sameer Nasir Shaikh
-                                            </button>
-                                        </h2>
-                                        <div id="collapseHistoryOne" class="accordion-collapse collapse show"
-                                            data-bs-parent="#gstHistory">
-                                            <div class="accordion-body">
-                                                <div class="row mt-3">
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">GST Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">012345678911</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Billing State</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Maharashtra</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Billing Name</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Sameer Nasir Shaikh</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Contact Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">7977604213</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-3">
-                                                                <p class="ms-3 view-label">Billing Address</p>
-                                                            </div>
-                                                            <div class="col-lg-9">
-                                                                <p class="view-inps">3, DLH Park, S. V. Road,
-                                                                    Goregaon (West),
-                                                                    Mumbai – 400062.
-                                                                    Maharashtra, India.</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                        <hr>
+                                    <div class="accordion" id="gstHistory">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseHistoryTwo"
-                                                    aria-expanded="false" id="heading" aria-controls="collapseTwo">
-                                                    Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseHistoryOne" aria-expanded="true"
+                                                    aria-controls="collapseOne" id="heading">
+                                                    Sameer Nasir Shaikh
                                                 </button>
                                             </h2>
-                                            <div id="collapseHistoryTwo" class="accordion-collapse collapse"
+                                            <div id="collapseHistoryOne" class="accordion-collapse collapse show"
                                                 data-bs-parent="#gstHistory">
                                                 <div class="accordion-body">
-
                                                     <div class="row mt-3">
                                                         <div class="col-lg-6">
                                                             <div class="row">
@@ -1477,146 +1327,102 @@
 
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseHistoryTwo"
+                                                        aria-expanded="false" id="heading" aria-controls="collapseTwo">
+                                                        Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseHistoryTwo" class="accordion-collapse collapse"
+                                                    data-bs-parent="#gstHistory">
+                                                    <div class="accordion-body">
+
+                                                        <div class="row mt-3">
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">GST Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">012345678911</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Billing State</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Maharashtra</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Billing Name</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Sameer Nasir Shaikh</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Contact Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">7977604213</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12">
+                                                                <div class="row">
+                                                                    <div class="col-lg-3">
+                                                                        <p class="ms-3 view-label">Billing Address</p>
+                                                                    </div>
+                                                                    <div class="col-lg-9">
+                                                                        <p class="view-inps">3, DLH Park, S. V. Road,
+                                                                            Goregaon (West),
+                                                                            Mumbai – 400062.
+                                                                            Maharashtra, India.</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
-
                                 </div>
-                            </div>
-                            <div class="tab-pane fade" id="vehicle-history-tab-pane" role="tabpanel"
-                                aria-labelledby="vehicle-tab" tabindex="0">
+                                <div class="tab-pane fade" id="vehicle-history-tab-pane" role="tabpanel"
+                                    aria-labelledby="vehicle-tab" tabindex="0">
 
 
-                                <div class="accordion" id="vehicleHistory">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseVehicleOne" aria-expanded="true"
-                                                aria-controls="collapseOne" id="heading">
-                                                Sameer Nasir Shaikh
-                                            </button>
-                                        </h2>
-                                        <div id="collapseVehicleOne" class="accordion-collapse collapse show"
-                                            data-bs-parent="#vehicleHistory">
-                                            <div class="accordion-body">
-                                                <div class="row mt-3">
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Parking Lot</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">A-203</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Vehicle Type</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Sedan</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Vehicle Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">MH 02 CF 3786</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Brand & Modal</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Honda City - 2022</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Sticker Issued</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Yes</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Sticker Number</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">A-361</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Vehicle Chargeable</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">Yes</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">Charge Amount</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="view-inps">1500 Rs</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <p class="ms-3 view-label">RC Copy</p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <p class="hovme view-inps"><a
-                                                                        style="text-decoration: none; color: grey;"
-                                                                        target="_blank" rel="noopener"
-                                                                        download="Society-Registration-Certificate.jpg"
-                                                                        href="./images/RC Front.JPG">RC-Copy.jpg</a></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                        <hr>
+                                    <div class="accordion" id="vehicleHistory">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseVehicleTwo"
-                                                    aria-expanded="false" id="heading" aria-controls="collapseTwo">
-                                                    Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseVehicleOne" aria-expanded="true"
+                                                    aria-controls="collapseOne" id="heading">
+                                                    Sameer Nasir Shaikh
                                                 </button>
                                             </h2>
-                                            <div id="collapseVehicleTwo" class="accordion-collapse collapse"
+                                            <div id="collapseVehicleOne" class="accordion-collapse collapse show"
                                                 data-bs-parent="#vehicleHistory">
                                                 <div class="accordion-body">
-
                                                     <div class="row mt-3">
                                                         <div class="col-lg-6">
                                                             <div class="row">
@@ -1713,8 +1519,7 @@
                                                                             style="text-decoration: none; color: grey;"
                                                                             target="_blank" rel="noopener"
                                                                             download="Society-Registration-Certificate.jpg"
-                                                                            href="./images/RC Front.JPG">RC-Copy.jpg</a>
-                                                                    </p>
+                                                                            href="./images/RC Front.JPG">RC-Copy.jpg</a></p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1723,17 +1528,137 @@
 
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseVehicleTwo"
+                                                        aria-expanded="false" id="heading" aria-controls="collapseTwo">
+                                                        Fareen Ansari &nbsp; <span>(12/02/2015 - 30/10/2022)</span>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseVehicleTwo" class="accordion-collapse collapse"
+                                                    data-bs-parent="#vehicleHistory">
+                                                    <div class="accordion-body">
+
+                                                        <div class="row mt-3">
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Parking Lot</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">A-203</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Vehicle Type</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Sedan</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Vehicle Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">MH 02 CF 3786</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Brand & Modal</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Honda City - 2022</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Sticker Issued</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Yes</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Sticker Number</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">A-361</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Vehicle Chargeable</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">Yes</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">Charge Amount</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="view-inps">1500 Rs</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <p class="ms-3 view-label">RC Copy</p>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <p class="hovme view-inps"><a
+                                                                                style="text-decoration: none; color: grey;"
+                                                                                target="_blank" rel="noopener"
+                                                                                download="Society-Registration-Certificate.jpg"
+                                                                                href="./images/RC Front.JPG">RC-Copy.jpg</a>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
-
                                 </div>
+                                <!-- </div> -->
                             </div>
-                            <!-- </div> -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -65,6 +65,9 @@ class SocietyUnitFlatCreation(models.Model):
     flat = models.CharField(max_length=300, null=True, blank=True)
     unit_flat_unique = models.CharField(max_length=100, null=True, blank=True)
 
+    # def __str__(self):
+    #     return self.unit_flat_unique
+
 
 class MemberMasterCreation(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE, verbose_name="Flat No.")
@@ -157,7 +160,7 @@ class FlatSharesDetails(models.Model):
 
 class FlatHomeLoanDetails(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
-    bank_loan_name = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_name = models.CharField(max_length=300)
     bank_loan_object = models.CharField(max_length=300, null=True, blank=True)
     bank_loan_date = models.DateField(null=True, blank=True)
     bank_loan_value = models.CharField(max_length=300, null=True, blank=True)
@@ -170,7 +173,7 @@ class FlatHomeLoanDetails(models.Model):
 
 class FlatGSTDetails(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
-    gst_number = models.CharField(max_length=300, null=True, blank=True)
+    gst_number = models.CharField(max_length=300)
     gst_state = models.CharField(max_length=300, null=True, blank=True)
     gst_billing_name = models.CharField(max_length=300, null=True, blank=True)
     gst_billing_address = models.CharField(max_length=300, null=True, blank=True)

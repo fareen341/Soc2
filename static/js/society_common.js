@@ -1424,7 +1424,7 @@ $(document).ready(function () {
     });
 
     // $(".next").click(function (e) {
-    $("#nextBtn, #nextBtn2").click(function (e) {
+    $("#nextBtn, #nextBtn2, #redirectToShares, #hLoan, #redirectToGst, #addGstNext").click(function (e) {
         e.preventDefault(); // Prevent default form submission behavior
         e.stopPropagation();
 
@@ -1453,33 +1453,33 @@ $(document).ready(function () {
         setProgressBar(++current);
     });
 
-    $(document).on("click", ".next", function (e) {
-        e.preventDefault();
-        current_fs = $(this).parent();
-        previous_fs = $(this).parent().prev();
+    // $(document).on("click", ".next", function (e) {
+    //     e.preventDefault();
+    //     current_fs = $(this).parent();
+    //     previous_fs = $(this).parent().prev();
 
-        //Remove class active
-        $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+    //     //Remove class active
+    //     $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
 
-        //show the previous fieldset
-        previous_fs.show();
+    //     //show the previous fieldset
+    //     previous_fs.show();
 
-        //hide the current fieldset with style
-        current_fs.animate({ opacity: 0 }, {
-            step: function (now) {
-                // for making fielset appear animation
-                opacity = 1 - now;
+    //     //hide the current fieldset with style
+    //     current_fs.animate({ opacity: 0 }, {
+    //         step: function (now) {
+    //             // for making fielset appear animation
+    //             opacity = 1 - now;
 
-                current_fs.css({
-                    'display': 'none',
-                    'position': 'relative'
-                });
-                previous_fs.css({ 'opacity': opacity });
-            },
-            duration: 500
-        });
-        setProgressBar(--current);
-    });
+    //             current_fs.css({
+    //                 'display': 'none',
+    //                 'position': 'relative'
+    //             });
+    //             previous_fs.css({ 'opacity': opacity });
+    //         },
+    //         duration: 500
+    //     });
+    //     setProgressBar(--current);
+    // });
 
     function setProgressBar(curStep) {
         var percent = parseFloat(100 / steps) * curStep;
@@ -6158,7 +6158,7 @@ new Vue({
 
 
 
-
+// WIng create
 new Vue({
     el: '#wingCreation',
     data: {
@@ -6209,7 +6209,7 @@ new Vue({
 
 
 
-
+// Document creation
 new Vue({
     el: '#societyDocumentsContainer',
     data: {
@@ -6394,6 +6394,9 @@ new Vue({
 
 
 
+
+
+
 // ADD MEMBER
 new Vue({
     el: '#addMemberDiv',
@@ -6402,21 +6405,7 @@ new Vue({
         formData: new FormData(),
         formData2: new FormData(),
         forms: [
-            {
-                // nominee_name: '',
-                // date_of_nomination: '',
-                // relation_with_nominee: '',
-                // nominee_sharein_percent: '',
-                // nominee_dob: '',
-                // nominee_aadhar_no: '',
-                // nominee_pan_no: '',
-                // nominee_email: '',
-                // nominee_address: '',
-                // nominee_state: '',
-                // nominee_pin_code: '',
-                // nominee_contact: '',
-                // nominee_emergency_contact: '',
-            }
+            {}
         ],
         errors: [],
         required_docs_errors: {},
@@ -6424,19 +6413,6 @@ new Vue({
     methods: {
         addForm() {
             this.forms.push({
-                // nominee_name: '',
-                // date_of_nomination: '',
-                // relation_with_nominee: '',
-                // nominee_sharein_percent: '',
-                // nominee_dob: '',
-                // nominee_aadhar_no: '',
-                // nominee_pan_no: '',
-                // nominee_email: '',
-                // nominee_address: '',
-                // nominee_state: '',
-                // nominee_pin_code: '',
-                // nominee_contact: '',
-                // nominee_emergency_contact: '',
             });
             const newIndex = this.forms.length - 1;
             this.errors = this.errors.filter(error => error.index !== newIndex);
@@ -6452,204 +6428,39 @@ new Vue({
             return error ? error[field][0] : '';
         },
         submitBothDocs() {
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-
-            // this.formData.append('wing_flat', this.formData.wing_flat)
-            // this.formData.append('member_name', this.formData.member_name)
-
-            // this.formData2.append('nominee_name', this.formData2.nominee_name)
-
-
+            const payload = {};
             for (const key in this.formData) {
                 if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
                     if (this.formData[key] !== null) {
-                        this.formData.append(key, this.formData[key]);
+                        payload[key] = this.formData[key];
                     }
                 }
             }
+            payload['nominees'] = this.forms;
+            this.formData.append('data', JSON.stringify(payload));
 
-
-            this.forms.forEach((form, index) => {
-                // Create a new FormData object for each form
-                const formData = new FormData();
-
-                // Append form data fields to FormData object
-                Object.entries(form).forEach(([key, value]) => {
-                    formData.append(key, value);
-                });
-
-                // Append the FormData object to forms list
-                this.forms.push(formData);
-            });
-
-            // this.formData.append("nominee", this.forms)
-
-            console.log("Nominees=========", this.forms)
-            console.log("Members=====", this.formData)
-
-
-            for (const pair of this.formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
+            if (this.$refs.sales_agreement.files[0]) {
+                s_file = this.$refs.sales_agreement.files[0];
+                this.formData.append('sales_agreement', s_file);
             }
 
+            console.log("payload", payload);
 
-
-
-            // this.forms.forEach((nominee, index) => {
-            //     for (const key in nominee) {
-            //         if (Object.prototype.hasOwnProperty.call(nominee, key)) {
-            //             this.formData2.append(key, nominee[key]);
-            //         }
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            // axios.post('http://127.0.0.1:8000/api/members-creation/', this.formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
             //     }
-            // });
-
-
-
-            // console.log("break=====================");
-            // for (const pair of this.formData2.entries()) {
-            //     console.log(pair[0] + ', ' + pair[1]);
-            // }
-
-            // const nominees = [
-            //     {
-            //         "nominee_name": "John Nominee",
-            //     },
-            //     {
-            //         "nominee_name": "John Nominee",
-            //     }
-            // ]
-
-
-            // const data = {
-            //     "wing_flat": 62,
-            //     "member_name": "John",
-            //     "ownership_percent": 50,
-            //     "member_position": "Owner",
-            //     "member_dob": "1990-01-01",
-            //     "member_pan_no": "ABCDE1234F",
-            //     "member_aadhar_no": "1234 5678 9012",
-            //     "member_address": "123 Main St, City",
-            //     "member_state": "State",
-            //     "member_pin_code": "123456",
-            //     "member_email": "john@example.com",
-            //     "member_contact": "123-456-7890",
-            //     "member_emergency_contact": "987-654-3210",
-            //     "member_occupation": "Engineer",
-            //     "member_is_primary": true,
-            //     "date_of_admission": "2022-01-01",
-            //     "age_at_date_of_admission": 32,
-            //     "date_of_entrance_fees": "2022-01-01",
-            //     "flat_status": "Active",
-            //     "same_flat_member_identification": null,
-            //     "nominees": [
-            //         {
-            //             "unique_nominee": true,
-            //             "nominee_name": "John Nominee================",
-            //             "date_of_nomination": "2022-01-01",
-            //             "relation_with_nominee": "Spouse",
-            //             "nominee_sharein_percent": 50,
-            //             "nominee_dob": "1990-01-01",
-            //             "nominee_aadhar_no": "9876 5432 1098",
-            //             "nominee_pan_no": "WXYZE6789R",
-            //             "nominee_email": "jane@example.com",
-            //             "nominee_address": "456 Elm St, City",
-            //             "nominee_state": "State",
-            //             "nominee_pin_code": "654321",
-            //             "nominee_contact": "987-654-3210",
-            //             "nominee_emergency_contact": "123-456-7890"
-            //         },
-            //         {
-            //             "unique_nominee": true,
-            //             "nominee_name": "John Nominee ===========",
-            //             "date_of_nomination": "2022-01-01",
-            //             "relation_with_nominee": "Child",
-            //             "nominee_sharein_percent": 25,
-            //             "nominee_dob": "2010-01-01",
-            //             "nominee_aadhar_no": "5432 1098 7654",
-            //             "nominee_pan_no": "PQRSF1234G",
-            //             "nominee_email": "jack@example.com",
-            //             "nominee_address": "789 Oak St, City",
-            //             "nominee_state": "State",
-            //             "nominee_pin_code": "789012",
-            //             "nominee_contact": "123-456-7890",
-            //             "nominee_emergency_contact": "987-654-3210"
-            //         }
-            //     ]
-            // };
-
-            // Object.entries(data).forEach(([key, value]) => {
-            //     if (key !== "nominees") {
-            //         this.formData.append(key, value);
-            //     }
-            // });
-
-            // // Append nominee data to FormData
-            // data.nominees.forEach(nominee => {
-            //     Object.entries(nominee).forEach(([key, value]) => {
-            //         this.formData.append(key, value);
+            // })
+            //     .then(response => {
+            //         console.log('Form data submitted successfully. Proceeding to the next action.', response.data);
+            //         this.nextAction();
+            //     })
+            //     .catch(error => {
+            //         this.required_docs_errors = error.response.data
             //     });
-            // });
-
-            // // Log FormData entries
-            // for (const pair of this.formData.entries()) {
-            //     console.log(pair[0] + ', ' + pair[1]);
-            // }
-            //   const jsonString = JSON.stringify(data);
-            //   console.log(jsonString);
-
-            // const nomineesJsonString = JSON.stringify(nominees);
-
-
-            // this.forms.forEach((nominee, index) => {
-            //     for (const key in nominee) {
-            //         if (Object.prototype.hasOwnProperty.call(nominee, key)) {
-            //             this.formData.append(`nominee[${index}][${key}]`, nominee[key]);
-            //         }
-            //     }
-            // });
-
-            // console.log("FORMDATA=======", formData);
-            // console.log("FORMDATA=======", this.forms);
-
-
-            // formData.append('wing_flat', 62); // Example value, replace with actual value
-            // formData.append('member_name', 'John'); // Example value, replace with actual value
-            // formData.append('ownership_percent', 50); // Example value, replace with actual value
-            // formData.append('member_position', 'Owner'); // Example value, replace with actual value
-            // formData.append('member_dob', '1990-01-01'); // Example value, replace with actual value
-            // formData.append('member_pan_no', 'ABCDE1234F'); // Example value, replace with actual value
-            // formData.append('member_aadhar_no', '1234 5678 9012'); // Example value, replace with actual value
-            // formData.append('member_address', '123 Main St, City'); // Example value, replace with actual value
-            // formData.append('member_state', 'State'); // Example value, replace with actual value
-            // formData.append('member_pin_code', '123456'); // Example value, replace with actual value
-            // formData.append('member_email', 'john@example.com'); // Example value, replace with actual value
-            // formData.append('member_contact', '123-456-7890'); // Example value, replace with actual value
-            // formData.append('member_emergency_contact', '987-654-3210'); // Example value, replace with actual value
-            // formData.append('member_occupation', 'Engineer'); // Example value, replace with actual value
-            // formData.append('member_is_primary', true); // Example value, replace with actual value
-            // formData.append('date_of_admission', '2022-01-01'); // Example value, replace with actual value
-            // formData.append('age_at_date_of_admission', 32); // Example value, replace with actual value
-            // formData.append('date_of_entrance_fees', '2022-01-01'); // Example value, replace with actual value
-            // formData.append('flat_status', 'Active'); // Example value, replace with actual value
-
-
-            // formData.append('transfer_to_folio_no', this.formData.transfer_to_folio_no);
-
-
-
-
-            axios.post('http://127.0.0.1:8000/api/members-creation/', this.forms, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-                .then(response => {
-                    this.submitted = true;
-                })
-                .catch(error => {
-                    this.required_docs_errors = error.response.data
-                });
+            $("#redirectToShares").trigger("click");
 
         },
         handleChangeFile() {
@@ -6660,6 +6471,10 @@ new Vue({
             if (this.$refs.other_attachment.files[0]) {
                 this.formData.append('other_attachment', this.$refs.other_attachment.files[0]);
             }
+        },
+        nextAction() {
+            console.log('Form data submitted successfully. Proceeding to the next action.');
+            $("#redirectToShares").trigger("click");
         },
         getFormNumber: index => index + 1
     },
@@ -6675,6 +6490,294 @@ new Vue({
     },
 });
 
+
+// Add Shares Details
+new Vue({
+    el: '#sharesAddVue',
+    data: {
+        units: [],
+        formData: {},
+        errors: {},
+    },
+    methods: {
+        submitSharesForm() {
+            console.log("callinng");
+            this.errors = {};
+            const formData = new FormData();
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    formData.append(key, this.formData[key]);
+                }
+            }
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            // axios.post('http://127.0.0.1:8000/api/shares/', formData)
+            //     .then(response => {
+            //         console.log('Form submitted successfully:', response.data);
+            //         this.nextAction();
+            //     })
+            //     .catch(error => {
+            //         this.errors = error.response.data
+            //         console.log("Error: ->", error.response.data.folio_number[0]);
+            //     });
+            $("#hLoan").trigger("click");
+        },
+        nextAction() {
+            console.log('Form data submitted successfully. Proceeding to the next action.');
+            $("#hLoan").trigger("click");
+        },
+    },
+    mounted() {
+        console.log("mounted calling");
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
+
+
+
+// Add Home Loan Details
+new Vue({
+    el: '#homeLoanVue',
+    data: {
+        units: [],
+        formData: {},
+        errors: {},
+    },
+    methods: {
+        submitHomeLoanForm() {
+            this.errors = {};
+            const formData = new FormData();
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    formData.append(key, this.formData[key]);
+                }
+            }
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            // axios.post('http://127.0.0.1:8000/api/home-loan/', formData)
+            //     .then(response => {
+            //         console.log('Form submitted successfully:', response.data);
+            //         this.nextAction();
+            //     })
+            //     .catch(error => {
+            //         this.errors = error.response.data
+            //         console.log("Error: ->", error.response.data.folio_number[0]);
+            //     });
+            $("#redirectToGst").trigger("click");
+        },
+        nextAction() {
+            console.log('Form data submitted successfully. Proceeding to the next action.');
+            $("#redirectToGst").trigger("click");
+        },
+    },
+    mounted() {
+        console.log("mounted calling");
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
+
+
+
+// Add GST Details
+new Vue({
+    el: '#GSTaddVue',
+    data: {
+        units: [],
+        formData: {},
+        errors: {},
+    },
+    methods: {
+        submitGSTForm() {
+            console.log("callinng");
+            this.errors = {};
+            const formData = new FormData();
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    formData.append(key, this.formData[key]);
+                }
+            }
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            // axios.post('http://127.0.0.1:8000/api/flat-gst/', formData)
+            //     .then(response => {
+            //         console.log('Form submitted successfully:', response.data);
+            //         this.nextAction();
+            //     })
+            //     .catch(error => {
+            //         this.errors = error.response.data
+            //         console.log("Error: ->", error.response.data.folio_number[0]);
+            //     });
+            $("#addGstNext").trigger("click");
+        },
+        nextAction() {
+            console.log('Form data submitted successfully. Proceeding to the next action.');
+            $("#addGstNext").trigger("click");
+        },
+    },
+    mounted() {
+        console.log("mounted calling");
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
+
+
+
+
+// Add Vehicle Details
+new Vue({
+    el: '#addVehicleVue',
+    data: {
+        units: [],
+        formData: {},
+        forms: [
+            {}
+        ],
+        errors: [],
+        // wing_flat: '',
+    },
+    methods: {
+        addForm() {
+            this.forms.push({});
+            const newIndex = this.forms.length - 1;
+            this.errors = this.errors.filter(error => error.index !== newIndex);
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitVehicle() {
+            this.forms.forEach((form, index) => {
+                console.log("FormData...........", form);
+                console.log("refs===>", this.$refs[`form_${index}`].files);
+                // const rcCopyInput = this.$refs[`form_${index + 1}`]; 
+                
+                // if (rcCopyInput && rcCopyInput.files.length > 0) {
+                //     files = rcCopyInput.files;
+                // }
+                
+                // console.log("copy", rcCopyInput);
+                // let rc_copy = null; // Initialize rc_copy variable
+
+                // if (rcCopyInput && rcCopyInput.files.length > 0) {
+                //     rc_copy = rcCopyInput.files[0];
+                // }
+
+                // const formData = {
+                //     wing_flat: this.formData.wing_flat,
+                //     parking_lot: form.parking_lot,
+                //     rc_copy: rcCopyInput
+                // };
+                
+                // console.log("FORMDATA====>",formData);
+                    
+                // axios.post('http://127.0.0.1:8000/api/add-vehicle/', formData , {
+                //         headers: {
+                //             'Content-Type': 'multipart/form-data'
+                //         }
+                //     })
+                //     .then(response => {
+                //         console.log('Form submitted successfully:', response.data);
+                //         this.nextAction();
+                //     })
+                //     .catch(error => {
+                //         this.errors = error.response.data
+                //         console.log("Error: ->", error.response.data.folio_number[0]);
+                //     });
+            });
+            console.log("Errors", this.errors);
+        },
+        getFormNumber: index => index + 1
+    },
+    mounted() {
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
+
+
+
+
+// MEMBER MASTER TABLE AND EDIT
+var app = new Vue({
+    el: '#memberMasterTableVue',
+    data: {
+        formData: {
+        },
+        members: [],
+        errors: {},
+        memberData: {},
+    },
+    methods: {
+        viewMemberData(id) {
+            $('#viewMemberModal').modal('show');
+            axios.get(`http://127.0.0.1:8000/api/members/${id}`)
+            .then(response => {
+                console.log("RESPONSE==>", response.data);
+                this.memberData = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        },
+        editMemberData(id) {
+            $('#editMemberModal').modal('show');
+        },
+        addMemberData(id) {
+            $('#addMemberModal').modal('show');
+        },
+        memberHistoryData(id) {
+            $('#memberHistoryModal').modal('show');
+        },
+        clearErrors() {
+            this.errors = {};
+        },
+    },
+    mounted() {
+        axios.get('http://127.0.0.1:8000/api/members/')
+            .then(response => {
+                this.members = response.data;
+                $(document).ready(function () {
+                    $('#example').DataTable();
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+        // $('#houseHelpUpdation').on('hidden.bs.modal', () => {
+        //     this.clearErrors();
+        // });
+    },
+});
 
 
 

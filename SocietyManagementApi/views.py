@@ -138,6 +138,8 @@ class UnitWingView(viewsets.ViewSet):
         return Response(units)
 
 
+from django.core.exceptions import ObjectDoesNotExist
+
 class MemberView(viewsets.ModelViewSet):
     queryset = MemberMasterCreation.objects.all()
     serializer_class = MembersSerializer
@@ -152,6 +154,26 @@ class MemberView(viewsets.ModelViewSet):
             queryset = queryset.filter(wing_flat__id=wing_flat_id)
             queryset = queryset.filter(member_is_primary=True, date_of_cessation__isnull=True)
         return queryset.distinct()
+    
+    def retrieve(self, request, *args, **kwargs):
+        queryset = super().get_queryset()
+        instance_id = kwargs.get('pk')
+        if instance_id:
+            try:
+                # instance = queryset.get(pk=instance_id, member_is_primary=True, date_of_cessation__isnull=True)
+                instance = MemberNomineeCreation.objects.select_related('related_model').get(pk=instance_id, member_is_primary=True, member__date_of_cessation__isnull=True)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        # instance = self.get_object()
+        # queryset = YourModel.objects.filter(id=instance.id, ...)  # Add your filtering logic here
+        # serializer = self.get_serializer(queryset)
+        # return Response(serializer.data)
 
 
 
@@ -417,4 +439,19 @@ class MemberNomineeView(viewsets.ModelViewSet):
 
 
 
+class AttendanceView(viewsets.ViewSet):
+    def list(self, request):
+        units = SocietyUnitFlatCreation.objects.filter(
+            membermastercreation__member_name__isnull=False, 
+            membermastercreation__date_of_cessation__isnull=True, 
+            membermastercreation__member_is_primary=True).values_list(
+            'id', 'unit_flat_unique', 'membermastercreation__member_name'
+        ).distinct()
+        return Response(units)
+    
 
+
+
+class VehicleView(viewsets.ModelViewSet):
+    queryset = FlatVehicleDetails.objects.all()
+    serializer_class = VehicleSerializers

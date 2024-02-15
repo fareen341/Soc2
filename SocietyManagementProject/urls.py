@@ -18,7 +18,9 @@ router.register('househelp', apiviews.HouseHelpView, basename='househelp')
 router.register('househelpallocation', apiviews.HouseHelpAllocationView, basename='househelpallocation')
 router.register('suggestion', apiviews.suggestionView, basename='suggestion')
 router.register('wint-unit', apiviews.UnitWingView, basename='wint_unit')
+router.register('attendance', apiviews.AttendanceView, basename='attendance')
 router.register('members', apiviews.MemberView, basename='members')
+
 
 router.register('society-creation', apiviews.SocietyCreationNewView, basename='society_creation')
 router.register('society-registration-documents', apiviews.SocietyRegistrationDocumentsView, basename='society_registration_documents')
@@ -29,6 +31,9 @@ router.register('society-required-docs', apiviews.SocietyRegistrationDocumentsVi
 router.register('home-loan', apiviews.FlatHomeLoanView, basename='home_loan')
 router.register('flat-gst', apiviews.FlatGSTView, basename='flat_gst')
 router.register('members-creation', apiviews.MemberNomineeView, basename='members-creation')
+
+router.register('add-vehicle', apiviews.VehicleView, basename='add_vehicle')
+
 
 
 

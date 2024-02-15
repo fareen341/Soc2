@@ -72,3 +72,13 @@ method 2:
 
 
 {"wing_flat": 74, "member_name": "fareen", "nominees": [{"nominee_name": "fareen-nom1"}, {"nominee_name": "fareen-nom2"}]}
+
+
+
+
+
+
+
+for (const pair of this.formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
