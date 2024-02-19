@@ -177,8 +177,8 @@
                             <div class="col-lg-4 mb-4">
                                 <div class="sty-input-wrapper w-100">
                                     <input type="text" class="sty-inp form-control w-100" v-model="formData.member_name">
-                                    <input type="text" class="sty-inp form-control w-100" v-model="formData.pk">
-                                    <input type="text" class="sty-inp form-control w-100" v-model="formData.aadharPanPk">
+                                    <input type="text" class="sty-inp form-control w-100" v-model="formData.pk" hidden>
+                                    <input type="text" class="sty-inp form-control w-100" v-model="formData.aadharPanPk" hidden>
 
                                     <label for="" class="sty-label">Owner Name</label>
                                     <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>

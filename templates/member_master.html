@@ -32,7 +32,7 @@
                     <div class="row mt-3" style="text-align: left">
                       <div class="col-lg-4 mb-3">
                         <div class="w-100 sty-input-wrapper">
-                          <select class="w-100 sty-inp form-control" v-model="formData.wing_flat" />
+                          <select class="w-100 sty-inp form-control" v-model="formData.wing_flat" @change="get_checkbox_value($event)">
                             <option v-for="unit in units" :value="unit[0]">{{ unit[1] }}</option>
                           </select>
                           <label for="wing_flat_select" class="sty-label">Wing & Flat No.</label>
@@ -52,8 +52,9 @@
 
                       <div class="col-lg-4 mb-3">
                         <div class="w-100 sty-input-wrapper">
-                          <input type="number" min="0" max="100" class="w-100 sty-inp percentage-input" v-model="formData.ownership_percent" />
+                          <input type="number" min="0" max="100" class="w-100 sty-inp percentage-input" v-model="formData.ownership_percent" @input="getOwnership(formData.wing_flat, $event)" />
                           <label for="" class="sty-label">Ownership %</label>
+                          <span v-if="ownershipError" style="color: red;">{{ ownershipError }}</span>
                           <span v-if="errors.ownership_percent" class="error">{{ errors.ownership_percent[0] }}</span>
                           <span v-else></span>
                         </div>
@@ -210,7 +211,7 @@
                         </div>
                       </div>
 
-                      <div class="col-lg-4 mb-3" id="id_flat_status_div_container">
+                      <div class="col-lg-4 mb-3" id="id_flat_status_div_container" v-if="flat_having_primary_mem">
                         <div class="w-100 sty-input-wrapper" id="id_flat_status_div">
                           <select class="w-100 sty-inp" v-model="formData.flat_status">
                             <option value="">Select Flat Status</option>
@@ -226,7 +227,7 @@
                         </div>
                       </div>
 
-                      <div class="col-lg-4 d-flex align-items-center" id="id_is_primary_container">
+                      <div class="col-lg-4 d-flex align-items-center" id="id_is_primary_container" v-if="flat_having_primary_mem">
                         <small id="id_is_primary">
                           <span>
                             <input type="checkbox" class="sty-inp" v-model="formData.member_is_primary"/>
@@ -359,7 +360,7 @@
                     <div class="row pt-3 ps-4 pe-4">
                       <div class="col-lg-4 mb-3">
                           <div class="w-100 sty-input-wrapper">
-                            <select class="w-100 sty-inp form-control" v-model="formData.wing_flat" />
+                            <select class="w-100 sty-inp form-control" v-model="formData.wing_flat">
                               <option v-for="unit in units" :value="unit[0]">{{ unit[1] }}</option>
                             </select>
                             <label for="wing_flat_select" class="sty-label">Wing & Flat No.</label>
@@ -545,10 +546,8 @@
 
                     <div class="col-lg-4 mb-3">
                       <div class="w-100 sty-input-wrapper">
-                        <select class="w-100 form-control sty-inp" v-model="formData.bank_loan_status">
-                          <option value="">Select Status</option>
-                          <option value="Active">Active</option>
-                          <option value="Closed">Closed</option>
+                        <select class="w-100 sty-inp" v-model="formData.bank_loan_status" @change="loanStatus($event)">
+                          <option :value="formData.bank_loan_status">{{ formData.bank_loan_status }}</option>
                         </select>
                         <label class="sty-label">Loan Status</label>
                         <span v-if="errors.bank_loan_status" class="error">{{ errors.bank_loan_status[0] }}</span>
@@ -556,9 +555,9 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-4 mb-3" style="display: none;" ref="bank_noc_file">
+                    <div class="col-lg-4 mb-3" v-if="attach_noc">
                       <div class="w-100 sty-input-wrapper">
-                        <input type="file" class="w-100 sty-inp form-control" />
+                        <input type="file" class="w-100 sty-inp form-control" ref="bank_noc_file" />
                         <label class="sty-label">Attach NOC</label>
                         <span v-if="errors.bank_loan_remark" class="error">{{ errors.bank_loan_remark[0] }}</span>
                         <span v-else></span>
@@ -568,7 +567,7 @@
                     <div class="col-lg-4 mb-3">
                       <div class="w-100 sty-input-wrapper">
                         <input type="text" class="w-100 sty-inp" v-model="formData.bank_loan_remark" />
-                        <label class="sty-label">Attach NOC</label>
+                        <label class="sty-label">Remark</label>
                         <span v-if="errors.bank_loan_remark" class="error">{{ errors.bank_loan_remark[0] }}</span>
                         <span v-else></span>
                       </div>
@@ -589,7 +588,7 @@
                 <div class="row">
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <select class="w-100 sty-inp form-control" v-model="formData.wing_flat" />
+                      <select class="w-100 sty-inp" v-model="formData.wing_flat" />
                         <option v-for="unit in units" :value="unit[0]">{{ unit[1] }}</option>
                       </select>
                       <label class="sty-label">Wing & Flat No.</label>
@@ -609,8 +608,8 @@
 
                   <div class="col-lg-4 mb-3">
                     <div class="w-100 sty-input-wrapper">
-                      <select class="w-100 sty-inp form-control" v-model="formData.gst_state" :style="{ borderColor: errors.gst_state ? 'red' : '' }">
-                        <option value="#">Select State</option>
+                      <select class="w-100 sty-inp" v-model="formData.gst_state">
+                        <option value="">Select State</option>
                         <option value="Andhra Pradesh">Andhra Pradesh</option>
                         <option value="Arunachal Pradesh">Arunachal Pradesh</option>
                         <option value="Assam">Assam</option>
@@ -649,6 +648,7 @@
                         <option value="Lakshadweep">Lakshadweep</option>
                         <option value="Puducherry">Puducherry</option>
                       </select>
+                      <label for="" class="sty-label">Select State</label>
                       <span v-if="errors.gst_state" class="error">{{ errors.gst_state[0] }}</span>
                       <span v-else></span>
                     </div>
@@ -742,8 +742,8 @@
 
                       <div class="col-lg-4 mb-3">
                         <div class="w-100 sty-input-wrapper">
-                          <input type="file" class="w-100 sty-inp form-control" :ref="'form_' + index" />
-                          <label for="id_rc_copy0" class="sty-label">RC Copy</label>
+                          <input type="file" class="w-100 sty-inp form-control" :ref="'rc_copy_' + index" />
+                          <label for="" class="sty-label">RC Copy</label>
                           <span class="error" v-if="hasError(index, 'rc_copy')">{{ getError(index, 'rc_copy') }}</span>
                         </div>
                       </div>
@@ -751,7 +751,7 @@
                       <div class="col-lg-4 mb-3">
                         <div class="w-100 sty-input-wrapper">
                           <input type="text" class="w-100 sty-inp form-control" v-model="form.sticker_number" />
-                          <label for="id_sticker_number0" class="sty-label">Sticker Number</label>
+                          <label for="" class="sty-label">Sticker Number</label>
                           <span class="error" v-if="hasError(index, 'sticker_number')">{{ getError(index, 'sticker_number') }}</span>
                         </div>
                       </div>
@@ -770,9 +770,9 @@
 
                       <div class="col-lg-4 mb-3" v-if="form.select_charge === 'yes'">
                         <div class="w-100 sty-input-wrapper">
-                          <input type="text" class="w-100 sty-inp form-control" v-model="form.new_vehicle_id_select_charge" />
+                          <input type="text" class="w-100 sty-inp form-control" v-model="form.chargable" />
                           <label class="sty-label">Charge Amount</label>
-                          <span class="error" v-if="hasError(index, 'new_vehicle_id_select_charge')">{{ getError(index, 'new_vehicle_id_select_charge') }}</span>
+                          <span class="error" v-if="hasError(index, 'chargable')">{{ getError(index, 'new_vehicle_id_select_charge') }}</span>
                         </div>
                       </div>
 

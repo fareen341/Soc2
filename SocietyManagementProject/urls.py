@@ -13,7 +13,7 @@ from rest_framework.routers import DefaultRouter
 router=DefaultRouter()
 router.register('meetingsapi',apiviews.MeetingsViewSet,basename='meetings')
 router.register('vehicle', apiviews.MemberVehicleViewSet, basename='vehicle')
-router.register('shares', apiviews.FlatSharesView, basename='shares')
+router.register('shares', apiviews.SharesDetailsView, basename='shares')
 router.register('househelp', apiviews.HouseHelpView, basename='househelp')
 router.register('househelpallocation', apiviews.HouseHelpAllocationView, basename='househelpallocation')
 router.register('suggestion', apiviews.suggestionView, basename='suggestion')
@@ -28,11 +28,12 @@ router.register('bank-creation', apiviews.BankNewView, basename='bank_creation')
 router.register('flat-wing', apiviews.FlatWingView, basename='flat_wing')
 router.register('society-other-docs', apiviews.SocDocumentNewView, basename='society_other_docs')
 router.register('society-required-docs', apiviews.SocietyRegistrationDocumentsView, basename='ssociety_required_docs')
-router.register('home-loan', apiviews.FlatHomeLoanView, basename='home_loan')
-router.register('flat-gst', apiviews.FlatGSTView, basename='flat_gst')
-router.register('members-creation', apiviews.MemberNomineeView, basename='members-creation')
+router.register('home-loan', apiviews.HomeLoanDetailsView, basename='home_loan')
+router.register('flat-gst', apiviews.GSTDetailsView, basename='flat_gst')
+# router.register('members-creation', apiviews.MemberNomineeView, basename='members-creation')
 
 router.register('add-vehicle', apiviews.VehicleView, basename='add_vehicle')
+
 
 
 
@@ -47,6 +48,17 @@ urlpatterns = [
 
     # path('api/get-soc-id/', apiviews.GetSingleSocView, name='get-soc-id'),
     path('api/getjson/', apiviews.GetSingleSocView, name='getjson'),
+    path('api/history/', apiviews.MemberView.as_view({'get': 'member_history_retrieve'}), name='history'),
+    path('last-object/', apiviews.get_last_object, name='last-object'),
+    path('non-primary/<int:id>/', apiviews.hide_non_primary_member_checkbox, name='non-primary'),
+    path('get_ownership/<int:flat_id>/', apiviews.get_ownership, name='get_ownership'),
+
+    
+
+
+
+
+    
 
     path('admin/', admin.site.urls),
     path('login/', views.login, name="login"),

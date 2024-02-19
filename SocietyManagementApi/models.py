@@ -2,6 +2,7 @@ from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from Society.models import *
 from django.core.exceptions import ValidationError
+from .models import *
 
 
 
@@ -63,9 +64,9 @@ class HouseHelp(models.Model):
 class HouseHelpAllocationMaster(models.Model):
     wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
     member_name = models.ForeignKey(MemberMasterCreation, on_delete=models.CASCADE, related_name='owner_allocations_new')
-    aadhar = models.ForeignKey(HouseHelp, on_delete=models.CASCADE, related_name='aadhar_allocations_new', blank=True, null=True)
-    pan = models.ForeignKey(HouseHelp, on_delete=models.CASCADE, related_name='pan_allocations_new', blank=True, null=True)
-    name = models.ForeignKey(HouseHelp, on_delete=models.CASCADE, related_name='name_allocations_new')
+    aadhar_pan = models.ForeignKey(HouseHelp, on_delete=models.CASCADE, related_name='aadhar_pan_allocations_new', blank=True, null=True)
+    # pan = models.ForeignKey(HouseHelp, on_delete=models.CASCADE, related_name='pan_allocations_new', blank=True, null=True)
+    house_help_name = models.ForeignKey(HouseHelp, on_delete=models.CASCADE, related_name='name_allocations_new')
     role = models.CharField(max_length=300)
     house_help_period_from = models.DateField(blank=True, null=True)
     house_help_period_to = models.DateField(blank=True, null=True)
@@ -90,19 +91,7 @@ class HouseHelpAllocationMaster(models.Model):
 #     vehicle_brand = models.CharField(max_length=200, null=True, blank=True)
 #     rc_copy = models.CharField(max_length=200, null=True, blank=True)
 #     sticker_number = models.CharField(max_length=200, null=True, blank=True)
-
-
-class MemberVehicle(models.Model):
-    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
-    parking_lot = models.CharField(max_length=200)
-    vehicle_type = models.CharField(max_length=200)
-    vehicle_number = models.CharField(max_length=200)
-    vehicle_brand = models.CharField(max_length=200)
-    rc_copy = models.FileField(upload_to='files/')
-    sticker_number = models.CharField(max_length=200)
-    chargable = models.CharField(max_length=200)
-
-
+    
 
 class SocietyBankCreationNew(models.Model):
     society_creation = models.ForeignKey(SocietyCreationNew, on_delete=models.CASCADE)
@@ -156,17 +145,9 @@ class FlatWing(models.Model):
 
 
 class SocietyDocumentCreationNew(models.Model):
-    society_creation = models.ForeignKey(SocietyCreation, on_delete=models.CASCADE)
+    society_creation = models.ForeignKey(SocietyCreationNew, on_delete=models.CASCADE)
     other_document = models.FileField(upload_to='files/')
     other_document_specification = models.CharField(max_length=100)
-
-    def save(self, *args, **kwargs):
-        if not self.society_creation_id:
-            last_society_creation = SocietyCreationNew.objects.first()
-            if last_society_creation:
-                self.society_creation = last_society_creation
-
-        super().save(*args, **kwargs)
 
 
 class SocietyRegistrationDocuments(models.Model):
@@ -218,6 +199,7 @@ class Members(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk and self.member_is_primary == True:
+            print("=======")
             # Only update the field if the instance is being saved for the first time
             super(Members, self).save(*args, **kwargs)  # Save the instance to generate the primary key
             self.same_flat_member_identification = f"{self.wing_flat.unit_flat_unique}MEM{self.pk}"
@@ -245,3 +227,58 @@ class Nominees(models.Model):
     nominee_pin_code = models.CharField(max_length=300, null=True, blank=True)
     nominee_contact = models.CharField(max_length=300, null=True, blank=True)
     nominee_emergency_contact = models.CharField(max_length=300, null=True, blank=True)
+
+
+
+class SharesDetailsMaster(models.Model):
+    unique_member_shares = models.OneToOneField(MemberMasterCreation, on_delete=models.CASCADE, null=True, blank=True)
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    folio_number = models.CharField(max_length=300)
+    shares_date = models.DateField(null=True, blank=True)
+    application_number = models.CharField(max_length=300)
+    shares_certificate = models.CharField(max_length=300, null=True, blank=True)
+    allotment_number = models.CharField(max_length=300, null=True, blank=True)
+    shares_from = models.CharField(max_length=300, null=True, blank=True)
+    shares_to = models.CharField(max_length=300, null=True, blank=True)
+    shares_transfer_date = models.DateField(null=True, blank=True)
+    total_amount_received = models.IntegerField(null=True, blank=True)
+    total_amount_date = models.DateField(null=True, blank=True)
+    transfer_from_folio_no = models.CharField(max_length=300, null=True, blank=True)
+    transfer_to_folio_no = models.CharField(max_length=300, null=True, blank=True)
+
+
+class HomeLoanDetails(models.Model):
+    unique_member_shares = models.OneToOneField(MemberMasterCreation, on_delete=models.CASCADE)
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    bank_loan_name = models.CharField(max_length=300)
+    bank_loan_object = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_date = models.DateField(null=True, blank=True)
+    bank_loan_value = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_acc_no = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_installment = models.CharField(max_length=300, null=True, blank=True)
+    bank_loan_status = models.BooleanField(null=True, blank=True, default=False)
+    bank_loan_remark = models.CharField(max_length=300, null=True, blank=True)
+    bank_noc_file = models.FileField(upload_to='files/', null=True, blank=True)
+
+
+class GSTDetails(models.Model):
+    unique_member_shares = models.OneToOneField(MemberMasterCreation, on_delete=models.CASCADE)
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    gst_number = models.CharField(max_length=300)
+    gst_state = models.CharField(max_length=300, null=True, blank=True)
+    gst_billing_name = models.CharField(max_length=300, null=True, blank=True)
+    gst_billing_address = models.CharField(max_length=300, null=True, blank=True)
+    gst_contact_no = models.CharField(max_length=300, null=True, blank=True)
+
+
+class MemberVehicleRegister(models.Model):
+    unique_member_shares = models.ForeignKey(MemberMasterCreation, on_delete=models.CASCADE)
+    wing_flat = models.ForeignKey(SocietyUnitFlatCreation, on_delete=models.CASCADE)
+    parking_lot = models.CharField(max_length=200)
+    vehicle_type = models.CharField(max_length=200)
+    vehicle_number = models.CharField(max_length=200)
+    vehicle_brand = models.CharField(max_length=200)
+    rc_copy = models.FileField(upload_to='files/')
+    sticker_number = models.CharField(max_length=200)
+    chargable = models.CharField(max_length=200, default='')
+

@@ -82,3 +82,110 @@ method 2:
 for (const pair of this.formData.entries()) {
                 console.log(pair[0] + ', ' + pair[1]);
             }
+
+
+
+
+
+
+all_member = [
+    {
+        "primary": 1,
+        "secondary": [2,3,4],
+    },
+    {
+        "primary": 2,
+        "secondary": [7,8],
+    },
+]
+
+
+
+
+
+{% verbatim %}
+<ul>
+    <li v-for="(member, index) in memberHistory" :key="index">
+        <div v-if="member.member_is_primary == true">
+            <h1>primary mem</h1>
+            <strong>{{ member.same_flat_member_identification }}</strong>
+            <ul>
+                <li v-for="(nominee, nIndex) in member.nominees" :key="nIndex">
+                    {{ nominee.nominee_name }}
+                </li>
+            </ul>
+        </div>
+        <div v-else="member.member_is_primary == false">
+            <h1>Non primary mem</h1>
+            <strong>{{ member.same_flat_member_identification }}</strong>
+        </div>
+    </li>
+</ul>
+{% endverbatim %}
+
+
+
+
+
+
+
+
+{
+    "other_document_specification": "sadasddas",
+    "other_document": {}
+}
+
+
+
+{"wing_flat": "wing_flat", "parking_lot": "parking_lot", "vehicle_type": "vehicle_type", "vehicle_number": "vehicle_number", "vehicle_brand": "vehicle_brand", "sticker_number": "sticker_number", "chargable": "chargable"}
+
+
+
+
+
+
+
+
+bkp:
+
+
+        # if request.data.get('wing_flat'):
+        # try:
+        #     unique_member_share = MemberMasterCreation.objects.get(
+        #             wing_flat=request.data.get('wing_flat'), member_is_primary=True,
+        #             date_of_cessation__isnull=True
+        #         ).pk
+
+        #     wing_flat_id = int(request.data.get('wing_flat')) 
+        #         # except MemberMasterCreation.DoesNotExist:
+        #         #         return Response({'error': 'MemberMasterCreation object not found'}, status=status.HTTP_404_NOT_FOUND)
+                
+                
+        #     shares_details_master = SharesDetailsMaster.objects.create(
+        #         unique_member_shares = MemberMasterCreation.objects.get(pk=unique_member_share),
+        #         wing_flat = SocietyUnitFlatCreation.objects.get(pk=wing_flat_id),
+        #         # wing_flat = SocietyUnitFlatCreation.objects.get(int(request.data.get('wing_flat'))),
+        #         folio_number = request.data.get('folio_number'),
+        #         shares_date = request.data.get('shares_date'),
+        #         application_number = request.data.get('application_number'),
+        #         shares_certificate = request.data.get('shares_certificate'),
+        #         allotment_number = request.data.get('allotment_number'),
+        #         shares_from = request.data.get('shares_from'),
+        #         shares_to = request.data.get('shares_to'),
+        #         shares_transfer_date = request.data.get('shares_transfer_date'),
+        #         total_amount_received = request.data.get('total_amount_received'),
+        #         total_amount_date = request.data.get('total_amount_date'),
+        #         transfer_from_folio_no = request.data.get('transfer_from_folio_no'),
+        #         transfer_to_folio_no = request.data.get('transfer_to_folio_no'),
+        #     )
+
+        #     return Response(
+        #             self.get_serializer(shares_details_master).data,
+        #             status=status.HTTP_201_CREATED
+        #         )
+        #     # return super().create(request, *args, **kwargs)
+    
+        # except MemberMasterCreation.DoesNotExist:
+        #     return Response({'error': 'MemberMasterCreation object not found, or flat is empty'}, status=status.HTTP_404_NOT_FOUND)
+
+

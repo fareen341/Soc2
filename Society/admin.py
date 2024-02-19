@@ -1,10 +1,5 @@
 from django.contrib import admin
-from .models import (
-    SocietyCreation, SocietyBankCreation, SocietyDocumentCreation, SocietyUnitFlatCreation,
-    MemberMasterCreation, MemberNomineeCreation, FlatSharesDetails, FlatHomeLoanDetails,
-    FlatGSTDetails, FlatVehicleDetails, TenentMasterCreation, TenantAllocationCreation, HouseHelpCreation,
-    HouseHelpAllocation
-)
+from .models import *
 
 # Register your models here.
 admin.site.register(SocietyCreation)

@@ -97,6 +97,7 @@ class MemberMasterCreation(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk and self.member_is_primary == True:
+            print("======")
             # Only update the field if the instance is being saved for the first time
             super(MemberMasterCreation, self).save(*args, **kwargs)  # Save the instance to generate the primary key
             self.same_flat_member_identification = f"{self.wing_flat.unit_flat_unique}MEM{self.pk}"
@@ -110,7 +111,7 @@ class MemberMasterCreation(models.Model):
 
 
 class MemberNomineeCreation(models.Model):
-    member_name = models.ForeignKey(MemberMasterCreation, on_delete=models.CASCADE)
+    member_name = models.ForeignKey(MemberMasterCreation, on_delete=models.CASCADE, related_name='nominees')
     nominee_name = models.CharField(max_length=300, null=True, blank=True)
     date_of_nomination = models.DateField(null=True, blank=True)
     relation_with_nominee = models.CharField(max_length=300, null=True, blank=True)

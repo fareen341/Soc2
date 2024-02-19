@@ -5554,78 +5554,78 @@ function flatHistoryDetails(id) {
 
 
 
-new Vue({
-    el: '#sharesEditContent',
-    data: {
-        // SET EVERYTHING AS BLANK, FOR FILE SET IT TO NULL
-        formData: {
-            wing_flat: '',
-            folio_number: '',
-            shares_date: '',
-            application_number: '',
-            shares_certificate: '',
-            allotment_number: '',
-            shares_from: '',
-            shares_to: '',
-            shares_transfer_date: '',
-            total_amount_received: '',
-            total_amount_date: '',
-            transfer_from_folio_no: '',
-            transfer_to_folio_no: '',
-        },
-        submitted: false,
-        error: null,
-        errors: {},
-    },
-    mounted() {
-        // Fetch data when the component is mounted
-        this.fetchData(); // No need to pass id here since it's not provided
-    },
-    methods: {
-        fetchData() {
-            const id = 10; // Set default id if not provided by the caller
-            console.log("ID============", id); // Use id instead of this.id
-            axios.get(`http://127.0.0.1:8000/api/shares/${id}/`) // Use id to construct URL
-                .then(response => {
-                    console.log(response.data);
-                    // Assuming response.data contains the value you want to set
-                    this.formData = response.data;
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-        },
-        submitForm() {
-            this.errors = {};
-            const formData = new FormData();
-            for (const key in this.formData) {
-                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
-                    console.log(key);
-                    formData.append(key, this.formData[key]);
-                }
-            }
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-            axios.patch('http://127.0.0.1:8000/api/shares/10/', formData)
-                .then(response => {
-                    console.log('Form submitted successfully:', response.data);
-                    this.submitted = true;
-                })
-                .catch(error => {
-                    this.errors = error.response.data
-                    console.log("Error: ->", error.response.data.folio_number[0]);
-                });
-        },
-        handleFileChange() {
-            console.log("Handling File");
-        }
-    },
-});
+// new Vue({
+//     el: '#sharesEditContent',
+//     data: {
+//         // SET EVERYTHING AS BLANK, FOR FILE SET IT TO NULL
+//         formData: {
+//             wing_flat: '',
+//             folio_number: '',
+//             shares_date: '',
+//             application_number: '',
+//             shares_certificate: '',
+//             allotment_number: '',
+//             shares_from: '',
+//             shares_to: '',
+//             shares_transfer_date: '',
+//             total_amount_received: '',
+//             total_amount_date: '',
+//             transfer_from_folio_no: '',
+//             transfer_to_folio_no: '',
+//         },
+//         submitted: false,
+//         error: null,
+//         errors: {},
+//     },
+//     mounted() {
+//         // Fetch data when the component is mounted
+//         this.fetchData(); // No need to pass id here since it's not provided
+//     },
+//     methods: {
+//         fetchData() {
+//             const id = 10; // Set default id if not provided by the caller
+//             console.log("ID============", id); // Use id instead of this.id
+//             axios.get(`http://127.0.0.1:8000/api/shares/${id}/`) // Use id to construct URL
+//                 .then(response => {
+//                     console.log(response.data);
+//                     // Assuming response.data contains the value you want to set
+//                     this.formData = response.data;
+//                 })
+//                 .catch(error => {
+//                     console.error('Error fetching data:', error);
+//                 });
+//         },
+//         submitForm() {
+//             this.errors = {};
+//             const formData = new FormData();
+//             for (const key in this.formData) {
+//                 if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+//                     console.log(key);
+//                     formData.append(key, this.formData[key]);
+//                 }
+//             }
+//             axios.defaults.xsrfCookieName = 'csrftoken';
+//             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+//             axios.patch('http://127.0.0.1:8000/api/shares/10/', formData)
+//                 .then(response => {
+//                     console.log('Form submitted successfully:', response.data);
+//                     this.submitted = true;
+//                 })
+//                 .catch(error => {
+//                     this.errors = error.response.data
+//                     console.log("Error: ->", error.response.data.folio_number[0]);
+//                 });
+//         },
+//         handleFileChange() {
+//             console.log("Handling File");
+//         }
+//     },
+// });
 
 
-function editMemberDetails(id) {
-    return fetchData(id)
-}
+// function editMemberDetails(id) {
+//     return fetchData(id)
+// }
 
 
 
@@ -5866,9 +5866,8 @@ new Vue({
             // formData.append('wing_flat', this.formData.wing_flat);
             formData.append('wing_flat', this.formData.wing_flat);
             formData.append('member_name', this.formData.pk);
-            formData.append('aadhar', this.formData.aadhar);
-            formData.append('pan', this.formData.pan);
-            formData.append('name', this.formData.aadharPanPk);
+            formData.append('aadhar_pan', this.formData.aadharPanPk);
+            formData.append('house_help_name', this.formData.aadharPanPk);
             formData.append('role', this.formData.role);
             formData.append('house_help_period_from', this.formData.house_help_period_from);
             formData.append('house_help_period_to', this.formData.house_help_period_to);
@@ -6213,12 +6212,11 @@ new Vue({
 new Vue({
     el: '#societyDocumentsContainer',
     data: {
-        formData: {
-        },
+        // formData: new FormData(),
         forms: [
             {
                 // other_document: '',
-                other_document_specification: ''
+                // other_document_specification: ''
             }
         ],
         errors: [],
@@ -6228,7 +6226,7 @@ new Vue({
         addForm() {
             this.forms.push({
                 // other_document: '',
-                other_document_specification: ''
+                // other_document_specification: ''
             });
             const newIndex = this.forms.length - 1;
             this.errors = this.errors.filter(error => error.index !== newIndex);
@@ -6247,65 +6245,43 @@ new Vue({
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-            // SAVE REQUIRED DOC
+            axios.get('http://127.0.0.1:8000/last-object/')
+                .then(response => {
+                    society_creation_obj = response.data.id
+                    this.forms.forEach((form, index) => {
+                        console.log("formdata==>", form);
+                        const formData = new FormData();
+                        const payload = {
+                            other_document_specification: form.other_document_specification,
+                            society_creation: society_creation_obj
+                        }
 
-            // this.required_docs_errors = {};
-            // const formData = new FormData();
-
-            // if (this.$refs.completion_cert.files[0]) {
-            //     formData.append('completion_cert', this.$refs.completion_cert.files[0]);
-            // }
-            // if (this.$refs.occupancy_cert.files[0]) {
-            //     formData.append('occupancy_cert', this.$refs.occupancy_cert.files[0]);
-            // }
-            // if (this.$refs.deed_of_conveyance.files[0]) {
-            //     formData.append('deed_of_conveyance', this.$refs.deed_of_conveyance.files[0]);
-            // }
-            // if (this.$refs.society_by_law.files[0]) {
-            //     formData.append('society_by_law', this.$refs.society_by_law.files[0]);
-            // }
-            // if (this.$refs.soc_other_document.files[0]) {
-            //     formData.append('soc_other_document', this.$refs.soc_other_document.files[0]);
-            // }
-            // formData.append('soc_other_document_spec', this.formData.soc_other_document_spec)
-
-            // axios.post('http://127.0.0.1:8000/api/society-required-docs/', formData, {
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         }
-            //     })
-            //     .then(response => {
-            //         this.submitted = true;
-            //     })
-            //     .catch(error => {
-            //         this.required_docs_errors = error.response.data
-            //     });
-
-            // SAVE OTHER DOCS
-
-            // CALL AJAX HERE .........................................
-
-            // console.log("FORMS======", this.forms);
-            // const formData = new FormData();
-
-            // Append each form data to FormData object
-            // this.forms.forEach((form, index) => {
-            //     console.log("dddddddddddddd==", form['other_document']);
-            //     formData.append('other_document', form['other_document']);
-            //     formData.append('other_document_specification', form['other_document_specification']);
-            // });
-
-            // console.log("FORMS======", formData);
+                        formData.append('data', JSON.stringify(payload));
+                        formData.append('other_document', form.other_document);
 
 
-            // axios.post('http://127.0.0.1:8000/api/society-other-docs/', this.forms, {})
-            //     .then(response => {
-            //         console.log('Form data submitted successfully:', response.data);
-            //     })
-            //     .catch(errors => {
-            //         console.error('Error submitting form data:', errors);
-            //         this.errors = errors.response.data.errors;
-            //     });
+                        axios.post('http://127.0.0.1:8000/api/society-other-docs/', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                            .then(response => {
+                                console.log('Form data submitted successfully:', response.data);
+                            })
+                            .catch(errors => {
+                                console.error('Error submitting form data:', errors);
+                                this.errors = errors.response.data.errors;
+                            });
+                    });
+                })
+                .catch(errors => {
+                    console.error('Error submitting form data:', errors);
+                    this.errors = errors.response.data.errors;
+                });
+
+
+
+
         },
         handleFileUpload(event, index) {
             console.log("file===========");
@@ -6397,98 +6373,6 @@ new Vue({
 
 
 
-// ADD MEMBER
-new Vue({
-    el: '#addMemberDiv',
-    data: {
-        units: [],
-        formData: new FormData(),
-        formData2: new FormData(),
-        forms: [
-            {}
-        ],
-        errors: [],
-        required_docs_errors: {},
-    },
-    methods: {
-        addForm() {
-            this.forms.push({
-            });
-            const newIndex = this.forms.length - 1;
-            this.errors = this.errors.filter(error => error.index !== newIndex);
-        },
-        removeForm(index) {
-            this.forms.splice(index, 1);
-        },
-        hasError(index, field) {
-            return this.errors.some(error => error.index === index && error[field]);
-        },
-        getError(index, field) {
-            const error = this.errors.find(error => error.index === index);
-            return error ? error[field][0] : '';
-        },
-        submitBothDocs() {
-            const payload = {};
-            for (const key in this.formData) {
-                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
-                    if (this.formData[key] !== null) {
-                        payload[key] = this.formData[key];
-                    }
-                }
-            }
-            payload['nominees'] = this.forms;
-            this.formData.append('data', JSON.stringify(payload));
-
-            if (this.$refs.sales_agreement.files[0]) {
-                s_file = this.$refs.sales_agreement.files[0];
-                this.formData.append('sales_agreement', s_file);
-            }
-
-            console.log("payload", payload);
-
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-            // axios.post('http://127.0.0.1:8000/api/members-creation/', this.formData, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }
-            // })
-            //     .then(response => {
-            //         console.log('Form data submitted successfully. Proceeding to the next action.', response.data);
-            //         this.nextAction();
-            //     })
-            //     .catch(error => {
-            //         this.required_docs_errors = error.response.data
-            //     });
-            $("#redirectToShares").trigger("click");
-
-        },
-        handleChangeFile() {
-            if (this.$refs.sales_agreement.files[0]) {
-                this.formData.append('sales_agreement', this.$refs.sales_agreement.files[0]);
-                console.log(this.$refs.sales_agreement.files[0]);
-            }
-            if (this.$refs.other_attachment.files[0]) {
-                this.formData.append('other_attachment', this.$refs.other_attachment.files[0]);
-            }
-        },
-        nextAction() {
-            console.log('Form data submitted successfully. Proceeding to the next action.');
-            $("#redirectToShares").trigger("click");
-        },
-        getFormNumber: index => index + 1
-    },
-    mounted() {
-        console.log("mounted===========");
-        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
-            .then(response => {
-                this.units = response.data;
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    },
-});
 
 
 // Add Shares Details
@@ -6518,7 +6402,6 @@ new Vue({
             //     })
             //     .catch(error => {
             //         this.errors = error.response.data
-            //         console.log("Error: ->", error.response.data.folio_number[0]);
             //     });
             $("#hLoan").trigger("click");
         },
@@ -6548,6 +6431,7 @@ new Vue({
         units: [],
         formData: {},
         errors: {},
+        attach_noc: false,
     },
     methods: {
         submitHomeLoanForm() {
@@ -6558,9 +6442,18 @@ new Vue({
                     formData.append(key, this.formData[key]);
                 }
             }
+            if (this.$refs.bank_noc_file && this.$refs.bank_noc_file.files && this.$refs.bank_noc_file.files.length > 0) {
+                console.log("File present");
+                formData.append('bank_noc_file', this.$refs.bank_noc_file.files[0]);
+            }
+
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-            // axios.post('http://127.0.0.1:8000/api/home-loan/', formData)
+            // axios.post('http://127.0.0.1:8000/api/home-loan/', formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // })
             //     .then(response => {
             //         console.log('Form submitted successfully:', response.data);
             //         this.nextAction();
@@ -6570,6 +6463,12 @@ new Vue({
             //         console.log("Error: ->", error.response.data.folio_number[0]);
             //     });
             $("#redirectToGst").trigger("click");
+        },
+        loanStatus(event) {
+            this.attach_noc = false;
+            if (event.target.value == 'yes') {
+                this.attach_noc = true;
+            }
         },
         nextAction() {
             console.log('Form data submitted successfully. Proceeding to the next action.');
@@ -6670,45 +6569,43 @@ new Vue({
             return error ? error[field][0] : '';
         },
         submitVehicle() {
+            // console.log("wing_flat ==>", this.formData.wing_flat);
             this.forms.forEach((form, index) => {
-                console.log("FormData...........", form);
-                console.log("refs===>", this.$refs[`form_${index}`].files);
-                // const rcCopyInput = this.$refs[`form_${index + 1}`]; 
-                
-                // if (rcCopyInput && rcCopyInput.files.length > 0) {
-                //     files = rcCopyInput.files;
-                // }
-                
-                // console.log("copy", rcCopyInput);
-                // let rc_copy = null; // Initialize rc_copy variable
+                const formData = new FormData();
 
-                // if (rcCopyInput && rcCopyInput.files.length > 0) {
-                //     rc_copy = rcCopyInput.files[0];
-                // }
+                const payload = {
+                    wing_flat: this.formData.wing_flat,
+                    parking_lot: form.parking_lot,
+                    vehicle_type: form.vehicle_type,
+                    vehicle_number: form.vehicle_number,
+                    vehicle_brand: form.vehicle_brand,
+                    sticker_number: form.sticker_number,
+                    chargable: form.chargable ? form.chargable : '',
+                }
 
-                // const formData = {
-                //     wing_flat: this.formData.wing_flat,
-                //     parking_lot: form.parking_lot,
-                //     rc_copy: rcCopyInput
-                // };
-                
-                // console.log("FORMDATA====>",formData);
-                    
-                // axios.post('http://127.0.0.1:8000/api/add-vehicle/', formData , {
-                //         headers: {
-                //             'Content-Type': 'multipart/form-data'
-                //         }
-                //     })
-                //     .then(response => {
-                //         console.log('Form submitted successfully:', response.data);
-                //         this.nextAction();
-                //     })
-                //     .catch(error => {
-                //         this.errors = error.response.data
-                //         console.log("Error: ->", error.response.data.folio_number[0]);
-                //     });
+                formData.append('data', JSON.stringify(payload));
+
+                const refName = 'rc_copy_' + index;
+                const inputElement = this.$refs[refName];
+                if (inputElement && inputElement.length > 0) {
+                    console.log("doc ==>", inputElement[0].files[0]);
+                    formData.append('rc_copy', inputElement[0].files[0]);
+                }
+
+
+                axios.post('http://127.0.0.1:8000/api/vehicle/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        console.log('Form data submitted successfully:', response.data);
+                    })
+                    .catch(errors => {
+                        console.error('Error submitting form data:', errors);
+                        this.errors = errors.response.data.errors;
+                    });
             });
-            console.log("Errors", this.errors);
         },
         getFormNumber: index => index + 1
     },
@@ -6726,44 +6623,433 @@ new Vue({
 
 
 
+// ADD MEMBER
+new Vue({
+    el: '#addMemberDiv',
+    data: {
+        units: [],
+        formData: new FormData(),
+        formData2: new FormData(),
+        forms: [
+            {}
+        ],
+        errors: [],
+        required_docs_errors: {},
+        flat_having_primary_mem: true,
+        ownershipError: '',
+    },
+    methods: {
+        addForm() {
+            this.forms.push({
+            });
+            const newIndex = this.forms.length - 1;
+            this.errors = this.errors.filter(error => error.index !== newIndex);
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitBothDocs() {
+            const payload = {};
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    if (this.formData[key] !== null) {
+                        payload[key] = this.formData[key];
+                    }
+                }
+            }
+            payload['nominees'] = this.forms;
+            this.formData.append('data', JSON.stringify(payload));
+
+            if (this.$refs.sales_agreement.files[0]) {
+                s_file = this.$refs.sales_agreement.files[0];
+                this.formData.append('sales_agreement', s_file);
+            }
+
+            console.log("payload", payload);
+
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            // axios.post('http://127.0.0.1:8000/api/members/', this.formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // })
+            //     .then(response => {
+            //         console.log('Form data submitted successfully. Proceeding to the next action.', response.data);
+            //         this.nextAction();
+            //     })
+            //     .catch(error => {
+            //         this.required_docs_errors = error.response.data
+            //     });
+            $("#redirectToShares").trigger("click");
+
+        },
+        getOwnership(flat_no, event) {
+            let inputValue = event.target.value;
+            if (flat_no) {
+                axios.get(`http://127.0.0.1:8000/get_ownership/${flat_no}/`)
+                    .then(response => {
+                        let existingOwnership = response.data.ownership_total
+                        if (inputValue >= existingOwnership) {
+                            this.ownershipError = `This flat left with ${100 - existingOwnership} ownership!`
+                        } else {
+                            this.ownershipError = ''
+                        }
+                    })
+                    .catch(error => {
+                        this.required_docs_errors = error.response.data
+                    });
+            }
+        },
+        handleChangeFile() {
+            if (this.$refs.sales_agreement.files[0]) {
+                this.formData.append('sales_agreement', this.$refs.sales_agreement.files[0]);
+                console.log(this.$refs.sales_agreement.files[0]);
+            }
+            if (this.$refs.other_attachment.files[0]) {
+                this.formData.append('other_attachment', this.$refs.other_attachment.files[0]);
+            }
+        },
+        get_checkbox_value(event) {
+            console.log("cahnge ecveny", event.target.value);
+            axios.get(`http://127.0.0.1:8000/non-primary/${event.target.value}/`)
+                .then(response => {
+                    console.log(response.data.member_status);
+                    this.flat_having_primary_mem = response.data.member_status
+                })
+                .catch(error => {
+                    this.required_docs_errors = error.response.data
+                });
+        },
+        nextAction() {
+            console.log('Form data submitted successfully. Proceeding to the next action.');
+            $("#redirectToShares").trigger("click");
+        },
+        getFormNumber: index => index + 1
+    },
+    mounted() {
+        console.log("mounted===========");
+        axios.get(`http://127.0.0.1:8000/api/wint-unit/`)
+            .then(response => {
+                this.units = response.data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    },
+});
+
+
 // MEMBER MASTER TABLE AND EDIT
 var app = new Vue({
     el: '#memberMasterTableVue',
     data: {
-        formData: {
+        vehicle_id: null,
+        vehicleData: [],
+        gstData: {},
+        attach_noc: false,
+        formData: {},
+        formData2: {
+            folio_number: '',
         },
+        homeLoanData: {},
         members: [],
         errors: {},
         memberData: {},
+        memberHistory: [],
+        primaryMembers: [],
+        nonPrimaryMembers: [],
+        memberformData: [],
+        units: [],
+        forms: [],
+        member: {
+            member_name: ''
+        }
     },
     methods: {
         viewMemberData(id) {
             $('#viewMemberModal').modal('show');
             axios.get(`http://127.0.0.1:8000/api/members/${id}`)
-            .then(response => {
-                console.log("RESPONSE==>", response.data);
-                this.memberData = response.data;
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+                .then(response => {
+                    console.log("RESPONSE==>", response.data);
+                    this.memberData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         },
         editMemberData(id) {
             $('#editMemberModal').modal('show');
+            console.log("id:===", id);
+            axios.get(`http://127.0.0.1:8000/api/members/${id}/`)
+                .then(response => {
+                    this.memberformData = response.data;
+                    console.log("EDIT===>", this.memberformData);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/shares/${id}/`)
+                .then(response => {
+                    this.formData = response.data;
+                    console.log("EDIT===>", this.formData);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/home-loan/${id}/`)
+                .then(response => {
+                    this.homeLoanData = response.data;
+                    delete this.homeLoanData.bank_noc_file;
+                    console.log("LOAN===>", this.homeLoanData);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/flat-gst/${id}/`)
+                .then(response => {
+                    this.gstData = response.data;
+                    console.log("LOAN===>", this.gstData);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/vehicle/${id}/`)
+                .then(response => {
+                    this.vehicleData = response.data;
+                    console.log("VEHICLE===>", this.vehicleData);
+                    this.vehicle_id = this.vehicleData.id;
+                    console.log("VEHICLE ID=", this.vehicle_id);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        updateSharesData(id) {
+            console.log("id===>", id);
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            const formData = new FormData();
+            for (const key in this.formData) {
+                if (Object.prototype.hasOwnProperty.call(this.formData, key)) {
+                    console.log(key);
+                    formData.append(key, this.formData[key]);
+                }
+            }
+            axios.patch(`http://127.0.0.1:8000/api/shares/${id}/`, formData)
+                .then(response => {
+                    console.log("Shares data uPdated", response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        loanFormSubmit(id) {
+            console.log("Bank LOan", id);
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            const formData = new FormData();
+            for (const key in this.homeLoanData) {
+                if (Object.prototype.hasOwnProperty.call(this.homeLoanData, key)) {
+                    formData.append(key, this.homeLoanData[key]);
+                }
+            }
+            axios.patch(`http://127.0.0.1:8000/api/home-loan/${id}/`, formData)
+                .then(response => {
+                    console.log("Shares data uPdated", response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        gstDataSubmit(id) {
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            const formData = new FormData();
+            for (const key in this.gstData) {
+                if (Object.prototype.hasOwnProperty.call(this.gstData, key)) {
+                    formData.append(key, this.gstData[key]);
+                }
+            }
+            axios.patch(`http://127.0.0.1:8000/api/flat-gst/${id}/`, formData)
+                .then(response => {
+                    console.log("Shares data uPdated", response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        vehicleEditSubmit() {
+            console.log("VEHICLE COMPLETE DATA->", this.vehicleData);
+            this.vehicleData.forEach((form, index) => {
+                const formData = new FormData();
+
+                const payload = {
+                    wing_flat: this.formData.wing_flat,
+                    parking_lot: form.parking_lot,
+                    vehicle_type: form.vehicle_type,
+                    vehicle_number: form.vehicle_number,
+                    vehicle_brand: form.vehicle_brand,
+                    sticker_number: form.sticker_number,
+                    chargable: form.chargable ? form.chargable : '',
+                }
+
+                formData.append('data', JSON.stringify(payload));
+
+                const refName = 'rc_copy_' + index;
+                const inputElement = this.$refs[refName];
+                if (inputElement && inputElement.length > 0) {
+                    console.log("doc ==>", inputElement[0].files[0]);
+                    formData.append('rc_copy', inputElement[0].files[0]);
+                }
+
+                axios.defaults.xsrfCookieName = 'csrftoken';
+                axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+                axios.patch(`http://127.0.0.1:8000/api/vehicle/${form.id}/`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        console.log('Form data submitted successfully:', response.data);
+                    })
+                    .catch(errors => {
+                        console.error('Error submitting form data:', errors);
+                        this.errors = errors.response.data.errors;
+                    });
+            });
+        },
+        submitEditedMemberData() {
+            console.log("MEMBER COMPLETE DATA->", this.memberData);
+            let cessation = ''
+            this.memberformData.forEach((form, index) => {
+                if (form.date_of_cessation) {
+                    console.log("member name-->", form.date_of_cessation);
+                    cessation = form.date_of_cessation;
+                }
+            });
+
+            console.log(cessation);
+
+            this.memberformData.forEach((form, index) => {
+                const formData = new FormData();
+                delete form.sales_agreement;
+                console.log("MEMER ID->", form.id);
+                console.log("ONLY FORM->", form);
+                console.log("ONLY FORM->", form.sales_agreement);
+                const payload = {};
+                for (const key in form) {
+                    if (Object.prototype.hasOwnProperty.call(form, key)) {
+                        if (key == 'date_of_cessation') {
+                            console.log("owner ship gives");
+                            payload[key] = cessation
+                        }
+                        // console.log(key);
+                        if (form[key] !== null) {
+                            payload[key] = form[key];
+                        }
+                    }
+                }
+                // payload['nominees'] = this.forms;
+                console.log("payload", payload);
+                formData.append('data', JSON.stringify(payload));
+
+
+                const refName = 'sales_agreement_' + index;
+                const inputElement = this.$refs[refName];
+                if (inputElement && inputElement.length > 0) {
+                    console.log("doc ==>", inputElement[0].files[0]);
+                    formData.append('sales_agreement', inputElement[0].files[0]);
+                }
+
+                // console.log("payload", payload);
+
+                axios.defaults.xsrfCookieName = 'csrftoken';
+                axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+                axios.patch(`http://127.0.0.1:8000/api/members/${form.id}/`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        console.log('Form data submitted successfully. Proceeding to the next action.', response.data);
+                        this.nextAction();
+                    })
+                    .catch(error => {
+                        this.required_docs_errors = error.response.data
+                    });
+            });
         },
         addMemberData(id) {
             $('#addMemberModal').modal('show');
         },
-        memberHistoryData(id) {
+        memberHistoryData(wing_flat) {
+            console.log("wing_flat=======", wing_flat);
             $('#memberHistoryModal').modal('show');
+            axios.get(`http://127.0.0.1:8000/api/history/?wing_flat__id=${wing_flat}`)
+                .then(response => {
+                    console.log("RESPONSE==>", response.data);
+                    this.memberHistory = response.data;
+
+                    if (this.memberHistory.length != 0) {
+                        this.primaryMembers = [];
+                        this.nonPrimaryMembers = [];
+                        response.data.forEach(member => {
+                            if (member.member_is_primary) {
+                                this.primaryMembers.push(member);
+                            } else {
+                                this.nonPrimaryMembers.push(member);
+                            }
+                        });
+                    } else {
+                        this.primaryMembers = [];
+                        this.nonPrimaryMembers = [];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         },
         clearErrors() {
             this.errors = {};
         },
+        handleChangeFile() {
+
+        },
+        submitBothDocs() {
+        },
+        handleFileChange() {
+
+        },
+        loanStatus(event) {
+            this.attach_noc = false;
+            if (event.target.value == 'Active') {
+                this.attach_noc = true;
+            }
+        },
+        hasError() {
+
+        }
     },
     mounted() {
         axios.get('http://127.0.0.1:8000/api/members/')
             .then(response => {
+                console.log("DATA===", response.data);
+                response.data.forEach(element => {
+                    delete element.nominees;
+                });
+
                 this.members = response.data;
                 $(document).ready(function () {
                     $('#example').DataTable();

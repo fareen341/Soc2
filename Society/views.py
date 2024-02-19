@@ -1,11 +1,7 @@
 from django.shortcuts import render
 import json
 from django.http import JsonResponse
-from .models import (
-    SocietyCreation, SocietyBankCreation, SocietyDocumentCreation, SocietyUnitFlatCreation,
-    MemberMasterCreation, MemberNomineeCreation, FlatSharesDetails, FlatHomeLoanDetails, FlatGSTDetails,
-    FlatVehicleDetails, TenentMasterCreation, TenantAllocationCreation, HouseHelpCreation, HouseHelpAllocation
-)
+from .models import *
 from SocietyManagementProject import constants
 from django.db.models import Count, Sum
 from django.db.models import Q

@@ -37,7 +37,7 @@
                         <span @click="viewMemberData(members.id)" class="me-3"><i class="fa-solid fa-eye"></i></span>
                         <span @click="editMemberData(members.id)" class="me-3"><i class="fa-solid fa-pen-to-square"></i></span>
                         <span @click="addMemberData(members.id)" class="me-3"><i class="fa-solid fa-user-plus"></i></span>
-                        <span @click="memberHistoryData(members.id)" class="me-3"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                        <span @click="memberHistoryData(members.wing_flat)" class="me-3"><i class="fa-solid fa-clock-rotate-left"></i></span>
                     </td>
                     <td v-for="(value, key) in members" :key="key">{{ value }}</td>
                 </tr>
@@ -87,6 +87,336 @@
                             <div class="tab-pane fade show active" id="member-tab-pane" role="tabpanel"
                                 aria-labelledby="member-tab" tabindex="0">
                                 <div class="accordion" id="accordionExample">
+                                    
+                                    <!-- start -->
+                                    {% verbatim %}
+                                        <ul>
+                                            <!-- Loop through the members array -->
+                                            <li v-for="(member, index) in memberData" :key="index">
+                                              <!-- Display the member's name -->
+                                              <strong>{{ member.member_name }}</strong>
+                                              <ul>
+                                                <!-- Loop through the nominees array of the current member -->
+                                                <li v-for="(nominee, nIndex) in member.nominees" :key="nIndex">
+                                                  <!-- Display nominee information -->
+                                                  {{ nominee.nominee_name }}
+                                                </li>
+                                              </ul>
+                                            </li>
+                                          </ul>
+                                    {% endverbatim %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" id="heading" data-bs-toggle="collapse" data-bs-target="#collapse${item.member_id}" aria-expanded="true" aria-controls="collapse${item.member_id}">
+                                                ${item.member_name}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse${item.member_id}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+            
+                                                <div class="row mt-3">
+                                                    <div class="col-lg-3">
+                                                        <p class="ms-3 view-label">Member's Name</p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p class=" view-inps">${item.member_name}</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p class="ms-3 view-label">Flat Number</p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p class="view-inps">A-1001</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">Ownership %</p>
+                                                            </div>
+                                                            <div class="col-lg-8">
+                                                                <p class="view-inps">${item.ownership_percent}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p class="ms-3 view-label">Position</p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p class="view-inps">${item.member_position}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">Date of Birth</p>
+                                                            </div>
+                                                            <div class="col-lg-8">
+                                                                <p class="view-inps">${item.member_dob}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p class="ms-3 view-label">Aadhaar Number</p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p class="view-inps">${item.member_aadhar_no}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">PAN Number</p>
+                                                            </div>
+                                                            <div class="col-lg-8">
+                                                                <p class="view-inps">${item.member_pan_no}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p class="ms-3 view-label">Permanent Address</p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p class="view-inps">${item.member_address}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row m-0 p-0">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">State</p>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p class="view-inps">${item.member_state}</p>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p class="ms-3 view-label">Pincode</p>
+                                                            </div>
+                                                            <div class="col-lg-2">
+                                                                <p class="view-inps">${item.member_pin_code}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p class="ms-3 view-label">Email Id</p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p class="view-inps">${item.member_email}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">Occupation</p>
+                                                            </div>
+                                                            <div class="col-lg-8">
+                                                                <p class="view-inps">${item.member_occupation}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p class="ms-3 view-label">Contact Number</p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p class="view-inps">${item.member_contact}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">Emergency Contact Number</p>
+                                                            </div>
+                                                            <div class="col-lg-8">
+                                                                <p class="view-inps">${item.member_emergency_contact}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <p class="ms-3 view-label">Primary Member:</p>
+                                                            </div>
+                                                            <div class="col-lg-8">
+                                                                <p class="view-inps">${item.member_is_primary}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                                <hr class="m-0 p-0">
+                                `
+            
+                                // Append nominee details
+                                if (item.nominee_Details.length > 0) {
+                                    item.nominee_Details.forEach(function (nominee) {
+                                        for (var key in nominee) {
+                                            if (nominee[key] === null) {
+                                                nominee[key] = "-";
+                                            }
+                                        }
+                                        htmlContent +=
+                                            `
+                                        <h4>=============== ${nominee.nominee_name}=====================</h4>
+                                        <div class="row mt-3">
+                                            <div class="col-lg-3">
+                                                <p class="ms-3 view-label">Nominee's Name</p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p class=" view-inps">${nominee.nominee_name}</p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p class="ms-3 view-label">Date of Nomination</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="view-inps">${nominee.date_of_nomination}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <p class="ms-3 view-label">Date of Birth</p>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <p class="view-inps">${nominee.nominee_dob}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p class="ms-3 view-label">Relation with Nominator</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="view-inps">${nominee.relation_with_nominee}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <p class="ms-3 view-label">Nominee Sharein %</p>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <p class="view-inps">${nominee.nominee_sharein_percent}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p class="ms-3 view-label">Nominee Aadhaar Number</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="view-inps">${nominee.nominee_aadhar_no}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <p class="ms-3 view-label">Nominee PAN Number</p>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <p class="view-inps">${nominee.nominee_pan_no}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p class="ms-3 view-label">Nominee Permanent Address</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="view-inps">${nominee.nominee_address}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <p class="ms-3 view-label">State</p>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <p class="view-inps">${nominee.nominee_state}</p>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <p class="ms-3 view-label">Pincode</p>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <p class="view-inps">${nominee.nominee_pin_code}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p class="ms-3 view-label">Nominee Contact Number</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="view-inps">${nominee.nominee_contact}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <p class="ms-3 view-label">Emergency Contact Number</p>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <p class="view-inps">${nominee.nominee_emergency_contact}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p class="ms-3 view-label">Nominee Email Id</p>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="view-inps">${nominee.nominee_email}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        `
+                                    });
+            
+                                }
+                                htmlContent +=
+                                    `
+                                </div>
+                                </div>
+                                </div>
+                                    <!-- end -->
                                 </div>
                             </div>
 
@@ -141,6 +471,7 @@
                             Flat No. A-1103</h1>
                         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                     </div>
+
                     <div class="modal-body p-0 m-0 " style="margin-inline: 30px;">
                         <div class="abs" style="z-index: 100;">
                             <ul class="nav nav-justified aaa nav-tabs" id="myTab" role="tablist">
@@ -180,148 +511,794 @@
                             <div class="tab-pane fade show active" id="member-edit-tab-pane" role="tabpanel"
                                 aria-labelledby="member-edit-tab" tabindex="0">
                                 <div class="accordion" id="memberEditForm">
-                                </div>
+                                    <!-- start -->
+                                    {% verbatim %}
+                                        <div v-for="(member, index) in memberformData" :key="index" class="ms-4 me-4">
+                                            <h1>{{ member.member_name }}</h1>
+                                            <form enctype="multipart/form-data">
+                                                <div class="row mt-3" style="text-align: left">
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select class="w-100 sty-inp form-control" v-model="member.wing_flat" />
+                                                                <option :value="member.wing_flat">{{ member.wing_flat }}</option>
+                                                            </select>
+                                                            <label for="wing_flat_select" class="sty-label">Wing & Flat No.</label>
+                                                            <span v-if="errors.wing_flat" class="error">{{ errors.wing_flat[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="member.member_name" />
+                                                            <label for="" class="sty-label">Member's Name</label>
+                                                            <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" min="0" max="100" class="w-100 sty-inp percentage-input" v-model="member.ownership_percent" />
+                                                            <label for="" class="sty-label">Ownership %</label>
+                                                            <span v-if="errors.ownership_percent" class="error">{{ errors.ownership_percent[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select class="w-100 sty-inp" v-model="member.member_position">
+                                                            <option value="">Select Member Position</option>
+                                                            <option value="nominal_member">Nominal Member</option>
+                                                            <option value="committe_member">Committe Member</option>
+                                                            <option value="member">Member</option>
+                                                            </select>
+                                                            <span v-if="errors.member_position" class="error">{{ errors.member_position[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp form-control" v-model="member.member_dob" />
+                                                            <label for="" class="sty-label">Member DOB</label>
+                                                            <span v-if="errors.member_dob" class="error">{{ errors.member_dob[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="member.member_pan_no" />
+                                                            <label for="" class="sty-label">Member PAN No</label>
+                                                            <span v-if="errors.member_pan_no" class="error">{{ errors.member_pan_no[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="member.member_aadhar_no" />
+                                                            <label for="" class="sty-label">Member Aadhaar No</label>
+                                                            <span v-if="errors.member_aadhar_no" class="error">{{ errors.member_aadhar_no[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <textarea class="w-100 sty-inp form-control" cols="30" rows="1" v-model="member.member_address"></textarea>
+                                                            <label for="" class="sty-label">Member Permanent Address</label>
+                                                            <span v-if="errors.member_address" class="error">{{ errors.member_address[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select name="state" class="w-100 sty-inp" v-model="member.member_state">
+                                                            </select>
+                                                            <label for="" class="sty-label">State</label>
+                                                            <span v-if="errors.member_state" class="error">{{ errors.member_state[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="member.member_pin_code" />
+                                                            <label for="" class="sty-label">Pin Code</label>
+                                                            <span v-if="errors.member_pin_code" class="error">{{ errors.member_pin_code[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="email" class="w-100 sty-inp" v-model="member.member_email" />
+                                                            <label for="" class="sty-label">Member Email</label>
+                                                            <span v-if="errors.member_email" class="error">{{ errors.member_email[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp form-control" v-model="member.member_contact" />
+                                                            <label for="" class="sty-label">Member Contact No.</label>
+                                                            <span v-if="errors.member_contact" class="error">{{ errors.member_contact[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="member.member_emergency_contact" />
+                                                            <label for="" class="sty-label">Emergency Contact No.</label>
+                                                            <span v-if="errors.member_emergency_contact" class="error">{{ errors.member_emergency_contact[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="member.member_occupation" />
+                                                            <label for="" class="sty-label">Occupation</label>
+                                                            <span v-if="errors.member_occupation" class="error">{{ errors.member_occupation[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" v-model="member.date_of_admission" />
+                                                            <label for="id_date_of_admission" class="sty-label">Date of admission</label>
+                                                            <span v-if="errors.date_of_admission" class="error">{{ errors.date_of_admission[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-6 mb-2 d-flex">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="file" class="w-100 sty-inp form-control" :ref="'sales_agreement_' + index" @change="handleChangeFile" />
+                                                            <label for="id_sales_agreement" class="sty-label">Sales Agreement</label>
+                                                            <span v-if="errors.sales_agreement" class="error">{{ errors.sales_agreement[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                        <div class="prev">
+                                                            <button type="button" class="sty-inp form-control"
+                                                                onclick="PreviewImage('id_sales_agreement')">
+                                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-6 mb-2 d-flex">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="file" class="w-100 sty-inp form-control" ref="other_attachment" @change="handleChangeFile"  />
+                                                            <label for="id_other_attachment" class="sty-label">Other Attachment</label>
+                                                            <span v-if="errors.other_attachment" class="error">{{ errors.other_attachment[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                        <div class="prev">
+                                                            <button type="button" class="sty-inp form-control" onclick="PreviewImage('id_tenant_noc')">
+                                                                <i class="fa-solid fa-eye" style="color: #2b96f1 !important;"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" v-model="member.date_of_entrance_fees" />
+                                                            <label for="id_date_of_entrance_fees" class="sty-label">Date of entrance fees</label>
+                                                            <span v-if="errors.date_of_entrance_fees" class="error">{{ errors.date_of_entrance_fees[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3" id="id_flat_status_div_container">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select class="w-100 sty-inp" v-model="member.flat_status">
+                                                            <option value="">Select Flat Status</option>
+                                                            <option value="occupied">Occupied</option>
+                                                            <option value="Not Occupied">Not Occupied</option>
+                                                            <option value="Rented">Rented</option>
+                                                            <option value="Japti">Japti</option>
+                                                            <option value="Builder Possession">Builder Possession</option>
+                                                            </select>
+                                                            <label for="id_flat_status_status" class="sty-label">Flat Status</label>
+                                                            <span v-if="errors.flat_status" class="error">{{ errors.flat_status[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 d-flex align-items-center">
+                                                        <small id="id_is_primary">
+                                                            <span>
+                                                            <input type="checkbox" class="sty-inp" v-model="member.member_is_primary"/>
+                                                            </span>&nbsp;Make Primary Member
+                                                            <span v-if="errors.member_is_primary" class="error">{{ errors.member_is_primary[0] }}</span>
+                                                            <span v-else></span>
+                                                        </small>
+                                                    </div>
 
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" v-model="member.date_of_cessation" />
+                                                            <label for="" class="sty-label">Date of cessation</label>
+                                                            <span v-if="errors.date_of_cessation" class="error">{{ errors.date_of_cessation[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="member.reason_for_cessation" />
+                                                            <label for="" class="sty-label">Reason for cessation</label>
+                                                            <span v-if="errors.reason_for_cessation" class="error">{{ errors.reason_for_cessation[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>                                                    
+
+                                                    <div v-for="(nominee, nIndex) in member.nominees" :key="nIndex">
+                                                        <h1>Nominee</h1>
+                                                        <div class="row mt-3" style="text-align: left">
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="text" class="w-100 sty-inp" v-model="nominee.id" />
+                                                                    <input type="text" class="w-100 sty-inp" v-model="nominee.nominee_name" />
+                                                                    <label for="" class="sty-label">Nominee's Name</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="date" class="w-100 sty-inp form-control" v-model="nominee.date_of_nomination"  />
+                                                                    <label for="" class="sty-label">Date of Nomination</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input class="w-100 sty-inp form-control" type="text" v-model="nominee.relation_with_nominee"  />
+                                                                    <label for="" class="sty-label">Relation with Nominator</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="text" class="w-100 sty-inp form-control percentage-input" v-model="nominee.nominee_sharein_percent" />
+                                                                    <label for="" class="sty-label">Nominee Sharein %</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="date" class="w-100 sty-inp"v-model="nominee.nominee_dob" />
+                                                                    <label for="" class="sty-label">Nominee DOB</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="nominee.nominee_aadhar_no" />
+                                                                    <label for="" class="sty-label">Nominee Aadhaar No</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="text" class="w-100 sty-inp" v-model="nominee.nominee_pan_no" />
+                                                                    <label for="" class="sty-label">Nominee PAN No</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="text" class="w-100 sty-inp" v-model="nominee.nominee_email" />
+                                                                    <label for="id_nominee_email" class="sty-label">Nominee Email</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <textarea class="w-100 sty-inp form-control" cols="30" rows="1" v-model="nominee.nominee_address" ></textarea>
+                                                                    <label for="" class="sty-label">Nominee Permanent Address</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <select name="state" class="w-100 sty-inp" v-model="nominee.nominee_state" >
+                                                                    </select>
+                                                                    <label for="" class="sty-label">State</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="nominee.nominee_pin_code" />
+                                                                    <label for="" class="sty-label">Pin Code</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp form-control" v-model="nominee.nominee_contact" />
+                                                                    <label for="" class="sty-label">Nominee Contact No.</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 mb-3">
+                                                                <div class="w-100 sty-input-wrapper">
+                                                                    <input type="number" class="w-100 sty-inp" v-model="nominee.nominee_emergency_contact" />
+                                                                    <label for="" class="sty-label">Emergency Contact No.</label>
+                                                                    <span v-if="errors.member_name" class="error">{{ errors.member_name[0] }}</span>
+                                                                    <span v-else></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form> 
+                                        </div>
+                                        <hr>
+                                        <div class="two-btn float-end pb-3 pe-4">
+                                            <button type="submit" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary" @click="submitEditedMemberData">Update</button>
+                                        </div>
+                                    {% endverbatim %}
+                                </div>
                             </div>
 
                             <div class="tab-pane fade" id="shares-edit-tab-pane" role="tabpanel"
                                 aria-labelledby="shares-edit-tab" tabindex="0">
                                 <div class="container-fluid" id="sharedmemberEditForm">
-                                        {% verbatim %}
-                                        <div id="sharesEditContent">
-                                                <form @submit.prevent="submitForm" enctype="multipart/form-data">
-                                                        <div class="row pt-3 ps-4 pe-4">
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <select v-model="formData.wing_flat" class="w-100 sty-inp form-control">
-                                                                        <option value="#">Select your Wing & Flat No.</option>
-                                                                        <option value="70">A-Wing(101)</option>
-                                                                        <option value="B-Wing(301)">B-Wing(301)</option>
-                                                                        <option value="C-Wing(301)">C-Wing(301)</option>
-                                                                    </select>
-                                                                    <label for="" class="sty-label">Wing & Flat No.</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.folio_number" />
-                                                                    <label for="" class="sty-label">Folio Number</label>
-                                                                    <span v-if="errors.folio_number" class="error">{{ errors.folio_number[0] }}</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="date" class="w-100 sty-inp" v-model="formData.shares_date" ref="shares_dateInput" @change="handleFileChange" />
-                                                                    <label for="" class="sty-label">Share Issue Date</label>
-                                                                    <span v-if="errors.shares_date" class="error">{{ errors.shares_date[0] }}</span>
-                                                                    <span v-else></span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.application_number" />
-                                                                    <label for="" class="sty-label">Application Number</label>
-                                                                    <span v-if="errors.application_number" class="error">{{ errors.application_number[0] }}</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.shares_certificate" />
-                                                                    <label for="" class="sty-label">Serial No. of Certificate</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.allotment_number" />
-                                                                    <label for="" class="sty-label">Allotment Number</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.shares_from" />
-                                                                    <label for="" class="sty-label">Share No. from</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.shares_to" />
-                                                                    <label for="" class="sty-label">Share No. To</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="date" class="w-100 sty-inp" v-model="formData.shares_transfer_date" />
-                                                                    <label for="" class="sty-label">Share Transfer Date</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.total_amount_received" />
-                                                                    <label for="" class="sty-label">Total Amount Received</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="date" class="w-100 sty-inp" v-model="formData.total_amount_date" />
-                                                                    <label for="" class="sty-label">Total Amount Received On</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.transfer_from_folio_no" />
-                                                                    <label for="" class="sty-label">Transfer from Folio Number</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4 mb-3">
-                                                                <div class="w-100 sty-input-wrapper">
-                                                                    <input type="number" class="w-100 sty-inp" v-model="formData.transfer_to_folio_no" />
-                                                                    <label for="" class="sty-label">Transfer to Folio Number</label>
-                                                                </div>
-                                                            </div>
+                                    {% verbatim %}
+                                    <div id="">
+                                        <form @submit.prevent="updateSharesData(formData.id)" enctype="multipart/form-data">
+                                                <div class="row pt-3 ps-4 pe-4">
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select v-model="formData.wing_flat" class="w-100 sty-inp form-control">
+                                                                <option :value="formData.wing_flat">{{ formData.wing_flat }}</option>
+                                                            </select>
+                                                            <label for="" class="sty-label">Wing & Flat No.</label>
                                                         </div>
-                                                        <hr>
-
-                                                        <div class="two-btn float-end pb-3 pe-4">
-                                                            <button type="submit" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.folio_number" />
+                                                            <label for="" class="sty-label">Folio Number</label>
+                                                            <span v-if="errors.folio_number" class="error">{{ errors.folio_number[0] }}</span>
                                                         </div>
-                                                </form>
-                                            </div>
-                                        {% endverbatim %}
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" v-model="formData.shares_date" ref="shares_dateInput" @change="handleFileChange" />
+                                                            <label for="" class="sty-label">Share Issue Date</label>
+                                                            <span v-if="errors.shares_date" class="error">{{ errors.shares_date[0] }}</span>
+                                                            <span v-else></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.application_number" />
+                                                            <label for="" class="sty-label">Application Number</label>
+                                                            <span v-if="errors.application_number" class="error">{{ errors.application_number[0] }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.shares_certificate" />
+                                                            <label for="" class="sty-label">Serial No. of Certificate</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.allotment_number" />
+                                                            <label for="" class="sty-label">Allotment Number</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.shares_from" />
+                                                            <label for="" class="sty-label">Share No. from</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.shares_to" />
+                                                            <label for="" class="sty-label">Share No. To</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" v-model="formData.shares_transfer_date" />
+                                                            <label for="" class="sty-label">Share Transfer Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.total_amount_received" />
+                                                            <label for="" class="sty-label">Total Amount Received</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="date" class="w-100 sty-inp" v-model="formData.total_amount_date" />
+                                                            <label for="" class="sty-label">Total Amount Received On</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.transfer_from_folio_no" />
+                                                            <label for="" class="sty-label">Transfer from Folio Number</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="number" class="w-100 sty-inp" v-model="formData.transfer_to_folio_no" />
+                                                            <label for="" class="sty-label">Transfer to Folio Number</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
 
+                                                <div class="two-btn float-end pb-3 pe-4">
+                                                    <button type="submit" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                        </form>
+                                    </div>
+                                    {% endverbatim %}
                                 </div>
                             </div>
 
                             <div class="tab-pane fade" id="loan-edit-tab-pane" role="tabpanel"
                                 aria-labelledby="loan-edit-tab" tabindex="0">
-                                <div class="container-fluid" id="homeloanEditForm">
-                                    {% comment %} {% verbatim %}
-                                        <div id="editHomeLoanDiv">
-                                            <form @submit.prevent="editHomeLoanForm" enctype="multipart/form-data">
-                                            </form>
-                                        </div>
-                                    {% endverbatim %} {% endcomment %}
+                                <div class="container-fluid" id="">                                    
+                                    {% verbatim %}
+                                    <div id="">
+                                        <form @submit.prevent="loanFormSubmit(homeLoanData.id)" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <select class="w-100 sty-inp form-control" v-model="homeLoanData.wing_flat">
+                                                            <option :value="homeLoanData.wing_flat">{{ homeLoanData.wing_flat }}</option>
+                                                        </select>
+                                                        <label class="sty-label">Wing & Flat No.</label>
+                                                        <span v-if="errors.wing_flat" class="error">{{ errors.wing_flat[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+                                
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_name" />
+                                                        <label class="sty-label">Hypothication Bank Name</label>
+                                                        <span v-if="errors.bank_loan_name" class="error">{{ errors.bank_loan_name[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+                                
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_object" />
+                                                        <label class="sty-label">Object of Loan</label>
+                                                        <span v-if="errors.bank_loan_object" class="error">{{ errors.bank_loan_object[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
 
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="date" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_date" />
+                                                        <label class="sty-label">Loan Issue Date</label>
+                                                        <span v-if="errors.bank_loan_date" class="error">{{ errors.bank_loan_date[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_value" />
+                                                        <label class="sty-label">Loan Value</label>
+                                                        <span v-if="errors.bank_loan_value" class="error">{{ errors.bank_loan_value[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_acc_no" />
+                                                        <label class="sty-label">Account Number</label>
+                                                        <span v-if="errors.bank_loan_acc_no" class="error">{{ errors.bank_loan_acc_no[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="number" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_installment" />
+                                                        <label class="sty-label">Installment</label>
+                                                        <span v-if="errors.bank_loan_installment" class="error">{{ errors.bank_loan_installment[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <select class="w-100 sty-inp" v-model="homeLoanData.bank_loan_status" @change="loanStatus($event)">
+                                                        <option value="">Select Status</option>
+                                                        <option value="Active">Active</option>
+                                                        <option value="Closed">Closed</option>
+                                                        </select>
+                                                        <label class="sty-label">Loan Status</label>
+                                                        <span v-if="errors.bank_loan_status" class="error">{{ errors.bank_loan_status[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3" v-if="attach_noc">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="file" class="w-100 sty-inp form-control" ref="bank_noc_file" />
+                                                        <label class="sty-label">Attach NOC</label>
+                                                        <span v-if="errors.bank_loan_remark" class="error">{{ errors.bank_loan_remark[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 mb-3">
+                                                    <div class="w-100 sty-input-wrapper">
+                                                        <input type="text" class="w-100 sty-inp" v-model="homeLoanData.bank_loan_remark" />
+                                                        <label class="sty-label">Remark</label>
+                                                        <span v-if="errors.bank_loan_remark" class="error">{{ errors.bank_loan_remark[0] }}</span>
+                                                        <span v-else></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="two-btn float-end pb-3 pe-4">
+                                                <button type="submit" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {% endverbatim %}
                                 </div>
-
-
-
                             </div>
+
                             <div class="tab-pane fade" id="gst-edit-tab-pane" role="tabpanel" aria-labelledby="gst-edit-tab"
                                 tabindex="0">
-                                <div class="container-fluid" id="gstEditform">
+                                <div class="container-fluid" id="">
+                                    {% verbatim %}
+                                    <form @submit.prevent="gstDataSubmit(gstData.id)" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                <select class="w-100 sty-inp" v-model="gstData.wing_flat" >
+                                                    <option :value="gstData.wing_flat">{{ gstData.wing_flat }}</option>
+                                                </select>
+                                                <label class="sty-label">Wing & Flat No.</label>
+                                                <span v-if="errors.wing_flat" class="error">{{ errors.wing_flat[0] }}</span>
+                                                <span v-else></span>
+                                                </div>
+                                            </div>
 
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="text" class="w-100 sty-inp" v-model="gstData.gst_number" />
+                                                    <label for="id_gst_number" class="sty-label">GST Number</label>
+                                                    <span v-if="errors.gst_number" class="error">{{ errors.gst_number[0] }}</span>
+                                                    <span v-else></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <select class="w-100 sty-inp" v-model="gstData.gst_state">
+                                                        <option value="">Select State</option>
+                                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                        <option value="Assam">Assam</option>
+                                                        <option value="Bihar">Bihar</option>
+                                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                                        <option value="Goa">Goa</option>
+                                                        <option value="Gujarat">Gujarat</option>
+                                                        <option value="Haryana">Haryana</option>
+                                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                        <option value="Jharkhand">Jharkhand</option>
+                                                        <option value="Karnataka">Karnataka</option>
+                                                        <option value="Kerala">Kerala</option>
+                                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                        <option value="Maharashtra">Maharashtra</option>
+                                                        <option value="Manipur">Manipur</option>
+                                                        <option value="Meghalaya">Meghalaya</option>
+                                                        <option value="Mizoram">Mizoram</option>
+                                                        <option value="Nagaland">Nagaland</option>
+                                                        <option value="Odisha">Odisha</option>
+                                                        <option value="Punjab">Punjab</option>
+                                                        <option value="Rajasthan">Rajasthan</option>
+                                                        <option value="Sikkim">Sikkim</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                        <option value="Telangana">Telangana</option>
+                                                        <option value="Tripura">Tripura</option>
+                                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                        <option value="Uttarakhand">Uttarakhand</option>
+                                                        <option value="West Bengal">West Bengal</option>
+                                                        <option value="Andaman and Nicobar ">Andaman and Nicobar </option>
+                                                        <option value="Islands">Islands</option>
+                                                        <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                                        <option value="Daman and Diu">Daman and Diu</option>
+                                                        <option value="Delhi">Delhi</option>
+                                                        <option value="Ladakh">Ladakh</option>
+                                                        <option value="Lakshadweep">Lakshadweep</option>
+                                                        <option value="Puducherry">Puducherry</option>
+                                                    </select>
+                                                    <label for="" class="sty-label">Select State</label>
+                                                    <span v-if="errors.gst_state" class="error">{{ errors.gst_state[0] }}</span>
+                                                    <span v-else></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="text" class="w-100 sty-inp" v-model="gstData.gst_billing_name" />
+                                                    <label for="id_gst_billing_name" class="sty-label">Billing Name</label>
+                                                    <span v-if="errors.gst_billing_name" class="error">{{ errors.gst_billing_name[0] }}</span>
+                                                    <span v-else></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <textarea class="w-100 sty-inp form-control" cols="30" rows="1" v-model="gstData.gst_billing_address"></textarea>
+                                                    <label for="id_gst_billing_address" class="sty-label">Billing Address</label>
+                                                    <span v-if="errors.gst_billing_address" class="error">{{ errors.gst_billing_address[0] }}</span>
+                                                    <span v-else></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="w-100 sty-input-wrapper">
+                                                    <input type="number" class="w-100 sty-inp" v-model="gstData.gst_contact_no" />
+                                                    <label for="id_gst_contact_no" class="sty-label">Contact Number</label>
+                                                    <span v-if="errors.gst_contact_no" class="error">{{ errors.gst_contact_no[0] }}</span>
+                                                    <span v-else></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="two-btn float-end pb-3 pe-4">
+                                            <button type="submit" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </div>
+                                    </form>
+                                    {% endverbatim %}
                                 </div>
 
                             </div>
+
                             <div class="tab-pane fade" id="vehicle-edit-tab-pane" role="tabpanel"
                                 aria-labelledby="vehicle-edit-tab" tabindex="0">
                                 <div class="container-fluid" id="vehicleEditForm">
+                                    {% verbatim %}
+                                        <div v-for="(vehicle, index) in vehicleData" :key="index" class="ms-4 me-4">
+                                            <h1>{{ vehicle.wing_flat }}</h1>
+                                            <form enctype="multipart/form-data">
+                                
+                                                <div class="row p-2 mt-2">
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="vehicle.parking_lot" />
+                                                            <label for="id_parking_lot0" class="sty-label">Parking Lot</label>
+                                                            <span class="error" v-if="hasError(index, 'parking_lot')">{{ getError(index, 'parking_lot') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="vehicle.vehicle_type" />
+                                                            <label for="id_vehicle_type0" class="sty-label">Vehicle Type</label>
+                                                            <span class="error" v-if="hasError(index, 'vehicle_type')">{{ getError(index, 'vehicle_type') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="vehicle.vehicle_number" />
+                                                            <label for="id_vehicle_number0" class="sty-label">Vehicle Number</label>
+                                                            <span class="error" v-if="hasError(index, 'vehicle_number')">{{ getError(index, 'vehicle_number') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp" v-model="vehicle.vehicle_brand" />
+                                                            <label for="id_vehicle_brand0" class="sty-label">Brand & Model</label>
+                                                            <span class="error" v-if="hasError(index, 'vehicle_brand')">{{ getError(index, 'vehicle_brand') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="file" class="w-100 sty-inp form-control" :ref="'rc_copy_' + index" />
+                                                            <label for="" class="sty-label">RC Copy</label>
+                                                            <span class="error" v-if="hasError(index, 'rc_copy')">{{ getError(index, 'rc_copy') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp form-control" v-model="vehicle.sticker_number" />
+                                                            <label for="" class="sty-label">Sticker Number</label>
+                                                            <span class="error" v-if="hasError(index, 'sticker_number')">{{ getError(index, 'sticker_number') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <select class="w-100 sty-inp" v-model="vehicle.select_charge">
+                                                                <option value="#" selected>YES / NO</option>
+                                                                <option id="optN0" value="no">NO</option>
+                                                                <option id="optY0" value="yes">YES</option>
+                                                            </select>
+                                                            <label for="id_select_charge0" class="sty-label">Vehicle Chargeable</label>
+                                                            <span class="error" v-if="hasError(index, 'select_charge')">{{ getError(index, 'select_charge') }}</span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-lg-4 mb-3">
+                                                        <div class="w-100 sty-input-wrapper">
+                                                            <input type="text" class="w-100 sty-inp form-control" v-model="vehicle.chargable" />
+                                                            <label class="sty-label">Charge Amount</label>
+                                                            <span class="error" v-if="hasError(index, 'chargable')">{{ getError(index, 'new_vehicle_id_select_charge') }}</span>
+                                                        </div>
+                                                    </div>                               
+                                                </div>
+                                                <hr>
+                                            </form>                                       
+                                        </div>
+                                        <hr>
+                                        <div class="two-btn float-end pb-3 pe-4">
+                                            <button type="submit" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary" @click="vehicleEditSubmit">Update</button>
+                                        </div>
+                                    {% endverbatim %}
                                 </div>
-
                             </div>
-                            <!-- </div> -->
                         </div>
                         <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -690,7 +1667,27 @@
                                 <div class="tab-pane fade show active" id="member-history-tab-pane" role="tabpanel"
                                     aria-labelledby="member-tab" tabindex="0">
                                     <div id="flat_member_history">
+                                        <!-- start -->
+                                        {% verbatim %}
+                                        <ul>
+                                            <div v-for="(primary, index) in primaryMembers" :key="index">
+                                                <h1>Primary mem</h1>
+                                                <strong>{{ primary.same_flat_member_identification }}</strong>
+                                                <strong>{{ primary.member_name }}</strong>
 
+                                                <div v-for="(secondary, index) in nonPrimaryMembers" :key="index">
+                                                    <div v-if="primary.same_flat_member_identification == secondary.same_flat_member_identification">
+                                                        <h1>NON Primary mem</h1>
+                                                        <strong>{{ secondary.same_flat_member_identification }}</strong>
+                                                        <strong>{{ secondary.member_name }}</strong>
+                                                    </div>
+                                                </div>
+                                                <p>====================</p>
+
+
+                                            </div>
+                                        </ul>
+                                        {% endverbatim %}
                                     </div>
                                 </div>
 

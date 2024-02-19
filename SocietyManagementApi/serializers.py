@@ -25,7 +25,7 @@ class MeetingsSerializer(serializers.ModelSerializer):
 
 class MemberVehicleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MemberVehicle
+        model = MemberVehicleRegister
         fields = '__all__'
 
 
@@ -41,14 +41,18 @@ class SuggestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class HouseHelpAllocationSerializer(serializers.ModelSerializer):
+    wing_flat_name = serializers.CharField(source='wing_flat.unit_flat_unique', read_only=True)
+    member_name_data = serializers.CharField(source='member_name.member_name', read_only=True)
+    house_help_aadhar_pan = serializers.CharField(source='aadhar_pan.house_help_pan_number', read_only=True)
+    house_help_name = serializers.CharField(source='house_help_name.house_help_name', read_only=True)
+
     class Meta:
         model = HouseHelpAllocationMaster
         fields = [
-            'wing_flat',
-            'member_name',  # Assuming member_name is a ForeignKey to MemberMasterCreation
-            'aadhar',
-            'pan',
-            'name',         # Assuming name is a ForeignKey to HouseHelp
+            'wing_flat_name',
+            'member_name_data',
+            'house_help_aadhar_pan',
+            'house_help_name',
             'role',
             'house_help_period_from',
             'house_help_period_to',
@@ -172,8 +176,9 @@ class FlatGSTSerializer(serializers.ModelSerializer):
 
 class NomineesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Nominees
+        model = MemberNomineeCreation
         fields = [
+            'id',
             # 'member_name',
             'nominee_name',
             'date_of_nomination',
@@ -195,7 +200,7 @@ class MembersSerializer(serializers.ModelSerializer):
     nominees = NomineesSerializer(many=True, required=False)
 
     class Meta:
-        model = Members
+        model = MemberMasterCreation
         fields = '__all__'
 
     # def create(self, validated_data):
@@ -234,3 +239,48 @@ class VehicleSerializers(serializers.ModelSerializer):
     class Meta:
         model = FlatVehicleDetails
         fields = '__all__'
+
+# class SharesDetailsSerializers(serializers.ModelSerializer):
+#     fetch_unique_member_shares = serializers.PrimaryKeyRelatedField(queryset=MemberMasterCreation.objects.filter(
+#         member_is_primary=True, date_of_cessation__isnull=True)
+#     )
+
+#     class Meta:
+#         model = SharesDetailsMaster
+#         fields = [
+#             'fetch_unique_member_shares',
+#             'wing_flat',
+#             'folio_number',
+#             'shares_date',
+#             'application_number',
+#             'shares_certificate',
+#             'allotment_number',
+#             'shares_from',
+#             'shares_to',
+#             'shares_transfer_date',
+#             'total_amount_received',
+#             'total_amount_date',
+#             'transfer_from_folio_no',
+#             'transfer_to_folio_no',
+#         ]
+        
+
+class SharesDetailsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = SharesDetailsMaster
+        fields = '__all__'
+
+
+class HomeLoanDetailsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = HomeLoanDetails
+        fields = '__all__'
+
+
+class GSTDetailsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = GSTDetails
+        fields = '__all__'
+
+
+        
