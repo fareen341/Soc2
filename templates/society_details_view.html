@@ -819,7 +819,7 @@
 
                     <div id="wingCreation">
                         {% verbatim %}
-                            <form enctype="multipart/form-data">
+                            <form @submit.prevent="validateBeforeSubmit" v-if="!formSubmitted">
                                 <div v-for="(form, index) in forms" :key="index">
                                     <p>Form {{ getFormNumber(index) }}</p>
 
@@ -827,13 +827,14 @@
                                         <div class="col-lg-3 sty-input-wrapper">
                                             <input class="w-100 sty-inp" type="text" v-model="form.wing">
                                             <label for="" class="sty-label">Enter your Wing Name</label>
-                                            <span class="error" v-if="hasError(index, 'wing')">{{ getError(index, 'wing') }}</span>
-                                        </div>
-                                        <div class="col-lg-5 sty-input-wrapper">
-                                            <textarea class="w-100 sty-inp" cols="30" rows="1" v-model="form.flat"></textarea>
+                                        </div>                                        
+
+                                        <div class="col-lg-5 sty-input-wrapper" :class="{'has-error': errors.has('form.flat_index') }">
+                                            <textarea class="w-100 sty-inp" cols="30" rows="1" v-model="form.flat_index" v-validate.initial="form.flat_index" data-rules="required|min:3" ></textarea>
                                             <label for="" class="sty-label">Enter your Flat Numbers</label>
-                                            <span class="error" v-if="hasError(index, 'flat')">{{ getError(index, 'flat') }}</span>
+                                            <p class="text-danger" v-if="errors.has('form.flat_index')">{{ errors.first('form.flat_index') }}</p>
                                         </div>
+
                                         <div class="col-lg-4 mb-4 gap-3 align-items-center">
                                             <span @click.prevent="removeForm(index)"><i class="fa-solid fa-trash-can"></i></span>
                                         </div>
@@ -844,7 +845,7 @@
                                 <hr>
                             </form>
                         {% endverbatim %}
-                    </div>
+                    </div>     
                 </div>
             </div>
         </div>

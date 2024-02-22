@@ -99,7 +99,7 @@ class SocietyBankCreationNew(models.Model):
     beneficiary_code = models.CharField(max_length=100)
     beneficiary_acc_number = models.CharField(max_length=100)
     beneficiary_bank = models.CharField(max_length=100)
-    is_primary = models.BooleanField(default=False)
+    is_primary = models.BooleanField(default=False, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.society_creation_id:

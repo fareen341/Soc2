@@ -308,7 +308,7 @@ class FlatWingView(viewsets.ModelViewSet):
                 errors.append(error_detail)
 
         if errors:
-            print("ERRORS=========", errors)
+            print("ERRORS========= CALLING FROM HERE", errors)
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
         else:
             for data in request.data:

@@ -60,19 +60,20 @@ $(document).ready(function () {
                 console.log("formdata", this.formData);
                 axios.defaults.xsrfCookieName = 'csrftoken';
                 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-                axios.post('http://127.0.0.1:8000/api/society-creation/', this.formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                    .then(response => {
-                        this.submitted = true;
-                        // stopNext = true;
-                        this.nextAction();
-                    })
-                    .catch(error => {
-                        this.errors = error.response.data;
-                    });
+                // axios.post('http://127.0.0.1:8000/api/society-creation/', this.formData, {
+                //     headers: {
+                //         'Content-Type': 'multipart/form-data'
+                //     }
+                // })
+                //     .then(response => {
+                //         this.submitted = true;
+                //         // stopNext = true;
+                //         this.nextAction();
+                //     })
+                //     .catch(error => {
+                //         this.errors = error.response.data;
+                //     });
+                $("#nextBtn").trigger("click");
             },
             nextAction() {
                 // Your logic for the next action after form submission
@@ -86,10 +87,6 @@ $(document).ready(function () {
             },
         },
     });
-
-    // BANK FORM
-
-
 
 
 
@@ -6101,6 +6098,7 @@ new Vue({
             }
         ],
         errors: [],
+        singlePrimaryError: '',
     },
     methods: {
         addForm() {
@@ -6134,18 +6132,27 @@ new Vue({
             return error ? error[field][0] : '';
         },
         submitBank() {
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            // const primaryChecked = this.forms.some(form => form.is_primary);
+            // if (!primaryChecked) {
+            //     this.singlePrimaryError = "Please select at least one beneficiary as primary."
+            //     return; // Stop further processing if validation fails
+            // }else{
+            //     this.singlePrimaryError = "";
+            // }
 
-            axios.post('http://127.0.0.1:8000/api/bank-creation/', this.forms, {})
-                .then(response => {
-                    console.log('Form data submitted successfully:', response.data);
-                    this.nextAction();
-                })
-                .catch(errors => {
-                    console.error('Error submitting form data:', errors);
-                    this.errors = errors.response.data.errors;
-                });
+            // axios.defaults.xsrfCookieName = 'csrftoken';
+            // axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            // axios.post('http://127.0.0.1:8000/api/bank-creation/', this.forms, {})
+            //     .then(response => {
+            //         console.log('Form data submitted successfully:', response.data);
+            //         this.nextAction();
+            //     })
+            //     .catch(errors => {
+            //         console.error('Error submitting form data:', errors);
+            //         this.errors = errors.response.data.errors;
+            //     });
+            $("#nextBtn2").trigger("click");
         },
         nextAction() {
             console.log('Form data submitted successfully. Proceeding to the next action.');
@@ -6157,79 +6164,106 @@ new Vue({
 
 
 
+
+// extra:
+Vue.use(VeeValidate)
+new Vue({
+    el: '#app',
+    data: {
+        email: '',
+        name: '',
+        url: '',
+        secret: '',
+        formSubmitted: false
+    },
+    methods: {
+        validateBeforeSubmit(e) {
+            this.$validator.validateAll();
+            if (!this.errors.any()) {
+                this.submitForm()
+            }
+        },
+        submitForm() {
+            this.formSubmitted = true
+        }
+    }
+})
+
+
 // WIng create
+Vue.use(VeeValidate)
 new Vue({
     el: '#wingCreation',
     data: {
         forms: [
-            {
-                wing: '',
-                flat: ''
-            }
+            {}
         ],
-        errors: [],
+        errors_data: [],
+        formSubmitted: false,
     },
     methods: {
         addForm() {
-            this.forms.push({
-                wing: '',
-                flat: ''
-            });
+            this.forms.push({});
             const newIndex = this.forms.length - 1;
-            this.errors = this.errors.filter(error => error.index !== newIndex);
+            this.errors_data = this.errors_data.filter(error => error.index !== newIndex);
         },
         removeForm(index) {
             this.forms.splice(index, 1);
         },
         hasError(index, field) {
-            return this.errors.some(error => error.index === index && error[field]);
+            return this.errors_data.some(error => error.index === index && error[field]);
         },
         getError(index, field) {
-            const error = this.errors.find(error => error.index === index);
+            const error = this.errors_data.find(error => error.index === index);
             return error ? error[field][0] : '';
         },
         submitWingFlat() {
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            console.log("VALIDATION VEE====", this.forms);
+            this.$validator.validateAll();
+            if (!this.errors.any()) {
+                this.submitForm()
+            }
 
-            axios.post('http://127.0.0.1:8000/api/flat-wing/', this.forms, {})
-                .then(response => {
-                    console.log('Form data submitted successfully:', response.data);
-                })
-                .catch(errors => {
-                    console.error('Error submitting form data:', errors);
-                    this.errors = errors.response.data.errors;
-                });
+            // axios.defaults.xsrfCookieName = 'csrftoken';
+            // axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            // axios.post('http://127.0.0.1:8000/api/flat-wing/', this.forms, {})
+            //     .then(response => {
+            //         console.log('Form data submitted successfully:', response.data);
+            //     })
+            //     .catch(errors => {
+            //         console.error('Error submitting form data:', errors);
+            //         this.errors = errors.response.data.errors;
+            //     });
         },
         getFormNumber: index => index + 1
     }
 });
 
 
-
-
 // Document creation
 new Vue({
-    el: '#societyDocumentsContainer',
+    el: '#societyDocumentsVue',
     data: {
-        // formData: new FormData(),
+        formData: new FormData(),
         forms: [
-            {
-                // other_document: '',
-                // other_document_specification: ''
-            }
+            {}
         ],
         errors: [],
         required_docs_errors: {},
+        required_docs_errors2: {},
+        showForm: false,
     },
     methods: {
+        showFormMethod() {
+            this.showForm = true;
+        },
         addForm() {
-            this.forms.push({
-                // other_document: '',
-                // other_document_specification: ''
-            });
-            const newIndex = this.forms.length - 1;
-            this.errors = this.errors.filter(error => error.index !== newIndex);
+            if (this.showForm) {
+                this.forms.push({});
+                const newIndex = this.forms.length - 1;
+                this.errors = this.errors.filter(error => error.index !== newIndex);
+            }
         },
         removeForm(index) {
             this.forms.splice(index, 1);
@@ -6242,6 +6276,8 @@ new Vue({
             return error ? error[field][0] : '';
         },
         submitBothDocs() {
+            this.formData.append('soc_other_document_spec', this.formData.soc_other_document_spec);
+
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
@@ -6250,17 +6286,32 @@ new Vue({
                     society_creation_obj = response.data.id
                     this.forms.forEach((form, index) => {
                         console.log("formdata==>", form);
-                        const formData = new FormData();
+                        const formData2 = new FormData();
                         const payload = {
                             other_document_specification: form.other_document_specification,
                             society_creation: society_creation_obj
                         }
 
-                        formData.append('data', JSON.stringify(payload));
-                        formData.append('other_document', form.other_document);
+                        formData2.append('data', JSON.stringify(payload));
+                        formData2.append('other_document', form.other_document);
+                        console.log("CALLING FROM HERE");
 
+                        // REQUIRED DOC CODE
+                        axios.post('http://127.0.0.1:8000/api/society-required-docs/', this.formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                            .then(response => {
+                                console.log('Form data submitted successfully:', response.data);
+                            })
+                            .catch(errors => {
+                                console.error('Error submitting form data:', errors);
+                                this.required_docs_errors = errors.response.data;
+                            });
 
-                        axios.post('http://127.0.0.1:8000/api/society-other-docs/', formData, {
+                        // OTER DOCUMENTS
+                        axios.post('http://127.0.0.1:8000/api/society-other-docs/', formData2, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
@@ -6278,24 +6329,103 @@ new Vue({
                     console.error('Error submitting form data:', errors);
                     this.errors = errors.response.data.errors;
                 });
-
-
-
-
         },
-        handleFileUpload(event, index) {
-            console.log("file===========");
-            const selectedFile = event.target.files[0];
-            console.log('Selected File:', selectedFile);
-
-            if (selectedFile) {
-                this.forms[index]['other_document'] = selectedFile;
+        handleFileUpload(event, ref) {
+            const fileInput = this.$refs[ref];
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                this.formData.append(ref, file);
             }
-            console.log("again", this.forms[index]);
         },
         getFormNumber: index => index + 1
     }
-});
+})
+
+
+// // Document creation
+// new Vue({
+//     el: '#abcd',
+//     data: {
+//         // formData: new FormData(),
+//         forms: [
+//             {
+//                 // other_document: '',
+//                 // other_document_specification: ''
+//             }
+//         ],
+//         errors: [],
+//         required_docs_errors: {},
+//     },
+//     methods: {
+//         addForm() {
+//             this.forms.push({
+//                 // other_document: '',
+//                 // other_document_specification: ''
+//             });
+//             const newIndex = this.forms.length - 1;
+//             this.errors = this.errors.filter(error => error.index !== newIndex);
+//         },
+//         removeForm(index) {
+//             this.forms.splice(index, 1);
+//         },
+//         hasError(index, field) {
+//             return this.errors.some(error => error.index === index && error[field]);
+//         },
+//         getError(index, field) {
+//             const error = this.errors.find(error => error.index === index);
+//             return error ? error[field][0] : '';
+//         },
+//         submitBothDocs() {
+//             axios.defaults.xsrfCookieName = 'csrftoken';
+//             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+//             axios.get('http://127.0.0.1:8000/last-object/')
+//                 .then(response => {
+//                     society_creation_obj = response.data.id
+//                     this.forms.forEach((form, index) => {
+//                         console.log("formdata==>", form);
+//                         const formData = new FormData();
+//                         const payload = {
+//                             other_document_specification: form.other_document_specification,
+//                             society_creation: society_creation_obj
+//                         }
+
+//                         formData.append('data', JSON.stringify(payload));
+//                         formData.append('other_document', form.other_document);
+
+
+//                         axios.post('http://127.0.0.1:8000/api/society-other-docs/', formData, {
+//                             headers: {
+//                                 'Content-Type': 'multipart/form-data'
+//                             }
+//                         })
+//                             .then(response => {
+//                                 console.log('Form data submitted successfully:', response.data);
+//                             })
+//                             .catch(errors => {
+//                                 console.error('Error submitting form data:', errors);
+//                                 this.errors = errors.response.data.errors;
+//                             });
+//                     });
+//                 })
+//                 .catch(errors => {
+//                     console.error('Error submitting form data:', errors);
+//                     this.errors = errors.response.data.errors;
+//                 });
+//         },
+//         handleFileUpload(event, index) {
+//             console.log("file===========");
+//             const selectedFile = event.target.files[0];
+//             console.log('Selected File:', selectedFile);
+
+//             if (selectedFile) {
+//                 this.forms[index]['other_document'] = selectedFile;
+//             }
+//             console.log("again", this.forms[index]);
+//         },
+//         getFormNumber: index => index + 1
+//     }
+// });
 
 
 
@@ -6771,15 +6901,41 @@ var app = new Vue({
         forms: [],
         member: {
             member_name: ''
-        }
+        },
+        sharesData: {},
+        homeLoanData: {},
+        gstData: {},
     },
     methods: {
         viewMemberData(id) {
             $('#viewMemberModal').modal('show');
             axios.get(`http://127.0.0.1:8000/api/members/${id}`)
                 .then(response => {
-                    console.log("RESPONSE==>", response.data);
                     this.memberData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/home-loan/${id}`)
+                .then(response => {
+                    this.homeLoanData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/shares/${id}`)
+                .then(response => {
+                    this.sharesData = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+
+            axios.get(`http://127.0.0.1:8000/api/flat-gst/${id}`)
+                .then(response => {
+                    this.gstData = response.data;
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
@@ -7074,3 +7230,130 @@ function showLoader() {
 function hideLoader() {
     document.getElementById("loader").classList.add("hidden");
 }
+
+
+
+// Document creation
+new Vue({
+    el: '#societyDocumentsContainer',
+    data: {
+        formData: new FormData(),
+        forms: [
+            {}
+        ],
+        errors: [],
+        required_docs_errors: {},
+        required_docs_errors2: {},
+        showForm: false,
+    },
+    methods: {
+        showFormMethod() {
+            this.showForm = true;
+        },
+        addForm() {
+            if (this.showForm) {
+                this.forms.push({});
+                const newIndex = this.forms.length - 1;
+                this.errors = this.errors.filter(error => error.index !== newIndex);
+            }
+        },
+        removeForm(index) {
+            this.forms.splice(index, 1);
+        },
+        hasError(index, field) {
+            return this.errors.some(error => error.index === index && error[field]);
+        },
+        getError(index, field) {
+            const error = this.errors.find(error => error.index === index);
+            return error ? error[field][0] : '';
+        },
+        submitBothDocs() {
+            this.formData.append('soc_other_document_spec', this.formData.soc_other_document_spec);
+
+            // Check if any form has missing fields
+            this.required_docs_errors = {};
+            let hasMissingFields = false;
+            this.forms.forEach((form, index) => {
+                if (!form.other_document_specification || !form.other_document) {
+                    hasMissingFields = true;
+                    if (!this.required_docs_errors[index]) {
+                        this.required_docs_errors[index] = {};
+                    }
+                    if (!form.other_document) {
+                        this.required_docs_errors[index]['other_document'] = ['This field is required'];
+                    }
+                    if (!form.other_document_specification) {
+                        this.required_docs_errors[index]['other_document_specification'] = ['This field is required'];
+                    }
+                }
+            });
+
+            // If any form has missing fields, stop submission and display errors
+            if (hasMissingFields) {
+                console.log("ERRORS===>", this.required_docs_errors);
+                return;
+            }
+
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            axios.get('http://127.0.0.1:8000/last-object/')
+                .then(response => {
+                    society_creation_obj = response.data.id
+                    this.forms.forEach((form, index) => {
+                        console.log("formdata==>", form);
+                        const formData2 = new FormData();
+                        const payload = {
+                            other_document_specification: form.other_document_specification,
+                            society_creation: society_creation_obj
+                        }
+
+                        formData2.append('data', JSON.stringify(payload));
+                        formData2.append('other_document', form.other_document);
+                        console.log("CALLING FROM HERE");
+
+
+                        axios.post('http://127.0.0.1:8000/api/society-other-docs/', formData2, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                            .then(response => {
+                                console.log('Form data submitted successfully:', response.data);
+                            })
+                            .catch(errors => {
+                                console.error('Error submitting form data:', errors);
+                                this.errors = errors.response.data.errors;
+                            });
+                    });
+
+                    // REQUIRED DOC CODE
+                    axios.post('http://127.0.0.1:8000/api/society-required-docs/', this.formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                        .then(response => {
+                            console.log('Form data submitted successfully:', response.data);
+                        })
+                        .catch(errors => {
+                            console.error('Error submitting form data:', errors);
+                            this.required_docs_errors = errors.response.data;
+                        });
+
+                })
+                .catch(errors => {
+                    console.error('Error submitting form data:', errors);
+                    this.errors = errors.response.data.errors;
+                });
+        },
+        handleFileUpload(event, ref) {
+            const fileInput = this.$refs[ref];
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                this.formData.append(ref, file);
+            }
+        },
+        getFormNumber: index => index + 1
+    }
+})

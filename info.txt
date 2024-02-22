@@ -189,3 +189,233 @@ bkp:
         #     return Response({'error': 'MemberMasterCreation object not found, or flat is empty'}, status=status.HTTP_404_NOT_FOUND)
 
 
+
+
+
+{
+    "id": 143,
+    "nominees": [
+        {
+            "nominee_name": "Nikki NOM 1",
+            "date_of_nomination": "2024-02-15",
+            "relation_with_nominee": "",
+            "nominee_sharein_percent": null,
+            "nominee_dob": "2024-02-21",
+            "nominee_aadhar_no": "",
+            "nominee_pan_no": "",
+            "nominee_email": "",
+            "nominee_address": "undefined",
+            "nominee_state": "Andhra Pradesh",
+            "nominee_pin_code": "",
+            "nominee_contact": "",
+            "nominee_emergency_contact": ""
+        },
+        {
+            "nominee_name": "Nikki NOM 2",
+            "date_of_nomination": "2024-02-22",
+            "relation_with_nominee": "",
+            "nominee_sharein_percent": null,
+            "nominee_dob": "2024-02-14",
+            "nominee_aadhar_no": "",
+            "nominee_pan_no": "",
+            "nominee_email": "",
+            "nominee_address": "undefined",
+            "nominee_state": "Andhra Pradesh",
+            "nominee_pin_code": "",
+            "nominee_contact": "",
+            "nominee_emergency_contact": ""
+        }
+    ],
+    "member_name": "Nikki",
+    "ownership_percent": 90,
+    "member_position": "Nominal Member",
+    "member_dob": "2024-02-04",
+    "member_pan_no": null,
+    "member_aadhar_no": "947594846",
+    "member_address": "weiruewi weiryiwjdcsiiiiiiiiiiiiiiiiids ncrruuuuuuuuuuuuuuuuuu",
+    "member_state": "Andhra Pradesh",
+    "member_pin_code": "80038",
+    "member_email": "fareen@gmail.com",
+    "member_contact": "12578766",
+    "member_emergency_contact": "12578766",
+    "member_occupation": "Working",
+    "member_is_primary": true,
+    "date_of_admission": "2024-02-04",
+    "age_at_date_of_admission": 23,
+    "sales_agreement": null,
+    "other_attachment": null,
+    "date_of_entrance_fees": "2024-02-04",
+    "date_of_cessation": null,
+    "reason_for_cessation": null,
+    "flat_status": "Rented",
+    "same_flat_member_identification": "C-WING-9MEM143",
+    "wing_flat": 70
+}
+
+
+
+
+{
+    "id": 143,
+    "nominees": [
+        {
+            "nominee_name": "Nikki NOM 1",
+            "date_of_nomination": "2024-02-15",
+            "relation_with_nominee": "",
+            "nominee_sharein_percent": null,
+            "nominee_dob": "2024-02-21",
+            "nominee_aadhar_no": "",
+            "nominee_pan_no": "",
+            "nominee_email": "",
+            "nominee_address": "undefined",
+            "nominee_state": "Andhra Pradesh",
+            "nominee_pin_code": "",
+            "nominee_contact": "",
+            "nominee_emergency_contact": ""
+        },
+        {
+            "nominee_name": "Nikki NOM 2",
+            "date_of_nomination": "2024-02-22",
+            "relation_with_nominee": "",
+            "nominee_sharein_percent": null,
+            "nominee_dob": "2024-02-14",
+            "nominee_aadhar_no": "",
+            "nominee_pan_no": "",
+            "nominee_email": "",
+            "nominee_address": "undefined",
+            "nominee_state": "Andhra Pradesh",
+            "nominee_pin_code": "",
+            "nominee_contact": "",
+            "nominee_emergency_contact": ""
+        }
+    ],
+    "member_name": "Nikki",
+    "ownership_percent": 90,
+    "member_position": "Nominal Member",
+    "member_dob": "2024-02-04",
+    "member_aadhar_no": "947594846",
+    "member_address": "weiruewi weiryiwjdcsiiiiiiiiiiiiiiiiids ncrruuuuuuuuuuuuuuuuuu",
+    "member_state": "Andhra Pradesh",
+    "member_pin_code": "80038",
+    "member_email": "fareen@gmail.com",
+    "member_contact": "12578766",
+    "member_emergency_contact": "12578766",
+    "member_occupation": "Working",
+    "member_is_primary": true,
+    "date_of_admission": "2024-02-04",
+    "age_at_date_of_admission": 23,
+    "date_of_entrance_fees": "2024-02-04",
+    "flat_status": "Rented",
+    "same_flat_member_identification": "C-WING-9MEM143",
+    "wing_flat": 70
+}
+
+
+
+
+
+
+
+
+
+
+
+ {
+        "nominees": [
+            {
+                "nominee_name": "Nikki NOM 1",
+                "date_of_nomination": "2024-02-15",
+                "relation_with_nominee": "",
+                "nominee_sharein_percent": null,
+                "nominee_dob": "2024-02-21",
+                "nominee_aadhar_no": "",
+                "nominee_pan_no": "",
+                "nominee_email": "",
+                "nominee_address": "undefined",
+                "nominee_state": "Andhra Pradesh",
+                "nominee_pin_code": "",
+                "nominee_contact": "",
+                "nominee_emergency_contact": ""
+            },
+            {
+                "nominee_name": "Nikki NOM 2",
+                "date_of_nomination": "2024-02-22",
+                "relation_with_nominee": "",
+                "nominee_sharein_percent": null,
+                "nominee_dob": "2024-02-14",
+                "nominee_aadhar_no": "",
+                "nominee_pan_no": "",
+                "nominee_email": "",
+                "nominee_address": "undefined",
+                "nominee_state": "Andhra Pradesh",
+                "nominee_pin_code": "",
+                "nominee_contact": "",
+                "nominee_emergency_contact": ""
+            }
+        ],
+        "member_name": "Nikki N",
+        "ownership_percent": 90,
+        "member_position": "Nominal Member",
+        "member_dob": "2024-02-04",
+        "member_pan_no": null,
+        "member_aadhar_no": "947594846",
+        "member_address": "weiruewi weiryiwjdcsiiiiiiiiiiiiiiiiids ncrruuuuuuuuuuuuuuuuuu",
+        "member_state": "Andhra Pradesh",
+        "member_pin_code": "80038",
+        "member_email": "fareen@gmail.com",
+        "member_contact": "12578766",
+        "member_emergency_contact": "12578766",
+        "member_occupation": "Working",
+        "member_is_primary": true,
+        "date_of_admission": "2024-02-04",
+        "age_at_date_of_admission": 23,
+        "sales_agreement": "/media/files/Form_I_LsRbdGK.pdf",
+        "other_attachment": null,
+        "date_of_entrance_fees": "2024-02-04",
+        "date_of_cessation": null,
+        "reason_for_cessation": null,
+        "flat_status": "Rented",
+        "same_flat_member_identification": "C-WING-9MEM143",
+        "wing_flat": 70
+    }
+
+
+
+
+
+
+{% verbatim %}
+<ul>
+<!-- Loop through the members array -->
+<li v-for="(member, index) in memberData" :key="index">
+    <!-- Display the member's name -->
+    <strong>{{ member.member_name }}</strong>
+    <ul>
+    <!-- Loop through the nominees array of the current member -->
+    <li v-for="(nominee, nIndex) in member.nominees" :key="nIndex">
+        <!-- Display nominee information -->
+        {{ nominee.nominee_name }}
+    </li>
+    </ul>
+</li>
+</ul>
+{% endverbatim %}
+
+
+<!-- start -->
+                                    {% verbatim %}
+                                        <ul>
+                                            <!-- Loop through the members array -->
+                                            <li v-for="(member, index) in memberData" :key="index">
+                                              <!-- Display the member's name -->
+                                              <strong>{{ member.member_name }}</strong>
+                                              <ul>
+                                                <!-- Loop through the nominees array of the current member -->
+                                                <li v-for="(nominee, nIndex) in member.nominees" :key="nIndex">
+                                                  <!-- Display nominee information -->
+                                                  {{ nominee.nominee_name }}
+                                                </li>
+                                              </ul>
+                                            </li>
+                                          </ul>
+                                    {% endverbatim %}

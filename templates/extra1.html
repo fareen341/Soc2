@@ -7,157 +7,104 @@
   <title>Vue.js Form</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.8/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/g/lodash@4.17.2,vee-validate@2.0.0-beta.14"></script>
+  <script>
+    Vue.use(VeeValidate); // good to go.
+  </script>
+  <style>
+    .container {
+      width: 500px;
+      font-family: Helvetica, sans-serif;
+    }
+
+    h1 {
+      text-align: center
+    }
+
+    img {
+      text-align: center
+    }
+
+    .submitted {
+      color: #4fc08d;
+    }
+  </style>
 </head>
 
 <body>
-  {% verbatim %}
-  <div id="app">
-    <form @submit.prevent="submitForm">
-      <div>
-        <label>Wing/Flat:</label>
-        <input type="text">
+
+
+
+  <div id="app" class="container">
+    {% verbatim %}
+    <form @submit.prevent="validateBeforeSubmit" v-if="!formSubmitted">
+
+      <h1>Form Validation with Vue 2</h1>
+      <div class="form-group" :class="{'has-error': errors.has('name') }">
+        <label class="control-label" for="name">Name</label>
+        <input v-model="name" v-validate.initial="name" data-rules="required|alpha|min:3" class="form-control"
+          type="text" placeholder="Full Name">
+        <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
+      </div>
+      <div class="form-group" :class="{'has-error': errors.has('email') }">
+        <label class="control-label" for="email">Email</label>
+        <input v-model="email" v-validate.initial="email" data-rules="required|email" class="form-control" type="email"
+          placeholder="Email">
+        <p class="text-danger" v-if="errors.has('email')">{{ errors.first('email') }}</p>
+      </div>
+      <div class="form-group" :class="{'has-error': errors.has('url') }">
+        <label class="control-label" for="url">Website</label>
+        <input v-model="url" v-validate.initial="url" data-rules="required|url" class="form-control" type="text"
+          placeholder="Website">
+        <p class="text-danger" v-if="errors.has('url')">{{ errors.first('url') }}</p>
+      </div>
+      <div class="form-group" :class="{'has-error': errors.has('secret') }">
+        <label class="control-label" for="secret">Secret</label>
+        <input v-model="secret" v-validate.initial="secret" data-rules="required|passphrase" class="form-control"
+          type="text" placeholder="Code Phrase">
+        <p class="text-danger" v-if="errors.has('secret')">{{ errors.first('secret') }}</p>
       </div>
 
-
-      <div v-for="(form, index) in forms" :key="index">
-        <h3>Form {{ getFormNumber(index) }}</h3>
-
-        <div>
-          <label>Parking Lot:</label>
-          <input v-model="form.parking_lot" type="text">
-          <span class="error" v-if="hasError(index, 'parking_lot')">{{ getError(index, 'parking_lot') }}</span>
-        </div>
-        <div>
-          <label>Vehicle Type:</label>
-          <input v-model="form.vehicle_type" type="text">
-          <span class="error" v-if="hasError(index, 'vehicle_type')">{{ getError(index, 'vehicle_type') }}</span>
-        </div>
-
-        <div>
-          <label>Vehicle Number:</label>
-          <input v-model="form.vehicle_number" type="text">
-          <span class="error" v-if="hasError(index, 'vehicle_number')">{{ getError(index, 'vehicle_number') }}</span>
-        </div>
-
-        <div>
-          <label>Vehicle Brand:</label>
-          <input v-model="form.vehicle_brand" type="text">
-          <span class="error" v-if="hasError(index, 'vehicle_brand')">{{ getError(index, 'vehicle_brand') }}</span>
-        </div>
-
-        <div>
-          <label>RC Copy:</label>
-          <input v-model="form.rc_copy" type="file">
-          <span class="error" v-if="hasError(index, 'rc_copy')">{{ getError(index, 'rc_copy') }}</span>
-        </div>
-
-        <div>
-          <label>Sticker Number:</label>
-          <input v-model="form.sticker_number" type="number">
-          <span class="error" v-if="hasError(index, 'sticker_number')">{{ getError(index, 'sticker_number') }}</span>
-        </div>
-
-        <!-- ... (other form fields) ... -->
-
-        <div>
-          <label>Vehicle Chargeable?:</label>
-          <select class="w-100 sty-inp form-control" @change="toggleChargeAmount(index, $event)">
-            <option value="" selected>YES / NO</option>
-            <option value="no">NO</option>
-            <option value="yes">YES</option>
-          </select>
-        </div>
-
-        <div v-if="form.showChargeAmount">
-          <label>Charge Amount:</label>
-          <input v-model="form.chargable" type="number">
-          <span class="error" v-if="hasError(index, 'chargable')">{{ getError(index, 'chargable') }}</span>
-        </div>
-
-        <button @click.prevent="removeForm(index)">Remove Form</button>
-        <hr>
-      </div>
-      <button @click.prevent="addForm">Add Form</button>
-      <hr>
-      <button type="submit">Submit All Forms</button>
+      <button class="btn btn-primary btn-block" type="submit">Submit</button>
     </form>
+    <div v-else>
+      <h1 class="submitted">Form submitted successfully!</h1>
+    </div>
     {% endverbatim %}
   </div>
 
-
   <script>
-    new Vue({
-      el: '#app',
-      data: {
-        forms: [
-          { wing_flat: '', parking_lot: '', vehicle_type: '', vehicle_number: '', vehicle_brand: '', rc_copy: '', sticker_number: '', chargable: '', showChargeAmount: false }
-        ],
-        errors: [],
-        wing_flat: '',
+    Vue.use(VeeValidate)
+
+
+new Vue({
+  el: '#app',
+  data: {
+      email: '',
+      name: '',
+      url: '',
+      secret: '',
+      formSubmitted: false
+    },
+  methods: {
+    validateBeforeSubmit(e) {
+        this.$validator.validateAll();
+        if (!this.errors.any()) {
+            this.submitForm()
+        }
       },
-      methods: {
-        addForm() {
-          this.forms.push({ wing_flat: '', parking_lot: '', vehicle_type: '', vehicle_number: '', vehicle_brand: '', rc_copy: '', sticker_number: '', chargable: '', showChargeAmount: false });
-          const newIndex = this.forms.length - 1;
-          this.errors = this.errors.filter(error => error.index !== newIndex);
-        },
-        removeForm(index) {
-          this.forms.splice(index, 1);
-        },
-        hasError(index, field) {
-          return this.errors.some(error => error.index === index && error[field]);
-        },
-        getError(index, field) {
-          const error = this.errors.find(error => error.index === index);
-          return error ? error[field][0] : '';
-        },
-        toggleChargeAmount(index, event) {
-          console.log("toggle");
-          this.forms[index].showChargeAmount = event.target.value === 'yes';
-        },
-        submitForm() {
-          axios.defaults.xsrfCookieName = 'csrftoken';
-          axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    submitForm(){
+      this.formSubmitted = true
+    }
+  }
+})
 
-          const formData = new FormData();
-          console.log("THIS.FORMS", this.forms)
-
-          this.forms.forEach((form, index) => {
-          const prefix = `form[${index}]`; // Prefix to differentiate form data
-
-          for (let key in form) {
-              if (key === 'rc_copy') {
-                  const file = form[key];
-                  if (file) {
-                      const blob = new Blob([file], { type: file.type });
-                      formData.append(`${prefix}[${key}]`, blob, file.name);
-                  }
-              } else {
-                  formData.append(`${prefix}[${key}]`, form[key]);
-              }
-          }
-      });
-
-          axios.post('http://127.0.0.1:8000/api/vehicle/', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(response => {
-              console.log('Form data submitted successfully:', response.data);
-            })
-            .catch(errors => {
-              console.error('Error submitting form data:', errors);
-              this.errors = errors.response.data.errors;
-              console.log("ERROR====================", this.errors[0]['wing_flat'][0]);
-            });
-        },
-        getFormNumber: index => index + 1
-      }
-    });
-
+VeeValidate.Validator.extend('passphrase', {
+    getMessage: field => 'Sorry dude, wrong pass phrase.',
+    validate: value => value.toUpperCase() == 'Demogorgon'.toUpperCase()
+});
   </script>
-
 </body>
 
 </html>
